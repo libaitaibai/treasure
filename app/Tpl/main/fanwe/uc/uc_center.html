@@ -1,0 +1,187 @@
+<?php
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/style.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/uc.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/utils/weebox.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/utils/fanweUI.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/uc_duobao.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/uc_center.css";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.bgiframe.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.weebox.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.pngfix.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.animateToClass.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.timer.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/plupload.full.min.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/login_panel.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/login_panel.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/uc/uc_duobao.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/uc/uc_duobao.js";
+
+?>
+{include file="inc/header.html"}
+
+<div class="blank20"></div>
+<div class="{function name="load_wrap" t=$wrap_type} clearfix">
+	<div class="side_nav f_l ">
+		{include file="inc/uc_nav_list.html"}
+	</div>
+	<div class="m-user-frame-colMain">
+		<div class="m-user-frame-content-m" pro="userFrameWraper">
+			<div class="m-user-center">
+				<div class="m-user-center-hd clearfix">
+				<!-- 头像 -->
+					<div class="f_l avatar">
+						<img src="{function name="get_user_avatar" uid=$user_info.id type="big"}" data-id="{$user_info.id}" width="160" height="160">
+					</div>
+					<div class="user-info f_l">
+						<ul>
+							<li class="user-name">{$user_info.user_name}</li>
+							<li>ID：<b>{$user_info.id}</b> &nbsp;&nbsp;&nbsp;积分：<b>{$user_info.score}</b> &nbsp;&nbsp;&nbsp;优惠币：<b>{function name="round" v=$user_info.coupons e=2}</b></li>
+							<li>账户余额：<b class="txt-red">{function name="round" v=$user_info.money e=2}</b>
+								夺宝币
+								<a href="{url x="index" r="uc_money"}" class="btn btn-s">充值</a>
+								<a href="{url x="index" r="uc_money_cash#withdraw"}" class="btn btn-s">提现</a>
+							</li>
+							<li>可用红包：<b class="txt-red">{$user_info.voucher_count}</b>
+								个
+								<a href="{url x="index" r="uc_voucher"}">查看</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="blank10"></div>
+				<div class="m-user-comm-wraper">
+					<div class="m-user-comm-cont">
+						<div class="m-user-comm-title">
+							<a href="{url r="index" x="uc_duobao"}" class="f_r">查看更多记录</a>
+							<h3>我最近的夺宝</h3>
+						</div>
+						<div>
+							{if $list}
+							<div class="listCont">
+								<div id="pro-view-18">
+									<table class="m-user-comm-table">
+										<thead style="background:#f2f2f2;">
+										<tr>
+											<th class="col-info-th">商品信息</th>
+											<th class="col-period-th">期号</th>
+											<th class="col-opt-th">操作</th>
+										</tr>
+										</thead>
+									</table>
+									<div class="duobaoList">
+									<table class="m-user-comm-table">
+										<tbody>
+										{foreach from=$list item=value}
+										<tr {if $value.duobao_item.luck_user_id eq $user_info.id}class="get-win"{/if}>
+											<td class="col-info">
+												<div class="w-goods-l">
+													<div class="w-goods-pic">
+														<div class="ico {if $value.duobao_item.luck_user_id eq $user_info.id} winner-ico{/if}"></div>
+														<a href="{url r="index" r="duobao" p="id=$value.duobao_item.id"}" style="text-decoration:none;color:#3399ff;">
+															<img src="{function name="get_spec_image" v=$value.duobao_item.icon w=74 h=74 g=1}" alt="{$value.name}" width="74" height="74" style="border:0px;" />
+														</a>
+													</div>
+													<p class="w-goods-title">
+														{if $value.duobao_item.min_buy eq 10}
+														<span class="type-ten">十元专区</span>&nbsp;{/if}
+														{if $value.duobao_item.unit_price eq 100}
+														<span class="type-ten" style="background-color:red">百元专区</span>&nbsp;{/if}
+														<a title="{$value.duobao_item.name}" href="{url r="index" r="duobao" p="id=$value.duobao_item.id"}" style="text-decoration:none;color:#333333;">{$value.duobao_item.name}</a>
+													</p>
+													<p class="w-goods-price">总需：{$value.duobao_item.max_buy}人次</p>
+													<div class="winner">
+														{if $value.duobao_item.has_lottery eq 1}
+														<div class="name">获得者：<a href="{url i="index" r="home" p="id=$value.duobao_item.luck_user_id"}" title="{$value.duobao_item.luck_user_name}" style="text-decoration:none;color:#3399ff;">{$value.duobao_item.luck_user_name}</a>（本期参与<strong class="txt-dark" style="color:#333333;">{$value.number}</strong>人次）
+														</div>
+														<div class="code">幸运代码：<strong class="txt-impt" style="color:#db3652;">{$value.duobao_item.lottery_sn}</strong></div>
+														<div class="time">揭晓时间：{function name="to_date" v=$value.duobao_item.lottery_time}</div>
+														{else}
+														<div class="progress f_l">
+                       									<div class="progress-bar f_l" style="width: {$value.duobao_item.progress}%"></div>
+                    									</div>
+                    									<div class="blank" style="height:1px;"></div>
+                    									已完成{$value.duobao_item.progress}%{if $value.duobao_item.less gt 0}，剩余{$value.duobao_item.less}{/if}
+														{/if}
+													</div>
+												</div>
+											</td>
+											<td class="col-period">{$value.duobao_item.id}</td>
+											<td class="col-opt" style="">
+												<p class="w-goods-price">
+													我参与{$value.number}人次
+													<a href="javascript:my_no_all({$value.duobao_item.id});"  style="color:#3399ff;">查看</a>
+												</p>
+												{if $value.duobao_item.has_lottery eq 1}
+													{if $value.duobao_item.new_duobao_item_id}
+														<a class="w-button-main" href='{url r="index" r="duobao" p="dbid=$value.duobao_item.duobao_id"}'>参与最新</a>
+													{else}
+														<a class="w-button-main" href='{url r="index" r="duobao" p="id=$value.duobao_item.id"}'>查看详情</a>
+													{/if}
+												{else}
+													{if $value.duobao_item.progress eq '100'}
+														{if $value.duobao_item.new_duobao_item_id}
+														<a class="w-button-main" href='{url r="index" r="duobao" p="dbid=$value.duobao_item.duobao_id"}'>参与最新</a>
+														{else}
+															<a class="w-button-main" href='{url r="index" r="duobao" p="id=$value.duobao_item.id"}'>查看详情</a>
+														{/if}
+													{elseif $value.duobao_item.is_pk==1}
+                                                        <a class="w-button-main" href='{url r="index" r="duobao" p="id=$value.duobao_item.id"}'>查看详情</a>
+                                                    {else}
+														<a class="w-button-main" href='{url r="index" r="duobao" p="id=$value.duobao_item.id"}'>追加人次</a>
+													{/if}
+												{/if}
+											</td>
+										</tr>
+										{/foreach}
+										</tbody>
+									</table>
+									</div>
+								</div>
+							</div>
+							{else}
+						<div class="listCont">
+							<div >
+								<div class="duobaoList">
+									<div class="m-user-comm-empty">
+										<div class="i-desc">
+											您没有相应的夺宝记录哦~</div>
+										<div class="i-opt">
+											<a href="{url r="index" }" style="color:#ffffff;border:none;white-space:nowrap;font-size:18px;display:inline-block;vertical-align:middle;padding:0px 35px;height:45px;line-height:45px;border-radius:4px;cursor:pointer;font-family:'microsoft yahei', simhei;outline:none;text-decoration:none !important;background:#dd344f;">马上去逛逛</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						{/if}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="m-user-frame-content-r f_r">
+		<!-- 广告 -->
+			<div class="extension">
+				<a href="{url x="index"}"></a>
+			</div>
+			<div class="blank10"></div>
+			<div class="log-history">
+				<h3 class="title">我最近浏览的商品</h3>
+				<div class="history-info">
+					<ul class="clearfix">
+						{foreach from=$history_list item=history_item}
+						<li><a href="{url x="index" r="duobao" p="id=$history_item.id"}" title="{$history_item.name}"><img src="{function name="get_spec_image" v=$history_item.icon w=72 h=72 g=1}" width="72" height="72"></a></li>
+						{/foreach}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="blank20"></div>
+{include file="inc/footer.html"}

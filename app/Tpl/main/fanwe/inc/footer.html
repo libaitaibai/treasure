@@ -1,0 +1,63 @@
+<div class="clear"></div>
+<div class="footer_box">
+<div class="footer_inner_box">
+
+<div class="{function name="load_wrap" t=$wrap_type} clearfix">
+	<div class="help_row f_l">
+		{foreach from=$deal_help item=help}
+			<span>
+			<dl>
+				<dt>{if $help.iconfont neq ''}<i class="diyfont">{$help.iconfont}</i>&nbsp;{/if}{$help.title}</dt>
+				<dd>
+					<ul>
+						{foreach from=$help.help_list item=help_item}
+						<li><b></b><a href="{url x="index" r="help" p="id=$help_item.id"}">{$help_item.title}</a></li>
+						{/foreach}
+					</ul>
+				</dd>
+			</dl>
+			</span>
+		{/foreach}
+	</div>
+	<div class="g-side-l f_l">
+            <ul class="m-instruction-state f-clear">
+                <li><i class="ico_foot ico-state-l-1"></i>100%公平公正公开</li>
+                <li><i class="ico_foot ico-state-l-2"></i>100%正品保证</li>
+                <li><i class="ico_foot ico-state-l-3"></i>100%权益保障</li>
+            </ul>
+     </div>
+	<div class="foot_logo f_l">
+		<a class="link" href="{$APP_ROOT}/">
+		<?php
+			$this->_var['foot_logo_image'] = get_spec_image(app_conf("FOOTER_LOGO"),110,110,1);
+		?>
+		{function name="load_page_png" v=$foot_logo_image}
+		</a>
+	</div>
+	<div class="foot_online_time f_l">
+	{function name="app_conf" value="ONLINE_TIME"}  <br/>
+	{if app_conf("SHOP_TEL") neq ''}
+				{$LANG.TEL}：{function name="app_conf" value="SHOP_TEL"}
+	{/if}
+	</div>
+	<div class="blank"></div>
+
+
+	<div class="foot_info">
+				{function name="app_conf" value="ICP_LICENSE"}&nbsp;&nbsp;
+				{function name="app_conf" value="COUNT_CODE"}
+				{function name="app_conf" value="SHOP_FOOTER"}
+
+
+	</div>
+</div><!--end foot_wrap-->
+</div>
+</div>
+<!--  
+<div class="side-bar">
+	<a href="">在线客服</a>
+</div>
+-->
+<a id="go_top" href="javascript:void(0);"></a>
+</body>
+</html>

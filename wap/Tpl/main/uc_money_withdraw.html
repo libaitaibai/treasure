@@ -1,0 +1,96 @@
+<?php
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/style.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/color.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/public.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/user_login.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/uc_money_withdraw.css";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery-1.6.2.min.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.bgiframe.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.timer.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.weebox.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.touchwipe.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/fastclick.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/uc_money_withdraw.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/uc_money_withdraw.js";
+
+?>
+{include file="inc/header_getpassword.html"}
+<script>
+    var withdraw_ajax_url = "{url r="index" b="uc_money_cash" p="del_user_bank" }";
+</script>
+<div class="wrap">
+	<div class="content">
+	 	<div id="withdraw">
+						<ul class="address-input">
+							{if $data.step eq 1}
+							<form action="{url r="index" p="uc_money_cash#do_withdraw"}" method="post" name="withdraw">
+							<li class="split-line">
+								<span>提现至</span>
+								<input name="bank_name" class="ui-textbox" readonly="readonly" value=""  />
+								<input type="hidden"  value="" name="bank_id" />
+							</li>
+							<li class="split-line">
+								<span>金<em></em>额</span>
+								<input class="ui-textbox" value="" type="number" name="money" placeholder="当前可提现的余额{$data.money}元"  />
+							</li>
+							<li class="split-line">
+								<span>密<em></em>码</span>
+								<input class="ui-textbox" value="" name="pwd" type="password"  placeholder="请再次输入登录密码" />
+							</li>
+							<div class="blank"></div>
+						
+							{foreach from=$data.bank_list item=item key=key}
+							<li class="split-line bank" >
+								<label>{$item.bank_name}<span  bank_name="{$item.bank_name}" rel="{$item.id}"  {if $key eq 0}class="checked"{/if}></span></label>
+								<a class="iconfont del_bank_btn" rel="{$item.id}">&#xe64f;</a>
+							</li>
+							{/foreach}
+							<div class="blank"></div>
+							<li class="split-line add_card" >
+								<a href="{url r="index" p="uc_money_cash#add_card"}">添加银行卡</a>
+							</li>	
+							<div class="blank"></div>
+							<div class="subbox">
+							<input type="submit" class="sub goahead" value="确认提现">
+							</div>
+							</form>
+							{elseif $data.step eq 2}
+							<form action="{url r="index" p="uc_money_cash#do_bind_bank"}" method="post" name="add_card">
+							<li class="split-line">
+								<span>卡<em></em>号</span>
+								<input  name="bank_account" value="" class="ui-textbox" placeholder="请输入银行卡卡号" />
+							</li>
+							<li class="split-line">
+								<span>开户行</span>
+								<input  name="bank_name" value="" class="ui-textbox" placeholder="请输开户行名称" />
+							</li>
+							<li class="split-line">
+								<span>户<em></em>名</span>
+								<input  name="bank_user" value="" class="ui-textbox" holder="请输入开户银行真实姓名" />
+							</li>
+							<li>
+								<span>验证码</span>
+								<input class="ui-textbox ph_verify" id="sms_verify" name="sms_verify" holder="请输入验证码" />
+								<button class="btn_phone" type="Button"  id="sms_btn"  lesstime="{$sms_lesstime}" account="1" >获取验证码</button>
+							</li>
+							<div class="subbox">
+							<input type="submit" class="sub" value="提交">
+							</div>
+							</form>						
+
+							{/if}
+
+
+						</ul>
+	 	</div>
+	</div>
+</div>
+{include file="inc/sms_verify_code.html"}
+{include file="inc/footer_index.html"}

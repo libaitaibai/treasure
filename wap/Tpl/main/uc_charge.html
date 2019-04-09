@@ -1,0 +1,55 @@
+<?php
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/weebox.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/fanweUI.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/style.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/color.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/public.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/uc_money_incharge.css";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery-1.6.2.min.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.bgiframe.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.timer.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.weebox.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.touchwipe.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/fastclick.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/uc_duobao_record.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/uc_duobao_record.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/uc_charge.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/uc_charge.js";
+
+?>
+{include file="inc/header_getpassword.html"}
+<form name="do_charge" action="{url r="index" p="uc_charge#done"}" method="post" >
+<h1>选择充值金额(元)</h1>
+<div class="money" id="money1">
+	<input type="text" value="20" readonly="readonly" class="select_num">
+	<input type="text" value="50" readonly="readonly" class="select_num">
+	<input type="text" value="100" readonly="readonly" class="select_num">
+	<input type="text" value="200" readonly="readonly" class="select_num">
+	<input type="text" value="500" readonly="readonly" class="select_num">
+	<input type="tel" placeholder="其他金额" class="select_num1" />
+	<input type="hidden" value="" name="money" >
+ </div>
+<h1>选择充值方式</h1>
+<ul class="pay-way">
+	{foreach from=$data.payment_list item=payment key=key}
+	<li>
+		<label for="weixin"  class="pay_select">
+			<input type="radio" name="payment_id" value="{$payment.id}"  {if $key eq 0}checked="checked"{/if}>{$payment.name}
+		<span {if $key eq 0}class="checked"{/if}></span>
+		</label>
+	</li>
+	{/foreach}
+</ul>
+<div class="subbox">
+<input type="submit" value="确认充值" class="sub">
+</div>
+</form>
+{include file="inc/footer_index.html"}

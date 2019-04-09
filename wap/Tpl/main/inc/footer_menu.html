@@ -1,0 +1,46 @@
+
+<div class="footer-menu-box">
+    <div class="f_menu split-line-top">
+  		<ul class="menu_box">
+  			<li class="menu_item {if $MODULE_NAME eq 'index'}cur{/if}">
+  				<a href="{url r="index" b="index#index"}">
+	  				<p><i class="iconfont">&#xe6ee;</i></p>
+	  				<p class="item_txt">首页</p>
+  				</a>
+  			</li>
+			<li class="menu_item {if $MODULE_NAME eq 'anno'}cur{/if}">
+				<a href="{url r="index" b="anno#index"}">
+					<p><i class="iconfont">&#xe6ed;</i></p>
+					<p class="item_txt">最新揭晓</p>
+				</a>
+			</li>
+  			<li class="menu_item {if $MODULE_NAME eq 'cart'}cur{/if}">
+  				<a href="{url r="index" b="cart#index"}">
+	  				<p style="position:relative;" >
+	  					<i class="iconfont">&#xe6ea;</i>
+	  					<div class="nav_cart_num" {if $data.cart_info.cart_item_num gt 0}style="display:block;"{/if}>{$data.cart_info.cart_item_num}</div>
+	  				</p>
+	  				<p class="item_txt">清单</p>
+	  			</a>
+	  		</li>
+  			<li class="menu_item {if $MODULE_NAME eq 'more'}cur{/if}">
+  				<a href="{url r="index" b="more#index"}">
+  					<p><i class="iconfont">&#xe69c;</i></p>
+  					<p class="item_txt">发现</p>
+  				</a>
+  			</li>
+  			<li class="menu_item {if $MODULE_NAME eq 'user_center'}cur{/if}">
+  				<a href="{url r="index" b="user_center#index"}" onclick="mt_rand(this);">
+  					<p><i class="iconfont">&#xe6ec;</i></p>
+  					<p class="item_txt">我</p>
+  				</a>
+  			</li>
+		</ul>
+		<a href="/o2onew/wap/biz.php?ctl=more"></a>
+	</div>
+</div>
+<script type="text/javascript">
+	{if $signin_result}
+	show_signin_message({$signin_result});
+	{/if}
+</script>

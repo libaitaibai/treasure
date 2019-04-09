@@ -1,0 +1,181 @@
+<?php
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/weebox.css";	
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/fanweUI.css";	
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/style.css";	
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/color.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/public.css";		
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/uc_fxinvite.css";	
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery-1.6.2.min.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.bgiframe.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.timer.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.weebox.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.touchwipe.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/fastclick.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
+
+
+?>
+{include file="inc/header_title_home.html"}
+
+
+<div class="wrap">
+	<div class="content">
+		<ul class="invit-info">
+			<li>
+				<div class="info-border-box">
+				<h1>今日获得夺宝币</h1>
+				<p class="num-info">
+					{$data.today_total_brokerage_money}
+				</p>
+				</div>
+<!-- 				<p class="other-info">
+	我的{$data.fx_name}创收：{$data.today_first_money}
+</p> -->
+			</li>
+			<li>
+				<h1>邀请好友累计收入</h1>
+				<p class="num-info">
+					{$data.total_brokerage_money}
+				</p>
+<!-- 				<p class="other-info">
+	我{$data.fx_name}的{$data.fx_name}创收：{$data.today_second_money}
+</p> -->
+			</li>
+		</ul> 
+		<div class="farmer-info split-line split-line-top">
+			<a href="{$data.fx_user1_url}" class="split-line title-bar">
+				<i class="iconfont main-icon">&#xe6ec;</i>
+				<p class="myfarmer">一级邀请用户</p>
+				 
+				<p class="farmer-num">全部共{$data.first_user_count}人</p>
+				<i class="iconfont row-right">&#xe704;</i>
+				 
+			</a>
+			<div class="farmers split-line">
+				{foreach from="$data.first_fx_user" item="u"}
+				<a href="{url a="index" r="anno_user_center#index" p="lucky_user_id=$u.id"}">
+					<div class="imgbox">
+						<img src="{if $u.user_logo}{$u.user_logo}{else}{$data.no_user_logo}{/if}" alt="">
+					</div>
+					<p class="farmer-name">
+						{$u.user_name}
+					</p>
+				</a>
+				{/foreach}
+				 					
+			</div>
+			<div class="other-info">
+				<p class="defult-info">今日我的一级邀请用户交易：</p>
+				<p class="deal-info">
+					<span>{$data.today_first_order_money}</span>个夺宝币，<span>{$data.fx_count.three_fx_count}</span>个订单数，按照{if $data.fx_salary_type==1 }{$data.fx_level_one_salary}%{else}固额{$data.fx_level_one_salary}{/if}的佣金，我收入<span>{$data.today_first_money}</span>个夺宝币
+				</p>
+			</div>
+		</div>
+		<div class="farmer-info split-line split-line-top">
+			<a href="{$data.fx_user2_url}" class="split-line title-bar">
+				<i class="iconfont main-icon">&#xe702;</i>
+				<p class="myfarmer">二级邀请用户</p>
+				 
+				<p class="farmer-num">全部共{$data.second_user_count}人</p>
+				<i class="iconfont row-right">&#xe704;</i>
+				 
+			</a>
+			<div class="farmers split-line">
+				{if $data.second_user_count}
+				{foreach from="$data.second_fx_user" item="u"}
+				<a href="{url a="index" r="anno_user_center#index" p="lucky_user_id=$u.id"}">
+					<div class="imgbox">
+						<img src="{if $u.user_logo}{$u.user_logo}{else}{$data.no_user_logo}{/if}" alt="">
+					</div>
+					<p class="farmer-name">
+						{$u.user_name}
+					</p>
+				</a>
+				{/foreach}
+				{/if}
+			</div>
+			<div class="other-info">
+				<p class="defult-info">今日我二级邀请用户交易：</p>
+				<p class="deal-info">
+					<span>{$data.today_second_order_money}</span>个夺宝币，<span>{$data.fx_count.second_fx_count}</span>个订单数，按照{if $data.fx_salary_type==1 }{$data.fx_level_two_salary}%{else}固额{$data.fx_level_two_salary}{/if}的佣金，我收入<span>{$data.today_second_money}</span>个夺宝币
+				</p>
+			</div>
+		</div>
+		
+		
+		<div class="farmer-info split-line split-line-top">
+			<a href="{$data.fx_user3_url}" class="split-line title-bar">
+				<i class="iconfont main-icon">&#xe702;</i>
+				<p class="myfarmer">三级邀请用户</p>
+				 
+				<p class="farmer-num">全部共{$data.three_user_count}人</p>
+				<i class="iconfont row-right">&#xe704;</i>
+				 
+			</a>
+			<div class="farmers split-line">
+				{if $data.three_user_count}
+				{foreach from="$data.three_fx_user" item="u"}
+				<a href="{url a="index" r="anno_user_center#index" p="lucky_user_id=$u.id"}">
+					<div class="imgbox">
+						<img src="{if $u.user_logo}{$u.user_logo}{else}{$data.no_user_logo}{/if}" alt="">
+					</div>
+					<p class="farmer-name">
+						{$u.user_name}
+					</p>
+				</a>
+				{/foreach}
+				{/if}
+			</div>
+			<div class="other-info">
+				<p class="defult-info">今日我的三级邀请用户交易：</p>
+				<p class="deal-info">
+					<span>{$data.today_three_order_money}</span>个夺宝币，<span>{$data.fx_count.first_fx_count}</span>个订单数，按照{if $data.fx_salary_type==1 }{$data.fx_level_three_salary}%{else}固额{$data.fx_level_three_salary}{/if}的佣金，我收入<span>{$data.today_three_money}</span>个夺宝币
+				</p>
+			</div>
+		</div>
+		
+		
+		<div class="rule split-line-top split-line">
+			<a class="split-line title-bar">
+				<i class="iconfont main-icon">&#xe705;</i>
+				<p class="myfarmer">邀请佣金规则</p>
+			</a>
+			<div class="rule-info">
+				<p class="rule-title">一级邀请用户：</p>
+				<p>指我直接邀请的用户。</p>
+				<p class="rule-title">二级邀请用户：</p>
+				<p>指我的一级邀请用户邀请的用户。</p>
+				<p class="rule-title">三级邀请用户：</p>
+				<p>指我的二级邀请用户邀请的用户。</p>
+				<p class="rule-title last-rule-title">
+					比如，我邀请A，A邀请B,B邀请C，C邀请D。A是我的一级邀请用户，B是我的二级邀请用户，C是我的三级邀请用户。<br />
+					如果A消费100元，我将获得3%的佣金即3元。<br />
+					如果B消费100元，A将获得3%的佣金即3元，我将获得2%的佣金即2元。<br />
+					如果C消费100元，B将获得3%的佣金即3元，A将获得2%的佣金即2元，我将获得1%的佣金即1元。<br />
+					如果D消费100元，C将获得3%的佣金即3元，B将获得2%的佣金即2元，A将获得1%的佣金即1元，我不获得佣金。<br />
+				</p>
+			</div>
+		</div>
+		<div class="htg-farmer split-line-top">
+			<a class="split-line title-bar">
+				<i class="iconfont main-icon">&#xe706;</i>
+				<p class="myfarmer">如何获得邀请用户</p>
+			</a>
+			<div class="htg-farmer-info">
+				<p>
+					在任意页面点击屏幕右上角，点击“发送给朋友”或“分享到朋友圈”即可。想要获取更多用户，就要经常“发送给朋友”或“分享到朋友圈”，然后给朋友留言，让朋友一起来玩！
+				</p>
+				<div class="img-info">
+					<div class="imgbox imgbox-1"></div>
+					<div class="imgbox imgbox-2"></div>
+				</div>				
+			</div>
+		</div>
+	</div>
+</div>
+{include file="inc/footer_index.html"}
