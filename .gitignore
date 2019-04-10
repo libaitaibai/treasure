@@ -1,1 +1,5 @@
 /public/db_config.php
+public/runtime
+public/attachment
+.idea
+.git
