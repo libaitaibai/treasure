@@ -10,6 +10,10 @@
 class MainBaseModule{
 	public function __construct()
 	{
+	    //清除缓存页面调试用
+        clear_cache();
+
+
 		if($GLOBALS['distribution_cfg']['OSS_TYPE']&&$GLOBALS['distribution_cfg']['OSS_TYPE']=="ES_FILE")
 		{
 			//logger::write($GLOBALS['distribution_cfg']['OSS_DOMAIN']."/es_file.php");
