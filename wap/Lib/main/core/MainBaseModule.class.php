@@ -9,7 +9,10 @@
 
 class MainBaseModule{
 	public function __construct()
-	{		
+	{
+        //清除缓存页面调试用
+        clear_cache();
+
 		$GLOBALS['cache']->set_dir(APP_ROOT_PATH."public/runtime/data/".CACHE_SUBDIR."/page_static_cache/");
 		$GLOBALS['dynamic_cache'] = $GLOBALS['cache']->get("APP_DYNAMIC_CACHE_".APP_INDEX."_".MODULE_NAME."_".ACTION_NAME);
 		$GLOBALS['cache']->set_dir(APP_ROOT_PATH."public/runtime/data/".CACHE_SUBDIR."/avatar_cache/");
