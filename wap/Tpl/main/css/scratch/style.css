@@ -42,6 +42,8 @@ figcaption{
   left:65px;*/
   margin:191px auto;
   overflow: hidden;
+    position:relative;
+    left:3px;
 }
 
 #bridgeContainer figcaption {

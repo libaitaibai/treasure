@@ -10,6 +10,7 @@
 class IndexAction extends AuthAction{
 	//首页
     public function index(){
+
 		$this->display();
     }
     
