@@ -218,6 +218,9 @@ function clear_cache()
 		$GLOBALS['cache']->clear();
 		clear_dir_file(get_real_path()."public/runtime/data/");
 
+		clear_dir_file(get_real_path()."public/runtime/wap/tpl_caches/");
+		clear_dir_file(get_real_path()."public/runtime/wap/tpl_compiled/");
+
 		//模板页面缓存
 		clear_dir_file(get_real_path()."public/runtime/app/tpl_caches/");
 		clear_dir_file(get_real_path()."public/runtime/app/tpl_compiled/");
