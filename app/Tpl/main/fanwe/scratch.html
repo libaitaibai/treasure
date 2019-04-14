@@ -1,4 +1,9 @@
 <?php
+//刮刮乐静态资源
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/scratch/normalize.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/scratch/htmleaf-demo.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/scratch/style.css";
+
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/style.css";
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/index.css";
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/helpcenter.css";
@@ -30,126 +35,135 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
 
 ?>
 {include file="inc/header.html"}
-<div class="blank15"></div>
-<div class="wrap_full_w clearfix">
-    <div class="g-side"  >
-        <div class="w-msg-news"  >
-            <i class="diyfont"></i>
-            <a href="{url r="index" r="news" p="t=notice"}"><span class="font_h3" >
-                系统公告
-            </span></a>
-        </div>
-        <div class="w-msg-news"  >
-            <i class="diyfont"></i>
-            <a href="{url r="index" r="news" p="t=agreement"}"><span class="font_h3" >
-                服务协议
-            </span></a>
-        </div>
-        <div class="w-msg-catlog">
-            <div class="w-msg-catlog-hd" >
-                <span class="font_h3s" >
-                    帮助中心
-                </span>
-            </div>
-            {if $deal_help }
-            <div>
-                <dl class="w-msg-catlog-list" >
-                    {foreach from=$deal_help item=web_article_cate}
-                    {if $web_article_cate}
-                    <dt class="font_dt" >
-                        <i class="diyfont">{$web_article_cate.iconfont}</i>
-                        {$web_article_cate.title}
-                    </dt>
-                    {/if}
-                    {foreach from=$web_article_cate.help_list item=web}
-                    <dd class="font_dd" >
-                        {if $web_article_id eq $web.id}
-                        <p class="txt-red">{$web.title}</p>
-                        {else}
-                        <a href="{url r="index" r="help" p="id=$web.id"}">
-                        {$web.title}
-                        </a>
-                        </li>
-                        {/if}
-                    </dd>
-                    {/foreach}
-                    {/foreach}
-                </dl>
-            </div>
-            {/if}
-        </div>
-        <div class="w-msg-more" >
-            <p>如果不能再帮助内容中找到答案，<br/>您还可以拨打：</p>
-            <div class="w-msg-more-wrap">
-                <p class="w-msg-more-call">
-                    <i class="diyfont"></i>服务热线
-                </p>
-                <p class="w-msg-more-phoneNum">{$shptel}</p>
-            </div>
-        </div>
+
+<div class="wrap_full_w clearfix" style="margin-top:20px">
+
+<div class="htmleaf-container">
+    <figure id="bridgeContainer" >
+        <canvas id="bridge" width="750" height="465"></canvas>
+
+    </figure>
+
+</div>
+<div class="text1">呱呱中大奖</div>
+
+
+
+<div class="col-md-4">
+    <div class="g_3">
+        <div class="g_3_tit"><span class="g_3_txt">游戏介绍</span></div>
+        <div class="g_3_cet1">视觉中国事件目前持续发酵中。起因于4月11日，视觉中国网站发布了人类历史上首张黑洞照片，版权所有一栏，写的是视觉中国。此事引发巨大争议。昨日下午，视觉中国将使用说明改为「不得用于商业用途」，并把版权所有改为「欧洲南方天文台」。百度、凤凰网等公司官方微博发文称，自己的商标被视觉中国收录并打上水印。共青团中央微博发文称，国旗、国徽的图片也在视觉中国网站上售卖。视觉中国道歉</div>
     </div>
-
-    <div class="g-main">
-        <ul class="web-map clearfix" style="padding-top:10px;margin-bottom:0px;padding-bottom:15px;font-size:14px;font-family:'Microsoft Yahei',verdana;">
-            {if $is_agreement eq 'notice'}
-            <li><a href="{url x="index" r="news" p="t=notice"}">系统公告</a> ></li>
-            {if $web_article_id}
-            <li class="txt-red">{function name=to_date v=$agreement_one.create_time f="Y-m-d"} 公告详情</li>
-            {else}
-            <li class="txt-red">列表</li>
-            {/if}
-            {/if}
-            {if $is_agreement eq 'agreement'}
-            <li><a href="{url x="index" r="news" p="t=agreement"}">服务协议</a> ></li>
-            {if $web_article_id}
-            <li class="txt-red">{function name=to_date v=$agreement_one.create_time f="Y-m-d"} 协议详情</li>
-            {else}
-            <li class="txt-red">列表</li>
-            {/if}
-            {/if}
-            {if !$is_agreement}
-            <li><a href="{url x="index"}">首页</a> ></li>
-            <li><a href="{url x="index" r="help"}">帮助中心</a> ></li>
-            <li class="txt-red">{$title}</li>
-            {/if}
-        </ul>
-        <div class="m-helpcenter-detail" >
-            {if $is_agreement}
-            {if $agreement_one}
-            <ul class="m-new-list">
-                <li class="m-news-list-list">
-                    <span class="date">{function name=to_date v=$agreement_one.create_time f="Y-m-d"}<span>
-                    &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span class="font_span" >{$agreement_one.agreement_name}</sapn>
-                </li>
-            </ul>
-            <div class="m-news-bd" >
-                {$agreement_one.agreement}
-            </div>
-            {else}
-            <ul class="m-new-list">
-                {foreach from=$agreement_list item=agreement}
-                <li class="m-news-list-list">
-                    <span class="date">{function name=to_date v=$agreement.create_time f="Y-m-d"}<span>
-                    &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="{url r="index" r="news" p="t=$is_agreement&id=$agreement.id"}"><span class="font_span" >{$agreement.agreement_name}</sapn></a>
-                </li>
-                {/foreach}
-            </ul>
-            <div class="pages">{$pages}</div>
-            {/if}
-            {else}
-            {if $content.content}
-            <div class="m-helpcenter-detail-hd" >
-                <h4>{$content.title}</h4>
-            </div>
-            <div class="m-helpcenter-detail-bd">
-                {$content.content}
-            </div>
-
-            {/if}
-            {/if}
+    <div class="g_3">
+        <div class="g_3_tit"><span class="g_3_txt">游戏规则</span></div>
+        <div class="g_3_cet1">视觉中国事件目前持续发酵中。起因于4月11日，视觉中国网站发布了人类历史上首张黑洞照片，版权所有一栏，写的是视觉中国。此事引发巨大争议。昨日下午，视觉中国将使用说明改为「不得用于商业用途」，并把版权所有改为「欧洲南方天文台」。百度、凤凰网等公司官方微博发文称，自己的商标被视觉中国收录并打上水印。共青团中央微博发文称，国旗、国徽的图片也在视觉中国网站上售卖。视觉中国道歉</div>
+    </div>
+    <div class="g_3">
+        <div class="g_3_tit"><span class="g_3_txt">奖励设置</span></div>
+        <div class="g_3_cet">
+            <table>
+                <tr>
+                    <td width="30%">奖级</td>
+                    <td width="70%">中奖金额</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>250,000元</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>10,000元</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>1,000元</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>500元</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>200元</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>100元</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>50元</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>20元</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>10元</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    var bridge = document.getElementById("bridge"),
+        bridgeCanvas = bridge.getContext('2d'),
+        brushRadius = (bridge.width / 100) * 5,
+        img = new Image();
+    if (brushRadius < 50) { brushRadius = 50 }
+    img.onload = function(){
+        bridgeCanvas.drawImage(img, 0, 0, bridge.width, bridge.height);
+    }
+    //静态资源位置
+    img.loc = '{$TMPL}/images/scratch/img/';
+    img.filename = 'scratch-1.jpg';
+    if (window.devicePixelRatio >= 2) {
+        var nameParts = img.filename.split('.');
+        img.src = img.loc + nameParts[0]+"-2x"+"."+nameParts[1];
+    } else {
+        img.src = img.loc + img.filename;
+    }
+    function detectLeftButton(event) {
+        if ('buttons' in event) {
+            return event.buttons === 1;
+        } else if ('which' in event) {
+            return event.which === 1;
+        } else {
+            return event.button === 1;
+        }
+    }
+    function getBrushPos(xRef, yRef) {
+        var bridgeRect = bridge.getBoundingClientRect();
+        return {
+            x: Math.floor((xRef-bridgeRect.left)/(bridgeRect.right-bridgeRect.left)*bridge.width),
+            y: Math.floor((yRef-bridgeRect.top)/(bridgeRect.bottom-bridgeRect.top)*bridge.height)
+        };
+    }
+    function drawDot(mouseX,mouseY){
+        bridgeCanvas.beginPath();
+        bridgeCanvas.arc(mouseX, mouseY, brushRadius, 0, 2*Math.PI, true);
+        bridgeCanvas.fillStyle = '#000';
+        bridgeCanvas.globalCompositeOperation = "destination-out";
+        bridgeCanvas.fill();
+    }
+    bridge.addEventListener("mousemove", function(e) {
+        var brushPos = getBrushPos(e.clientX, e.clientY);
+        var leftBut = detectLeftButton(e);
+        if (leftBut == 1) {
+            drawDot(brushPos.x, brushPos.y);
+        }
+    }, false);
+    bridge.addEventListener("touchmove", function(e) {
+        e.preventDefault();
+        var touch = e.targetTouches[0];
+        if (touch) {
+            var brushPos = getBrushPos(touch.pageX, touch.pageY);
+            drawDot(brushPos.x, brushPos.y);
+        }
+    }, false);
+</script>
+</div>
+
+
 {include file="inc/footer.html"}
