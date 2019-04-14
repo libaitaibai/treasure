@@ -18,17 +18,21 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js"
 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
 $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
 
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/styletrun.css";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery-1.11.0.min.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
+
 ?>
 {include file="inc/header_title_home.html"}
 <div class="wrap">
     <div class="content">
         <div class="container">
-            <img src="images/1.png" id="shan-img" style="display:none;" />
-            <img src="images/2.png" id="sorry-img" style="display:none;" />
+            <img src="{$TMPL}/images/truntable/1.png" id="shan-img" style="display:none;" />
+            <img src="{$TMPL}/images/truntable/2.png" id="sorry-img" style="display:none;" />
             <div class="banner">
-                <div class="turnplate" style="background-image:url(images/turnplate-bg.png);background-size:100% 100%;">
+                <div class="turnplate" style="background-image:url({$TMPL}/images/truntable/turnplate-bg.png);background-size:100% 100%;">
                     <canvas class="item" id="wheelcanvas" width="422px" height="422px"></canvas>
-                    <img class="pointer" src="images/turnplate-pointer.png"/>
+                    <img class="pointer" src="{$TMPL}/images/truntable/turnplate-pointer.png"/>
                 </div>
             </div>
         </div>
