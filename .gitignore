@@ -1,5 +1,5 @@
 /public/db_config.php
-public/runtime
+./public/runtime
 public/attachment
 public/session
 .idea
