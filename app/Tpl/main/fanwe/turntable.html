@@ -1,7 +1,6 @@
 <?php
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/style.css";
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/index.css";
-$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/helpcenter.css";
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/utils/weebox.css";
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/utils/fanweUI.css";
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/zone.css";
@@ -26,130 +25,239 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/index.js";
 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
 $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
 
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/styletrun.css";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
 
 
 ?>
 {include file="inc/header.html"}
-<div class="blank15"></div>
+
+
 <div class="wrap_full_w clearfix">
-    <div class="g-side"  >
-        <div class="w-msg-news"  >
-            <i class="diyfont"></i>
-            <a href="{url r="index" r="news" p="t=notice"}"><span class="font_h3" >
-                系统公告
-            </span></a>
-        </div>
-        <div class="w-msg-news"  >
-            <i class="diyfont"></i>
-            <a href="{url r="index" r="news" p="t=agreement"}"><span class="font_h3" >
-                服务协议
-            </span></a>
-        </div>
-        <div class="w-msg-catlog">
-            <div class="w-msg-catlog-hd" >
-                <span class="font_h3s" >
-                    帮助中心
-                </span>
+
+    <div class="container">
+        <img src="{$TMPL}/images/truntable/1.png" id="shan-img" style="display:none;" />
+        <img src="{$TMPL}/images/truntable/2.png" id="sorry-img" style="display:none;" />
+        <div class="banner">
+            <div class="turnplate" style="background-image:url({$TMPL}/images/truntable/turnplate-bg.png);background-size:100% 100%;">
+                <canvas class="item" id="wheelcanvas" width="422px" height="422px"></canvas>
+                <img class="pointer" src="{$TMPL}/images/truntable/turnplate-pointer.png"/>
             </div>
-            {if $deal_help }
-            <div>
-                <dl class="w-msg-catlog-list" >
-                    {foreach from=$deal_help item=web_article_cate}
-                    {if $web_article_cate}
-                    <dt class="font_dt" >
-                        <i class="diyfont">{$web_article_cate.iconfont}</i>
-                        {$web_article_cate.title}
-                    </dt>
-                    {/if}
-                    {foreach from=$web_article_cate.help_list item=web}
-                    <dd class="font_dd" >
-                        {if $web_article_id eq $web.id}
-                        <p class="txt-red">{$web.title}</p>
-                        {else}
-                        <a href="{url r="index" r="help" p="id=$web.id"}">
-                        {$web.title}
-                        </a>
-                        </li>
-                        {/if}
-                    </dd>
-                    {/foreach}
-                    {/foreach}
-                </dl>
-            </div>
-            {/if}
         </div>
-        <div class="w-msg-more" >
-            <p>如果不能再帮助内容中找到答案，<br/>您还可以拨打：</p>
-            <div class="w-msg-more-wrap">
-                <p class="w-msg-more-call">
-                    <i class="diyfont"></i>服务热线
-                </p>
-                <p class="w-msg-more-phoneNum">{$shptel}</p>
+    </div>
+    <div class="col-md-4">
+        <div class="g_3">
+            <div class="g_3_tit"><span class="g_3_txt">游戏介绍</span></div>
+            <div class="g_3_cet1">视觉中国事件目前持续发酵中。起因于4月11日，视觉中国网站发布了人类历史上首张黑洞照片，版权所有一栏，写的是视觉中国。此事引发巨大争议。昨日下午，视觉中国将使用说明改为「不得用于商业用途」，并把版权所有改为「欧洲南方天文台」。百度、凤凰网等公司官方微博发文称，自己的商标被视觉中国收录并打上水印。共青团中央微博发文称，国旗、国徽的图片也在视觉中国网站上售卖。视觉中国道歉</div>
+        </div>
+        <div class="g_3">
+            <div class="g_3_tit"><span class="g_3_txt">游戏规则</span></div>
+            <div class="g_3_cet1"> 视觉中国事件目前持续发酵中。起因于4月11日，视觉中国网站发布了人类历史上首张黑洞照片，版权所有一栏，写的是视觉中国。此事引发巨大争议。昨日下午，视觉中国将使用说明改为「不得用于商业用途」，并把版权所有改为「欧洲南方天文台」。百度、凤凰网等公司官方微博发文称，自己的商标被视觉中国收录并打上水印。共青团中央微博发文称，国旗、国徽的图片也在视觉中国网站上售卖。视觉中国道歉</div>
+        </div>
+        <div class="g_3">
+            <div class="g_3_tit"><span class="g_3_txt">奖励设置</span></div>
+            <div class="g_3_cet">
+                <table>
+                    <tr>
+                        <td width="30%">奖级</td>
+                        <td width="70%">中奖金额</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>250,000元</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>10,000元</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>1,000元</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>500元</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>200元</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>100元</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>50元</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>20元</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>10元</td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
 
-    <div class="g-main">
-        <ul class="web-map clearfix" style="padding-top:10px;margin-bottom:0px;padding-bottom:15px;font-size:14px;font-family:'Microsoft Yahei',verdana;">
-            {if $is_agreement eq 'notice'}
-            <li><a href="{url x="index" r="news" p="t=notice"}">系统公告</a> ></li>
-            {if $web_article_id}
-            <li class="txt-red">{function name=to_date v=$agreement_one.create_time f="Y-m-d"} 公告详情</li>
-            {else}
-            <li class="txt-red">列表</li>
-            {/if}
-            {/if}
-            {if $is_agreement eq 'agreement'}
-            <li><a href="{url x="index" r="news" p="t=agreement"}">服务协议</a> ></li>
-            {if $web_article_id}
-            <li class="txt-red">{function name=to_date v=$agreement_one.create_time f="Y-m-d"} 协议详情</li>
-            {else}
-            <li class="txt-red">列表</li>
-            {/if}
-            {/if}
-            {if !$is_agreement}
-            <li><a href="{url x="index"}">首页</a> ></li>
-            <li><a href="{url x="index" r="help"}">帮助中心</a> ></li>
-            <li class="txt-red">{$title}</li>
-            {/if}
-        </ul>
-        <div class="m-helpcenter-detail" >
-            {if $is_agreement}
-            {if $agreement_one}
-            <ul class="m-new-list">
-                <li class="m-news-list-list">
-                    <span class="date">{function name=to_date v=$agreement_one.create_time f="Y-m-d"}<span>
-                    &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span class="font_span" >{$agreement_one.agreement_name}</sapn>
-                </li>
-            </ul>
-            <div class="m-news-bd" >
-                {$agreement_one.agreement}
-            </div>
-            {else}
-            <ul class="m-new-list">
-                {foreach from=$agreement_list item=agreement}
-                <li class="m-news-list-list">
-                    <span class="date">{function name=to_date v=$agreement.create_time f="Y-m-d"}<span>
-                    &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="{url r="index" r="news" p="t=$is_agreement&id=$agreement.id"}"><span class="font_span" >{$agreement.agreement_name}</sapn></a>
-                </li>
-                {/foreach}
-            </ul>
-            <div class="pages">{$pages}</div>
-            {/if}
-            {else}
-            {if $content.content}
-            <div class="m-helpcenter-detail-hd" >
-                <h4>{$content.title}</h4>
-            </div>
-            <div class="m-helpcenter-detail-bd">
-                {$content.content}
-            </div>
-
-            {/if}
-            {/if}
-        </div>
-    </div>
 </div>
+
+</div>
+
+
+
+<script>
+    var turnplate={
+        restaraunts:[],       //大转盘奖品名称
+        colors:[],          //大转盘奖品区块对应背景颜色
+        outsideRadius:192,      //大转盘外圆的半径
+        textRadius:155,       //大转盘奖品位置距离圆心的距离
+        insideRadius:73,      //大转盘内圆的半径
+        startAngle:0,       //开始角度
+
+        bRotate:false       //false:停止;ture:旋转
+    };
+
+    $(document).ready(function(){
+        //动态添加大转盘的奖品与奖品区域背景颜色
+        turnplate.restaraunts = ["50M免费流量包", "10金币", "谢谢参与", "5金币", "10M免费流量包", "20M免费流量包", "20金币 ", "30M免费流量包", "100M免费流量包", "2金币"];
+        turnplate.colors = ["#FFF4D6", "#FFFFFF", "#FFF4D6", "#FFFFFF","#FFF4D6", "#FFFFFF", "#FFF4D6", "#FFFFFF","#FFF4D6", "#FFFFFF"];
+
+
+        var rotateTimeOut = function (){
+            $('#wheelcanvas').rotate({
+                angle:0,
+                animateTo:2160,
+                duration:8000,
+                callback:function (){
+                    alert('网络超时，请检查您的网络设置！');
+                }
+            });
+        };
+
+        //旋转转盘 item:奖品位置; txt：提示语;
+        var rotateFn = function (item, txt){
+            var angles = item * (360 / turnplate.restaraunts.length) - (360 / (turnplate.restaraunts.length*2));
+            if(angles<270){
+                angles = 270 - angles;
+            }else{
+                angles = 360 - angles + 270;
+            }
+            console.log(this);
+
+            $('#wheelcanvas').stopRotate();
+            $('#wheelcanvas').rotate({
+                angle:0,
+                animateTo:angles+1800,
+                duration:8000,
+                callback:function (){
+                    alert(txt);
+                    turnplate.bRotate = !turnplate.bRotate;
+                }
+            });
+        };
+
+        $('.pointer').click(function (){
+            if(turnplate.bRotate)return;
+            turnplate.bRotate = !turnplate.bRotate;
+            //获取随机数(奖品个数范围内)
+            var item = rnd(1,turnplate.restaraunts.length);
+            //奖品数量等于10,指针落在对应奖品区域的中心角度[252, 216, 180, 144, 108, 72, 36, 360, 324, 288]
+            rotateFn(item, turnplate.restaraunts[item-1]);
+        });
+    });
+
+    function rnd(n, m){
+        var random = Math.floor(Math.random()*(m-n+1)+n);
+        return random;
+
+    }
+
+
+    //页面所有元素加载完毕后执行drawRouletteWheel()方法对转盘进行渲染
+    window.onload=function(){
+        drawRouletteWheel();
+    };
+
+    function drawRouletteWheel() {
+        var canvas = document.getElementById("wheelcanvas");
+        if (canvas.getContext) {
+            //根据奖品个数计算圆周角度
+            var arc = Math.PI / (turnplate.restaraunts.length/2);
+            var ctx = canvas.getContext("2d");
+            //在给定矩形内清空一个矩形
+            ctx.clearRect(0,0,422,422);
+            //strokeStyle 属性设置或返回用于笔触的颜色、渐变或模式
+            ctx.strokeStyle = "#FFBE04";
+            //font 属性设置或返回画布上文本内容的当前字体属性
+            ctx.font = '16px Microsoft YaHei';
+            for(var i = 0; i < turnplate.restaraunts.length; i++) {
+                var angle = turnplate.startAngle + i * arc;
+                ctx.fillStyle = turnplate.colors[i];
+                ctx.beginPath();
+                //arc(x,y,r,起始角,结束角,绘制方向) 方法创建弧/曲线（用于创建圆或部分圆）
+                ctx.arc(211, 211, turnplate.outsideRadius, angle, angle + arc, false);
+                ctx.arc(211, 211, turnplate.insideRadius, angle + arc, angle, true);
+                ctx.stroke();
+                ctx.fill();
+                //锁画布(为了保存之前的画布状态)
+                ctx.save();
+
+                //----绘制奖品开始----
+                ctx.fillStyle = "#E5302F";
+                var text = turnplate.restaraunts[i];
+                var line_height = 17;
+                //translate方法重新映射画布上的 (0,0) 位置
+                ctx.translate(211 + Math.cos(angle + arc / 2) * turnplate.textRadius, 211 + Math.sin(angle + arc / 2) * turnplate.textRadius);
+
+                //rotate方法旋转当前的绘图
+                ctx.rotate(angle + arc / 2 + Math.PI / 2);
+
+                /** 下面代码根据奖品类型、奖品名称长度渲染不同效果，如字体、颜色、图片效果。(具体根据实际情况改变) **/
+                if(text.indexOf("M")>0){//流量包
+                    var texts = text.split("M");
+                    for(var j = 0; j<texts.length; j++){
+                        ctx.font = j == 0?'bold 20px Microsoft YaHei':'16px Microsoft YaHei';
+                        if(j == 0){
+                            ctx.fillText(texts[j]+"M", -ctx.measureText(texts[j]+"M").width / 2, j * line_height);
+                        }else{
+                            ctx.fillText(texts[j], -ctx.measureText(texts[j]).width / 2, j * line_height);
+                        }
+                    }
+                }else if(text.indexOf("M") == -1 && text.length>6){//奖品名称长度超过一定范围
+                    text = text.substring(0,6)+"||"+text.substring(6);
+                    var texts = text.split("||");
+                    for(var j = 0; j<texts.length; j++){
+                        ctx.fillText(texts[j], -ctx.measureText(texts[j]).width / 2, j * line_height);
+                    }
+                }else{
+                    //在画布上绘制填色的文本。文本的默认颜色是黑色
+                    //measureText()方法返回包含一个对象，该对象包含以像素计的指定字体宽度
+                    ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
+                }
+
+                //添加对应图标
+                if(text.indexOf("金币")>0){
+                    var img= document.getElementById("shan-img");
+                    img.onload=function(){
+                        ctx.drawImage(img,-15,10);
+                    };
+                    ctx.drawImage(img,-15,10);
+                }else if(text.indexOf("谢谢参与")>=0){
+                    var img= document.getElementById("sorry-img");
+                    img.onload=function(){
+                        ctx.drawImage(img,-15,10);
+                    };
+                    ctx.drawImage(img,-15,10);
+                }
+                //把当前画布返回（调整）到上一个save()状态之前
+                ctx.restore();
+                //----绘制奖品结束----
+            }
+        }
+    }
+</script>
 {include file="inc/footer.html"}
