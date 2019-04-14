@@ -32,7 +32,7 @@ return array(
 'SIDE_MESSAGE_COUNT'=>'3',
 'ONLINE_QQ'=>'800005515|800005515',
 'ONLINE_TIME'=>'周一至周六 9:00-18:00',
-'SHOP_FOOTER'=>'<div style=\"text-align:center;\">紫豪网络</div>
+'SHOP_FOOTER'=>'<div style=\"text-align:center;\"><a href="http://www.rongxingzhileng.cn">荣兴制冷</a></div>
 ',
 'MAIL_SEND_PAYMENT'=>'0',
 'SMS_SEND_PAYMENT'=>'0',
