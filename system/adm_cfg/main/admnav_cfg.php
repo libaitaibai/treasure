@@ -43,6 +43,15 @@ return array(
 							//array("name"=>"往期夺宝","module"=>"DuobaoItemHistory","action"=>"index"),
 					),
 			),
+            "choujiang"	=>	array(
+                "name"	=>	"抽奖",
+                "key"	=>	"choujiang",
+                "nodes"	=>	array(
+                    array("name"=>"一元抽奖","module"=>"Choujiang","action"=>"index"),
+                    array("name"=>"幸运大转盘","module"=>"Turntable","action"=>"index"),
+                    array("name"=>"刮刮乐","module"=>"Scratch","action"=>"index"),
+                ),
+            ),
 		),
 	),
 	"order"	=>	array(
