@@ -23,6 +23,6 @@ class scratchModule extends MainBaseModule
         $GLOBALS['tmpl']->assign("web_article_id",$web_article_id);
         $GLOBALS['tmpl']->assign("shptel",$shptel);
 
-        $GLOBALS['tmpl']->display("turntable.html");
+        $GLOBALS['tmpl']->display("scratch.html");
     }
 }
