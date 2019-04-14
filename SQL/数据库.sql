@@ -297,7 +297,7 @@ INSERT INTO `fanwe_conf` (`id`, `name`, `value`, `group_id`, `input_type`, `valu
 (34, 'SIDE_MESSAGE_COUNT', '3', 3, 0, '', 1, 0, 30),
 (38, 'ONLINE_QQ', '800005515|800005515', 3, 0, '', 0, 1, 25),
 (39, 'ONLINE_TIME', '周一至周六 9:00-18:00', 3, 0, '', 1, 1, 26),
-(44, 'SHOP_FOOTER', '<div style="text-align:center;">紫豪网络</div>\n', 3, 3, '', 1, 1, 37),
+(44, 'SHOP_FOOTER', '<div style="text-align:center;"><a href="http://www.rongxingzhileng.cn">荣兴制冷</a></div>\n', 3, 3, '', 1, 1, 37),
 (50, 'MAIL_SEND_PAYMENT', '0', 5, 1, '0,1', 1, 1, 75),
 (51, 'SMS_SEND_PAYMENT', '0', 5, 1, '0,1', 1, 1, 81),
 (62, 'REPLY_ADDRESS', '8888@qq.com', 5, 0, '', 1, 1, 77),
