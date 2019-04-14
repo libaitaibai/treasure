@@ -1,3 +1,0 @@
-<?php
-//000000000300a:3:{i:0;a:6:{s:2:"id";s:2:"32";s:4:"name";s:7:"banner3";s:3:"img";s:70:"http://gou.bs3062.top/public/attachment/201605/25/12/5745272830c48.jpg";s:4:"type";s:1:"7";s:4:"data";a:1:{s:0:"";N;}s:3:"ctl";s:5:"share";}i:1;a:6:{s:2:"id";s:2:"31";s:4:"name";s:7:"banner2";s:3:"img";s:70:"http://gou.bs3062.top/public/attachment/201605/25/12/574526fd658cb.jpg";s:4:"type";s:1:"5";s:4:"data";a:1:{s:0:"";N;}s:3:"ctl";s:5:"helps";}i:2;a:6:{s:2:"id";s:2:"30";s:4:"name";s:7:"banner1";s:3:"img";s:70:"http://gou.bs3062.top/public/attachment/201605/25/12/574526b26c8b3.jpg";s:4:"type";s:1:"1";s:4:"data";a:1:{s:0:"";N;}s:3:"ctl";s:4:"cate";}}
-?>

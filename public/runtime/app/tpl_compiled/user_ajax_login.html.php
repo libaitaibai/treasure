@@ -1,1 +1,0 @@
-<?php echo $this->fetch('inc/login_box.html'); ?>
