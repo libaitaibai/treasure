@@ -10,7 +10,7 @@ class turntableModule extends MainBaseModule
         $param['page']         = intval($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
         $param['data_id'] = intval($_REQUEST['data_id']);
         $param['keyword'] = strim($_REQUEST['keyword']);
-        $data = call_api_core("duobaos","index", $param);
+        $data = call_api_core("turntable","index", $param);
 
         $page = new Page($data['page']['total'], $data['page']['page_size']); // 初始化分页对象
         $p = $page->show();
