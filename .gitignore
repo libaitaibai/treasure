@@ -2,6 +2,8 @@
 ./public/runtime
 public/attachment
 public/session
+public
+public/runtime
 .idea/
 .git
 .user.ini
