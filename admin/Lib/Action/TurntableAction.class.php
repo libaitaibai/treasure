@@ -20,6 +20,9 @@ class TurntableAction extends CommonAction
         if($_REQUEST['type']){
             $map['type'] = $_REQUEST['type'];
         }
+        if($_REQUEST['status']===0|| $_REQUEST['status']===1){
+            $map['status'] = $_REQUEST['status'];
+        }
 
         $this->_list ( $model, $map );
 
@@ -120,6 +123,35 @@ class TurntableAction extends CommonAction
      */
     public function show()
     {
+        $id = $_REQUEST['actityid'];
+        if(!($_REQUEST['actityid'])){
+            $this->error('主键不能为空!');
+        }
+        $TurntableActity = D ('TurntableActity');
+        $actity = $TurntableActity->where(['id'=> $id])->find();
+
+        //列表过滤器，生成查询Map对象
+        $model = D ('TurntableActityPrize');
+        $map = $this->_search ($model);
+
+        $map['actityid'] = $_REQUEST['actityid'];
+        if($_REQUEST['id']){
+            $map['id'] = $_REQUEST['id'];
+        }
+        if($_REQUEST['name']){
+            $map['name'] = $_REQUEST['name'];
+        }
+        if($_REQUEST['type']){
+            $map['type'] = $_REQUEST['type'];
+        }
+        if($_REQUEST['status']===0|| $_REQUEST['status']===1){
+            $map['status'] = $_REQUEST['status'];
+        }
+
+        $this->assign('actity',$actity);
+        $this->_list ( $model, $map );
+
+        $this->display ();
 
     }
 

@@ -7,14 +7,13 @@
 <PHP>
     function get_handle($id, $duobao)
     {
-    $str = "<a href='".u("Turntable/edit",array("id"=>$id))."'>编辑</a>";
+    $str = "<a href='".u("Turntable/prizeedit",array("id"=>$id))."'>编辑</a>";
     $str.="&nbsp;&nbsp;<a href='javascript:foreverdel(".$id.");'>".l("DEL")."</a>";
-    $str.="&nbsp;&nbsp;<a href='".u("Turntable/show",array("actityid"=>$id))."'>".'详细信息'."</a>";
     return $str;
     }
 
     function get_current_schedule($schedule, $duobao_id){
-    $str = "<a href='".u("DuobaoItem/index",array("duobao_id"=>$duobao_id))."'>".$schedule."</a>";
+    $str = "<a href='".u("DuobaoItem/prizeindex",array("duobao_id"=>$duobao_id))."'>".$schedule."</a>";
     return $str;
     }
 
@@ -26,7 +25,7 @@
             $expression = '钻石' ;
             break;
             case 3:
-                $expression = '优惠券' ;
+            $expression = '优惠券' ;
             break;
             case 4:
             $expression = '实物' ;
@@ -42,7 +41,7 @@
 <load href='__TMPL__Common/js/jquery.weebox.js' />
 <load href='__TMPL__Common/style/weebox.css' />
 <div class="main">
-    <div class="main_title">大转盘详细信息</div>
+    <div class="main_title">{$actity.name}------大转盘奖品配置页面</div>
     <div class="blank5"></div>
     <form name="search" action="__APP__" method="get">
         <div class="button_row">
@@ -53,10 +52,8 @@
         <div class="search_row">
 
             编号：<input type="text" class="textbox" name="id" value="{:strim($_REQUEST['id'])}" style="width:100px;" />
-            活动名称：<input type="text" class="textbox" name="name" value="{:strim($_REQUEST['name'])}" style="width:100px;" />
-            花费金额：<input type="text" class="textbox" name="expenditure" value="{:strim($_REQUEST['expenditure'])}" style="width:100px;" />
-
-            消费类型
+            奖品名称：<input type="text" class="textbox" name="name" value="{:strim($_REQUEST['name'])}" style="width:100px;" />
+            消费类型:
             <select name="type">
                 <option value="0" <if condition="intval($_REQUEST['type']) eq 0">selected="selected"</if>>全部</option>
                 <option value="1" <if condition="intval($_REQUEST['type']) eq 1">selected="selected"</if>>金币</option>
@@ -72,7 +69,8 @@
             </select>
 
             <input type="hidden" value="Turntable" name="m" />
-            <input type="hidden" value="index" name="a" />
+            <input type="hidden" value="show" name="a" />
+            <input type="hidden" value="{$actity.id}" name="actityid" />
 
             <input type="submit" class="button" value="{%SEARCH}" />
         </div>
@@ -86,10 +84,13 @@
             action="true"
             datasource="list"
             show="id:{%ID}|50px
-			,name:活动名称
-			,expenditure:花费单价
-			,type|type=$duobao['id']:支付类型
-		 	,status|get_status:有效"
+                ,name:奖品名称
+                ,type|type=$duobao['id']:奖品类型
+                ,count:奖品数量
+                ,probability:中奖概率
+                ,predict_repertory:预库存
+                ,repertory:库存
+                ,status|get_status:有效"
             actionlist="id|get_handle=$duobao" />
 
     <div class="blank5"></div>
