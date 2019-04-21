@@ -45,7 +45,7 @@
     <div class="blank5"></div>
     <form name="search" action="__APP__" method="get">
         <div class="button_row">
-            <input type="button" class="button" value="新增" onclick="add();" />
+            <input type="button" class="button" value="新增" onclick="show('prizeadd');" />
             <input type="button" class="button" value="删除" onclick="foreverdel();" />
         </div>
         <div class="blank5"></div>
@@ -96,4 +96,11 @@
     <div class="blank5"></div>
     <div class="page">{$page}</div>
 </div>
+<script>
+    //随意跳转地址
+    function show(action)
+    {
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"="+action+'&actityid='+"{$actity.id}";
+    }
+</script>
 <include file="Public:footer" />

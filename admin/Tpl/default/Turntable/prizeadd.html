@@ -1,0 +1,92 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<load href='__TMPL__Common/js/duobao.js' />
+<div class="main">
+<div class="main_title">{$actity.name}-----大转盘奖品添加页面 <a href="{:u("Turntable/show",['actityid'=>$actity['id']])}" class="back_list"> 返回列表</a></div>
+<div class="blank5"></div>
+<form name="edit" action="__APP__" method="post" enctype="multipart/form-data">
+<table class="form" cellpadding=0 cellspacing=0>
+	<tr>
+		<td colspan=2 class="topTd"></td>
+	</tr>
+	<tr>
+		<td class="item_title ">奖品:</td>
+		<td class="item_input">
+			<input type="text" class="textbox" name="name" />
+			<span class="tip_span">数字</span>
+		</td>
+	</tr>
+	
+	<tr>
+		<td class="item_title">奖品类型:</td>
+		<td class="item_input">
+			<select class="require" name="type">
+				<option selected="selected" value="1">金币</option>
+				<option value="2">钻石</option>
+				<option value="3">优惠券</option>
+				<option value="4">实物</option>
+			</select>
+			<span class="tip_span">如果是金币等,在奖品栏填写数量;如果是实物,奖品栏需要填写商品id</span>
+
+			<!-- 新字段，数据库不存在，一元购：min_buy为1，unit_price为1,  十元区：min_buy为10，unit_price为1,  百元区：min_buy为1，unit_price为100 -->
+		</td>
+	</tr>
+
+	<tr>
+		<td class="item_title">奖品数量:</td>
+		<td class="item_input">
+			<input type="text" class="textbox" name="count" />
+		</td>
+	</tr>
+
+	<tr>
+		<td class="item_title">中奖概率:</td>
+		<td class="item_input">
+			<input type="text" class="textbox" name="probability" />
+			<span class="tip_span">小数点后两位 例如0.01</span>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="item_title">预库存:</td>
+		<td class="item_input">
+			<input type="text" class="textbox" name="counpredict_repertoryt" />
+		</td>
+	</tr>
+
+	<tr>
+		<td class="item_title">库存:</td>
+		<td class="item_input">
+			<input type="text" class="textbox" name="repertory" />
+		</td>
+	</tr>
+
+	<tr id="tr_is_recomend">
+		<td class="item_title">活动是否有效:</td>
+		<td class="item_input">
+			<lable>是<input type="radio" name="status" value="1" checked="checked"  /></lable>
+			<lable>否<input type="radio" name="status" value="0"   /></lable>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="item_title"></td>
+		<td class="item_input">
+			<!--隐藏元素-->			
+			<input type="hidden" name="{:conf("VAR_MODULE")}" value="Turntable" />
+			<input type="hidden" name="{:conf("VAR_ACTION")}" value="prizeinsert" />
+			 <input type="hidden" name="is_effect" value="1" />
+			<input type="hidden" name="actityid" value="{$actity.id}" />
+			<!--隐藏元素-->
+			<input type="submit" class="button" value="添加" />
+			<input type="reset" class="button" value="重置" />
+		</td>
+	</tr>
+	<tr>
+		<td colspan=2 class="bottomTd"></td>
+	</tr>
+</table>	 
+</form>
+</div>
+<include file="Public:footer" />

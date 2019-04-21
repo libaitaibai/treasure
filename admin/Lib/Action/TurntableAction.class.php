@@ -20,7 +20,7 @@ class TurntableAction extends CommonAction
         if($_REQUEST['type']){
             $map['type'] = $_REQUEST['type'];
         }
-        if((int)$_REQUEST['status']===0 || (int)$_REQUEST['status']===1){
+        if(isset($_REQUEST['status']) && ((int)$_REQUEST['status']===0 || (int)$_REQUEST['status']===1)){
             $map['status'] = $_REQUEST['status'];
         }
 
@@ -144,7 +144,7 @@ class TurntableAction extends CommonAction
         if($_REQUEST['type']){
             $map['type'] = $_REQUEST['type'];
         }
-        if((int)$_REQUEST['status']===0 || (int)$_REQUEST['status']===1){
+        if(isset($_REQUEST['status']) && ((int)$_REQUEST['status']===0 || (int)$_REQUEST['status']===1)){
             $map['status'] = $_REQUEST['status'];
         }
         $this->assign('actity',$actity);
@@ -154,6 +154,45 @@ class TurntableAction extends CommonAction
 
     }
 
+    public function prizeadd()
+    {
+        $id = $_REQUEST['actityid'];
+        if(!($_REQUEST['actityid'])){
+            $this->error('主键不能为空!');
+        }
+        $TurntableActity = D ('TurntableActity');
+        $actity = $TurntableActity->where(['id'=> $id])->find();
+
+        $this->assign('actity',$actity);
+        $this->display();
+    }
+
+    public function prizeinsert()
+    {
+        if(!($_REQUEST['count']) || !($_REQUEST['probability']) || !($_REQUEST['name'])||!($_REQUEST['actityid'])){
+            $this->error('请检查一些必要字段不能为空!');
+        }
+
+        $model = D ('TurntableActityPrize');
+
+        $data = [
+            'actityid'=>$_REQUEST['actityid'],
+            'name'=>(int)($_REQUEST['name']),
+            'type'=>$_REQUEST['type'],
+            'count'=>$_REQUEST['count'],
+            'probability'=>$_REQUEST['probability'],
+            'predict_repertory'=>$_REQUEST['counpredict_repertoryt'],
+            'repertory'=>$_REQUEST['repertory'],
+            'status'=>$_REQUEST['status'],
+        ];
+        $id = $model->data($data)->add();
+        if ($id) {
+            $this->success('添加成功');
+        }else{
+            $this->error('添加失败');
+        }
+
+    }
 
     //echo '<pre>';var_dump($config_file);exit;
 
