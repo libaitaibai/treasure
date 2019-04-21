@@ -68,7 +68,7 @@
             <select name="status">
                 <option value="1" <if condition="intval($_REQUEST['status']) eq 1">selected="selected"</if>>有效</option>
                 <option value="0" <if condition="intval($_REQUEST['status']) eq 0">selected="selected"</if>>无效</option>
-                <option value="5" <if condition="intval($_REQUEST['status']) eq 0">selected="selected"</if>>全部</option>
+                <option value="5" <if condition="intval($_REQUEST['status']) eq 5">selected="selected"</if>>全部</option>
             </select>
 
             <input type="hidden" value="Turntable" name="m" />

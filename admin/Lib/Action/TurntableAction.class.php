@@ -20,7 +20,7 @@ class TurntableAction extends CommonAction
         if($_REQUEST['type']){
             $map['type'] = $_REQUEST['type'];
         }
-        if($_REQUEST['status']===0|| $_REQUEST['status']===1){
+        if((int)$_REQUEST['status']===0 || (int)$_REQUEST['status']===1){
             $map['status'] = $_REQUEST['status'];
         }
 
@@ -144,10 +144,9 @@ class TurntableAction extends CommonAction
         if($_REQUEST['type']){
             $map['type'] = $_REQUEST['type'];
         }
-        if($_REQUEST['status']===0|| $_REQUEST['status']===1){
+        if((int)$_REQUEST['status']===0 || (int)$_REQUEST['status']===1){
             $map['status'] = $_REQUEST['status'];
         }
-
         $this->assign('actity',$actity);
         $this->_list ( $model, $map );
 
