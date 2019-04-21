@@ -211,6 +211,40 @@ class TurntableAction extends CommonAction
         }
     }
 
+    public function prizeedit(){
+        $id     = intval($_REQUEST['id']);
+        $model = D ('TurntableActityPrize');
+        $result = $model->where('id='.$id )->find();
+
+        $this->assign('result', $result);
+        $this->display();
+    }
+
+    public function prizeupdate(){
+
+        $id = $_REQUEST['id'];
+
+        if(!($_REQUEST['count']) || !($_REQUEST['probability']) || !($_REQUEST['name'])||!($_REQUEST['actityid'])){
+            $this->error('请检查一些必要字段不能为空!');
+        }
+
+        $model = D ('TurntableActityPrize');
+
+        $data = [
+            'actityid'=>$_REQUEST['actityid'],
+            'name'=>(int)($_REQUEST['name']),
+            'type'=>$_REQUEST['type'],
+            'count'=>$_REQUEST['count'],
+            'probability'=>$_REQUEST['probability'],
+            'predict_repertory'=>$_REQUEST['counpredict_repertoryt'],
+            'repertory'=>$_REQUEST['repertory'],
+            'status'=>$_REQUEST['status'],
+        ];
+        $model->where(['id'=> $id])->data($data)->save();
+
+        $this->success('修改成功');
+
+    }
     //echo '<pre>';var_dump($config_file);exit;
 
 

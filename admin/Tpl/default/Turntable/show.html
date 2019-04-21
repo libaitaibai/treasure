@@ -7,7 +7,7 @@
 <PHP>
     function get_handle($id, $duobao)
     {
-    $str = "<a href='".u("Turntable/prizeedit",array("id"=>$id))."'>编辑</a>";
+    $str = "<a href='".u("Turntable/prizeedit",array("actityid"=>$_REQUEST["actityid"],"id"=>$id))."'>编辑</a>";
     $str.="&nbsp;&nbsp;<a href='javascript:del(".$id.");'>".l("DEL")."</a>";
     return $str;
     }
