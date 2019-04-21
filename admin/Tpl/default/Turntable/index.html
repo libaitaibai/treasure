@@ -9,7 +9,7 @@
     {
     $str = "<a href='".u("Turntable/edit",array("id"=>$id))."'>编辑</a>";
     $str.="&nbsp;&nbsp;<a href='javascript:foreverdel(".$id.");'>".l("DEL")."</a>";
-    $str.="&nbsp;&nbsp;<a href='".u("Turntable/show",array("id"=>$id))."'>".'详细信息'."</a>";
+    $str.="&nbsp;&nbsp;<a href='".u("Turntable/show",array("actityid"=>$id))."'>".'详细信息'."</a>";
     return $str;
     }
 
