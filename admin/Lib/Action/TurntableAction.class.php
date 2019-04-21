@@ -194,6 +194,23 @@ class TurntableAction extends CommonAction
 
     }
 
+    public function prizeforeverdelete() {
+        //彻底删除指定记录
+        $ajax = intval($_REQUEST['ajax']);
+        $id = $_REQUEST ['id'];
+        if ( $id ) {
+            $condition = array ('id' => array ('in', explode ( ',', $id ) ) );
+            $list = M('TurntableActityPrize')->where ( $condition )->delete();
+            if ($list!==false) {
+                $this->success (l("FOREVER_DELETE_SUCCESS"),$ajax);
+            } else {
+                $this->error (l("FOREVER_DELETE_FAILED"),$ajax);
+            }
+        } else {
+            $this->error (l("INVALID_OPERATION"),$ajax);
+        }
+    }
+
     //echo '<pre>';var_dump($config_file);exit;
 
 

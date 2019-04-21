@@ -8,7 +8,7 @@
     function get_handle($id, $duobao)
     {
     $str = "<a href='".u("Turntable/prizeedit",array("id"=>$id))."'>编辑</a>";
-    $str.="&nbsp;&nbsp;<a href='javascript:foreverdel(".$id.");'>".l("DEL")."</a>";
+    $str.="&nbsp;&nbsp;<a href='javascript:del(".$id.");'>".l("DEL")."</a>";
     return $str;
     }
 
@@ -46,7 +46,7 @@
     <form name="search" action="__APP__" method="get">
         <div class="button_row">
             <input type="button" class="button" value="新增" onclick="show('prizeadd');" />
-            <input type="button" class="button" value="删除" onclick="foreverdel();" />
+            <input type="button" class="button" value="删除" onclick="del();" />
         </div>
         <div class="blank5"></div>
         <div class="search_row">
@@ -101,6 +101,34 @@
     function show(action)
     {
         location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"="+action+'&actityid='+"{$actity.id}";
+    }
+    function del(id)
+    {
+        if(!id)
+        {
+            idBox = $(".key:checked");
+            if(idBox.length == 0)
+            {
+                alert(LANG['DELETE_EMPTY_WARNING']);
+                return;
+            }
+            idArray = new Array();
+            $.each( idBox, function(i, n){
+                idArray.push($(n).val());
+            });
+            id = idArray.join(",");
+        }
+        if(confirm(LANG['CONFIRM_DELETE']))
+            $.ajax({
+                url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=prizeforeverdelete&id="+id,
+                data: "ajax=1",
+                dataType: "json",
+                success: function(obj){
+                    $("#info").html(obj.info);
+                    if(obj.status==1)
+                        location.href=location.href;
+                }
+            });
     }
 </script>
 <include file="Public:footer" />
