@@ -1,0 +1,75 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<load href='__TMPL__Common/js/duobao.js' />
+<div class="main">
+<div class="main_title">大转盘 <a href="{:u("Turntable/index")}" class="back_list"> 返回列表</a></div>
+<div class="blank5"></div>
+<form name="edit" action="__APP__" method="post" enctype="multipart/form-data">
+<table class="form" cellpadding=0 cellspacing=0>
+	<tr>
+		<td colspan=2 class="topTd"></td>
+	</tr>
+	<tr>
+		<td class="item_title">活动名称:</td>
+		<td class="item_input">
+			<input type="text" class="textbox" name="name" />
+		</td>
+	</tr>
+	
+
+	<tr>
+		<td class="item_title">扣除类型:</td>
+		<td class="item_input">
+			<select class="require" name="type">
+				<option selected="selected" value="1">金币</option>
+				<option value="2">钻石</option>
+				<option value="3">优惠券</option>
+			</select>
+			<!-- 新字段，数据库不存在，一元购：min_buy为1，unit_price为1,  十元区：min_buy为10，unit_price为1,  百元区：min_buy为1，unit_price为100 -->
+		</td>
+	</tr>
+	
+	<tr id="total_buy_price">
+		<td class="item_title">花费:</td>
+		<td class="item_input">
+			<input type="text" class="textbox" name="expenditure" value="" />
+			<span class="tip_span">玩耍大转盘需要花费的价格</span>
+		</td>
+	</tr>
+
+	<tr id="tr_is_recomend">
+		<td class="item_title">活动是否有效:</td>
+		<td class="item_input">
+			<lable>是<input type="radio" name="status" value="1" checked="checked"  /></lable>
+			<lable>否<input type="radio" name="status" value="0"   /></lable>
+		</td>
+	</tr>
+	
+	<tr id="robot_is_db_box">
+		<td class="item_title">夺宝时长:</td>
+		<td class="item_input">
+			<input type="text" class="textbox" name="robot_end_time" value="5" />
+			<span class="tip_span">[单位：分钟]</span>
+		</td>
+	</tr>
+	
+	<tr>
+		<td class="item_title"></td>
+		<td class="item_input">
+			<!--隐藏元素-->			
+			<input type="hidden" name="{:conf("VAR_MODULE")}" value="Turntable" />
+			<input type="hidden" name="{:conf("VAR_ACTION")}" value="insert" />
+			 <input type="hidden" name="is_effect" value="1" />
+			<!--隐藏元素-->
+			<input type="submit" class="button" value="添加" />
+			<input type="reset" class="button" value="重置" />
+		</td>
+	</tr>
+	<tr>
+		<td colspan=2 class="bottomTd"></td>
+	</tr>
+</table>	 
+</form>
+</div>
+<include file="Public:footer" />
