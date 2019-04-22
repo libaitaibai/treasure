@@ -39754,3 +39754,32 @@ ALTER TABLE `fanwe_withdraw`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+CREATE TABLE `fanwe_turntable_actity` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` VARCHAR(255)  NOT NULL DEFAULT 0 COMMENT '活动名称',
+  `expenditure` double(20,4) NOT NULL DEFAULT 0 COMMENT '花费多少钱才能参加',
+  `type` TINYINT(2) unsigned NOT NULL DEFAULT 1 COMMENT '抽奖扣除的类型 1金币2钻石3优惠券4实物',
+  `status` TINYINT(2) unsigned NOT NULL DEFAULT 1 COMMENT '是否有效',
+  `on_create` TIMESTAMP not null default current_timestamp COMMENT '创建时间',
+  `on_update` TIMESTAMP default current_timestamp on update current_timestamp COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='大转盘活动';
+
+
+CREATE TABLE `fanwe_turntable_actity_prize` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `actityid` int(11) unsigned NOT NULL DEFAULT 0  COMMENT '活动id',
+  `name` VARCHAR(255)  NOT NULL DEFAULT 0 COMMENT '奖品名称',
+  `type` TINYINT(2) unsigned NOT NULL DEFAULT 1 COMMENT '奖品类型 1金币2钻石3优惠券4实物',
+  `count` SMALLINT(11) unsigned NOT NULL DEFAULT 0 COMMENT ' 奖品数量',
+  `probability` double(20,4) NOT NULL DEFAULT 0 COMMENT '中奖概率',
+  `predict_repertory` double(20,4) NOT NULL DEFAULT 0 COMMENT '预库存',
+  `repertory`  double(20,4) NOT NULL DEFAULT 0 COMMENT '库存',
+  `status` TINYINT(2) unsigned NOT NULL DEFAULT 1 COMMENT '是否有效',
+  `on_create` TIMESTAMP not null default current_timestamp COMMENT '创建时间',
+  `on_update` TIMESTAMP default current_timestamp on update current_timestamp COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  index `actityid`(`actityid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='大转盘活动奖品';
