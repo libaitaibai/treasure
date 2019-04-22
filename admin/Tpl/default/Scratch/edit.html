@@ -1,0 +1,56 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<load href='__TMPL__Common/js/duobao.js' />
+<div class="main">
+    <div class="main_title">添加刮刮乐 <a href="{:u("Scratch/index")}" class="back_list"> 返回列表</a></div>
+    <div class="blank5"></div>
+    <form name="edit" action="__APP__" method="post" enctype="multipart/form-data">
+        <table class="form" cellpadding=0 cellspacing=0>
+            <tr>
+                <td colspan=2 class="topTd"></td>
+            </tr>
+
+            <tr id="total_buy_name">
+                <td class="item_title">活动名称:</td>
+                <td class="item_input">
+                    <input type="text" class="textbox require" name="total_buy_name" value="{$data['name']}" />
+                </td>
+            </tr>
+
+
+            <tr id="total_need_price">
+                <td class="item_title">消费金额:</td>
+                <td class="item_input">
+                    <input type="text" class="textbox require" name="total_need_price" value="{$data['money']}" />
+                </td>
+            </tr>
+
+            <tr id="total_need_effect">
+                <td class="item_title">是否有效:</td>
+                <td class="item_input">
+                    <label>是<input type="radio" name="is_scratch_effect" value="1" <if condition="$data['is_effect']==1">checked="checked"</if>/></label>
+                    <label>否<input type="radio" name="is_scratch_effect" value="0" <if condition="$data['is_effect']==0">checked="checked"</if>/></label>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="item_title"></td>
+                <td class="item_input">
+                    <!--隐藏元素-->
+                    <input type="hidden" name="{:conf("VAR_MODULE")}" value="Scratch" />
+                    <input type="hidden" name="{:conf("VAR_ACTION")}" value="insert" />
+                    <!--隐藏元素-->
+                    <input type="submit" class="button" value="编辑" />
+                    <input type="reset" class="button" value="重置" />
+                    <input type="hidden" name="scratch_unique" value="{$data['id']}">
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2 class="bottomTd"></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<include file="Public:footer" />

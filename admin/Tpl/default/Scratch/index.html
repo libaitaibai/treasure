@@ -1,0 +1,69 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<php>
+    function get_handle($id, $duobao)
+    {
+    $str = "<a href='".u("Scratch/edit",array("id"=>$id))."'>编辑</a>";
+    $str.="&nbsp;&nbsp;<a href='javascript:foreverdel(".$id.");'>".l("DEL")."</a>";
+    $str.=" <a href='".u("Scratch/detail",array("id"=>$id))."'>详情</a>";
+    return $str;
+    }
+
+    function get_current_schedule($schedule, $duobao_id){
+    $str = "<a href='".u("DuobaoItem/index",array("duobao_id"=>$duobao_id))."'>".$schedule."</a>";
+    return $str;
+    }
+
+    function change_create_time($time){
+        return date('Y-m-d H:i:s',$time);
+    }
+
+</php>
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<div class="main">
+    <div class="main_title">刮刮乐列表</div>
+    <div class="blank5"></div>
+    <form name="search" action="__APP__" method="get">
+        <div class="button_row">
+            <input type="button" class="button" value="新增" onclick="add();" />
+            <input type="button" class="button" value="删除" onclick="foreverdel();" />
+        </div>
+        <div class="blank5"></div>
+        <div class="search_row">
+
+            编号：<input type="text" class="textbox" name="id" value="{:strim($_REQUEST['id'])}" style="width:100px;" />
+            名称：<input type="text" class="textbox" name="name" value="{:strim($_REQUEST['name'])}" style="width:100px;" />
+            金额：<input type="text" class="textbox" name="money" value="{:strim($_REQUEST['money'])}" style="width:100px;" />
+            <input type="hidden" value="Scratch" name="m" />
+            <input type="hidden" value="index" name="a" />
+
+            <input type="submit" class="button" value="{%SEARCH}" />
+        </div>
+    </form>
+    <div class="blank5"></div>
+    <html:list
+            id="dataTable"
+            style="dataTable"
+            name="scratch"
+            checkbox="true"
+            action="true"
+            datasource="list"
+            show="id:{%ID}|50px
+			,name:活动名称
+			,money:消费金额
+			,parti_num:参与人数
+			,parti_score:参与金额
+			,create_time|change_create_time:创建时间
+		 	,is_effect|get_toogle_status=$scratch['id']#is_effect:有效"
+            actionlist="id|get_handle=$scratch" />
+
+    <div class="blank5"></div>
+    <div class="page">{$page}</div>
+</div>
+<include file="Public:footer" />
