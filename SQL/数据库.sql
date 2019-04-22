@@ -39783,3 +39783,46 @@ CREATE TABLE `fanwe_turntable_actity_prize` (
   PRIMARY KEY (`id`),
   index `actityid`(`actityid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='大转盘活动奖品';
+
+
+--
+-- 刮刮乐
+--
+CREATE TABLE `fanwe_scratch` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '刮刮乐活动名称',
+  `money` int(11) NOT NULL DEFAULT '0' COMMENT '刮刮乐所需花费，单位元',
+  `parti_num` int(11) NOT NULL DEFAULT '0' COMMENT '总参与人数',
+  `parti_score` int(11) NOT NULL DEFAULT '0' COMMENT '总得积分',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `is_effect` tinyint(1) NOT NULL DEFAULT '1' COMMENT '活动是否有效',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态 1可用 0作废',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='刮刮乐活动表';
+
+CREATE TABLE `fanwei_scratchprize` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `scratch_id` int(11) NOT NULL DEFAULT '0' COMMENT '刮刮乐活动ID',
+  `deal_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品ID',
+  `prize_score` int(11) NOT NULL DEFAULT '0' COMMENT '奖励积分',
+  `prize_diamond` int(11) NOT NULL DEFAULT '0' COMMENT '奖励钻石',
+  `rate` decimal(10,0) NOT NULL DEFAULT '0' COMMENT '中奖概率',
+  `aim_profit` int(11) NOT NULL DEFAULT '0' COMMENT '预设库存，希望转的金币',
+  `prize` varchar(255) NOT NULL DEFAULT '' COMMENT '奖项 一等奖等',
+  `prize_num` tinyint(4) NOT NULL DEFAULT '0' COMMENT '几个奖项',
+  `last_num` tinyint(4) NOT NULL DEFAULT '0' COMMENT '剩余奖项数量',
+  `book_ids` varchar(255) NOT NULL DEFAULT '' COMMENT '是否指定中奖人ID列表',
+  PRIMARY KEY (`id`),
+  KEY `scratch_key` (`scratch_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='刮刮乐奖品设置';
+
+CREATE TABLE `fanwei_scratchstatics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `scratch_id` int(11) NOT NULL DEFAULT '0' COMMENT '刮刮乐活动ID',
+  `prize_id` int(11) NOT NULL DEFAULT '0' COMMENT '刮刮乐奖品ID',
+  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间，中奖时间',
+  PRIMARY KEY (`id`),
+  KEY `scratchsta_key` (`scratch_id`),
+  KEY `scratchsta_pkey` (`prize_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='刮刮乐中奖统计';
