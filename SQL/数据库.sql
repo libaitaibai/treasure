@@ -39756,6 +39756,8 @@ ALTER TABLE `fanwe_withdraw`
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 
+---------------------大转盘表--------------------------------
+
 CREATE TABLE `fanwe_turntable_actity` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `name` VARCHAR(255)  NOT NULL DEFAULT 0 COMMENT '活动名称',
@@ -39784,6 +39786,11 @@ CREATE TABLE `fanwe_turntable_actity_prize` (
   index `actityid`(`actityid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='大转盘活动奖品';
 
+---------------------大转盘表--------------------------------
+
+
+
+---------------------刮刮乐--------------------------------
 
 --
 -- 刮刮乐
@@ -39826,3 +39833,5 @@ CREATE TABLE `fanwei_scratchstatics` (
   KEY `scratchsta_key` (`scratch_id`),
   KEY `scratchsta_pkey` (`prize_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='刮刮乐中奖统计';
+
+---------------------刮刮乐--------------------------------
