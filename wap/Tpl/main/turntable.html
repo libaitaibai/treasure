@@ -40,60 +40,44 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
         </div>
         <div class="col-md-4">
             <div class="g_3">
-                <div class="g_3_tit"><span class="g_3_txt">游戏介绍</span></div>
-                <div class="g_3_cet1">视觉中国事件目前持续发酵中。起因于4月11日，视觉中国网站发布了人类历史上首张黑洞照片，版权所有一栏，写的是视觉中国。此事引发巨大争议。昨日下午，视觉中国将使用说明改为「不得用于商业用途」，并把版权所有改为「欧洲南方天文台」。百度、凤凰网等公司官方微博发文称，自己的商标被视觉中国收录并打上水印。共青团中央微博发文称，国旗、国徽的图片也在视觉中国网站上售卖。视觉中国道歉</div>
-            </div>
-            <div class="g_3">
-                <div class="g_3_tit"><span class="g_3_txt">游戏规则</span></div>
-                <div class="g_3_cet1"> 视觉中国事件目前持续发酵中。起因于4月11日，视觉中国网站发布了人类历史上首张黑洞照片，版权所有一栏，写的是视觉中国。此事引发巨大争议。昨日下午，视觉中国将使用说明改为「不得用于商业用途」，并把版权所有改为「欧洲南方天文台」。百度、凤凰网等公司官方微博发文称，自己的商标被视觉中国收录并打上水印。共青团中央微博发文称，国旗、国徽的图片也在视觉中国网站上售卖。视觉中国道歉</div>
-            </div>
-            <div class="g_3">
-                <div class="g_3_tit"><span class="g_3_txt">奖励设置</span></div>
+                <div class="g_3_tit"><span class="g_3_txt">奖励</span></div>
                 <div class="g_3_cet">
+                    <p>抽奖花费 : {$list.actity.expenditure}</p>
                     <table>
                         <tr>
-                            <td width="30%">奖级</td>
-                            <td width="70%">中奖金额</td>
+                            <td width="50%">奖品</td>
+                            <td width="70%">数量</td>
                         </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>250,000元</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>10,000元</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>1,000元</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>500元</td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>200元</td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>100元</td>
-                        </tr>
-                        <tr>
-                            <td>7</td>
-                            <td>50元</td>
-                        </tr>
-                        <tr>
-                            <td>8</td>
-                            <td>20元</td>
-                        </tr>
-                        <tr>
-                            <td>9</td>
-                            <td>10元</td>
-                        </tr>
+                        {foreach from=$list.prize item=item}
+                            <tr>
+                                <td>{$item.type}{$item.name}</td>
+                                <td>{$item.count}个</td>
+                            </tr>
+                        {/foreach}
                     </table>
                 </div>
             </div>
+            <div class="g_3">
+                <div class="g_3_tit"><span class="g_3_txt">游戏介绍</span></div>
+                <div class="g_3_cet1">活动内容：
+
+                    <p>1、玩家需要使用自己所有的资源,消耗一定的抽奖花费才能进行幸运轮盘卷进行抽奖，一次抽奖花费只能抽奖一次。</p>
+
+                    <p>2、每个ID每天最多只可以抽奖三次。</p>
+
+                    <p>3、玩家获得的奖品在60秒后自动加入到账户中</p>
+                </div>
+            </div>
+            <div class="g_3">
+                <div class="g_3_tit"><span class="g_3_txt">游戏规则</span></div>
+                <div class="g_3_cet1">
+
+                    <p>1、先进入兑换中心兑换自己所需的轮盘抽奖卷。</p>
+
+                    <p>2、兑换成功后可直接进入幸运轮盘抽奖页面，进行抽奖，也可进入商城，点击“我的背包”的“道具”中查看抽奖卷数据后再进行抽奖。</p>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -112,9 +96,23 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
 
     $(document).ready(function(){
         //动态添加大转盘的奖品与奖品区域背景颜色
-        turnplate.restaraunts = ["50M免费流量包", "10金币", "谢谢参与", "5金币", "10M免费流量包", "20M免费流量包", "20金币 ", "30M免费流量包", "100M免费流量包", "2金币"];
-        turnplate.colors = ["#FFF4D6", "#FFFFFF", "#FFF4D6", "#FFFFFF","#FFF4D6", "#FFFFFF", "#FFF4D6", "#FFFFFF","#FFF4D6", "#FFFFFF"];
 
+        //活动相关信息
+        var actity = {$list.actity_json};
+        //奖品等信息
+        var prize = {$list.prize_json};
+
+        var prizeArray=new Array()
+        for(var i in prize){
+            prizeArray[i] = prize[i].name;
+        }
+        console.log(prize);
+        console.log(prizeArray);
+
+    // sdfasd = ["50M免费流量包", "10金币", "谢谢参与", "5金币", "10M免费流量包", "20M免费流量包", "20金币 ", "30M免费流量包", "100M免费流量包", "2金币"];
+        // ["50M免费流量包", "10金币", "谢谢参与", "5金币", "10M免费流量包", "20M免费流量包", "20金币 ", "30M免费流量包", "100M免费流量包", "2金币"]
+        turnplate.restaraunts = prizeArray;
+        turnplate.colors = ["#FFF4D6", "#FFFFFF", "#FFF4D6", "#FFFFFF","#FFF4D6", "#FFFFFF", "#FFF4D6", "#FFFFFF","#FFF4D6", "#FFFFFF"];
 
         var rotateTimeOut = function (){
             $('#wheelcanvas').rotate({

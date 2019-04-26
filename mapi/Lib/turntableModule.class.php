@@ -1,44 +1,42 @@
 <?php
 class turntableApiModule extends MainBaseApiModule{
-	
-	/**
-	 * 帮助文章列表接口
-	 * 
-	 * 输入： 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 输出：
-	 * page_title:string 页面标题
-	 * 
-	 * list:array:array 帮助文章列表，结构如下
-	 *  Array
-        (
-		    [1] => Array
-		        (
-		            [id] => 19 分类id
-		            [title] => 系统文章  分类名称
-		            [article_list] => Array
-		                (
-		                    [0] => Array
-		                        (
-		                            [id] => 27 帮助文章id
-		                            [title] => 免责条款   帮助文章标题
-		                        )
-		
-		                )
-		
-		        )
-         ) 
-	 * 
-	 */	
-    public function index(){
-    	$root = array();        
 
-		$root['page_title']="大转盘";
+    public  $type = [1=>'金币', 2=>'钻石' , 3=>'优惠券' , 4=>'实物'];
+
+    /**
+	 * 展示所有的大转盘的活动和奖品
+	 */
+    public function index(){
+    	$root = array();
+        $root['page_title']="大转盘";
+        $actityid = strim($GLOBALS['request']['actityid']);
+        $actityid = 1;
+
+        if($actityid){
+            $actity = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."turntable_actity where id = '".$actityid."' and status = 1");
+
+            $prize = $GLOBALS['db']->getAll("select * from ".DB_PREFIX."turntable_actity_prize where actityid = '".$actityid."' and status = 1");
+        }else{
+            //倒叙查找
+            $actity = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."turntable_actity where status = 1 order by id desc limit 1");
+
+            $prize = $GLOBALS['db']->getAll("select * from ".DB_PREFIX."turntable_actity_prize where id = '".$actityid."' and status = 1");
+        }
+
+        array_walk($prize,function(&$val){
+            $val['type'] = $this->type[$val['type']];
+        });
+
+        $root['list']['actity'] = ($actity);
+        $root['list']['prize'] = ($prize);
+        $root['list']['actity_json'] = json_encode($actity);
+        $root['list']['prize_json'] = json_encode($prize);
         return output($root);
+
+        echo '<pre>';var_dump($prize);exit;
+
     }
+
 
     
 	/**
@@ -46,18 +44,7 @@ class turntableApiModule extends MainBaseApiModule{
 	 * 
 	 * 输入： 
 	 * id:int 帮助文章id 
-	 * 
-	 * 
-	 * 输出：
-	 * page_title:string 页面标题	 
-	 * result:array 文章详细内容，结构如下
-	 *  Array
-	 *  (
-                [name] => 贵安温泉自驾游 [string] 帮助文章标题 
-                [content]=>也推进了中国的工业化进程，但大部分利润并没有留在国内。 [string]  文章内容                   
-				[create_time] => 2015-04-07 [string] 文章发布时间
-         ) 
-	 * 
+	 *
 	 */    
     
     public function show(){

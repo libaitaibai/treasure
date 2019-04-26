@@ -2,6 +2,7 @@
 
 class turntableModule extends MainBaseModule
 {
+
     public function index()
     {
         global_run();
@@ -21,6 +22,10 @@ class turntableModule extends MainBaseModule
         $GLOBALS['tmpl']->assign("list", $data['list']);
         $GLOBALS['tmpl']->assign("data", $data);
         $GLOBALS['tmpl']->display("turntable.html");
+
     }
 }
 ?>
+
+
+<!--echo '<pre>';var_dump();exit;-->
