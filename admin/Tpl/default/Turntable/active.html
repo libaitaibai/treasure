@@ -1,0 +1,97 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<PHP>
+    function get_handle($id, $duobao)
+    {
+    $str = "<a href='".u("Turntable/edit",array("id"=>$id))."'>编辑</a>";
+    $str.="&nbsp;&nbsp;<a href='javascript:foreverdel(".$id.");'>".l("DEL")."</a>";
+    $str.="&nbsp;&nbsp;<a href='".u("Turntable/show",array("actityid"=>$id))."'>".'详细信息'."</a>";
+    return $str;
+    }
+
+    function get_current_schedule($schedule, $duobao_id){
+    $str = "<a href='".u("DuobaoItem/index",array("duobao_id"=>$duobao_id))."'>".$schedule."</a>";
+    return $str;
+    }
+
+    function type($type)
+    {
+        switch ($type)
+        {
+            case 2:
+            $expression = '钻石' ;
+            break;
+            case 3:
+                $expression = '优惠券' ;
+            break;
+            case 4:
+            $expression = '实物' ;
+            break;
+            default:
+            $expression = '金币' ;
+        }
+        return $expression;
+    }
+
+</php>
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<div class="main">
+    <div class="main_title">大转盘中奖人员信息</div>
+    <div class="blank5"></div>
+    <form name="search" action="__APP__" method="get">
+        <div class="button_row">
+            <input type="button" class="button" value="删除" onclick="foreverdel();" />
+        </div>
+        <div class="blank5"></div>
+        <div class="search_row">
+
+            编号：<input type="text" class="textbox" name="id" value="{:strim($_REQUEST['id'])}" style="width:100px;" />
+            活动名称：<input type="text" class="textbox" name="name" value="{:strim($_REQUEST['name'])}" style="width:100px;" />
+            花费金额：<input type="text" class="textbox" name="expenditure" value="{:strim($_REQUEST['expenditure'])}" style="width:100px;" />
+
+            消费类型
+            <select name="type">
+                <option value="0" <if condition="intval($_REQUEST['type']) eq 0">selected="selected"</if>>全部</option>
+                <option value="1" <if condition="intval($_REQUEST['type']) eq 1">selected="selected"</if>>金币</option>
+                <option value="2" <if condition="intval($_REQUEST['type']) eq 2">selected="selected"</if>>钻石</option>
+                <option value="3" <if condition="intval($_REQUEST['type']) eq 3">selected="selected"</if>>优惠券</option>
+                <option value="3" <if condition="intval($_REQUEST['type']) eq 4">selected="selected"</if>>实物</option>
+            </select>
+            状态:
+            <select name="status">
+                <option value="1" <if condition="intval($_REQUEST['status']) eq 1">selected="selected"</if>>有效</option>
+                <option value="0" <if condition="intval($_REQUEST['status']) eq 0">selected="selected"</if>>无效</option>
+                <option value="5" <if condition="intval($_REQUEST['status']) eq 5">selected="selected"</if>>全部</option>
+            </select>
+
+            <input type="hidden" value="Turntable" name="m" />
+            <input type="hidden" value="index" name="a" />
+
+            <input type="submit" class="button" value="{%SEARCH}" />
+        </div>
+    </form>
+    <div class="blank5"></div>
+    <html:list
+            id="dataTable"
+            style="dataTable"
+            name="duobao"
+            checkbox="true"
+            action="true"
+            datasource="list"
+            show="id:{%ID}|50px
+			,name:活动名称
+			,expenditure:花费单价
+			,type|type=$duobao['id']:支付类型
+		 	,status|get_status:有效"
+            actionlist="id|get_handle=$duobao" />
+
+    <div class="blank5"></div>
+    <div class="page">{$page}</div>
+</div>
+<include file="Public:footer" />

@@ -245,6 +245,16 @@ class TurntableAction extends CommonAction
         $this->success('修改成功');
 
     }
+
+
+    //--------------------中奖人员信息-------------------------------
+
+
+    public function active()
+    {
+        $this->display ();
+
+    }
     //echo '<pre>';var_dump($config_file);exit;
 
 

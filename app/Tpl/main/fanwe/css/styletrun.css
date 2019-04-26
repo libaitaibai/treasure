@@ -27,7 +27,7 @@ input{
 /* 大转盘样式 */
 .banner{
     display:block;
-    width:95%;
+    width:100%;
     margin-left:auto;
     margin-right:auto;
     margin-bottom: 20px;
