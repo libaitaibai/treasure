@@ -39786,6 +39786,19 @@ CREATE TABLE `fanwe_turntable_actity_prize` (
   index `actityid`(`actityid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='大转盘活动奖品';
 
+
+CREATE TABLE `fanwe_turntable_win` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `actityid` int(11) unsigned NOT NULL DEFAULT 0  COMMENT '活动id',
+  `prizeyid` int(11) unsigned NOT NULL DEFAULT 0  COMMENT '奖品id',
+  `userid` int(11) unsigned NOT NULL DEFAULT 0  COMMENT '奖品id',
+  `name` VARCHAR(255)  NOT NULL DEFAULT 0 COMMENT '奖品名称',
+  `on_create` TIMESTAMP not null default current_timestamp COMMENT '创建时间',
+  `on_update` TIMESTAMP default current_timestamp on update current_timestamp COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  index `actityid`(`actityid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='大转盘中奖人员表';
+
 ---------------------大转盘表--------------------------------
 
 
