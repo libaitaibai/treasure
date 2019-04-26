@@ -12,14 +12,14 @@ class turntableApiModule extends MainBaseApiModule{
         $actityid = strim($GLOBALS['request']['actityid']);
         $actityid = 1;
 
+        $actitys = $GLOBALS['db']->getAll("select * from ".DB_PREFIX."turntable_actity where   status = 1");
+
         if($actityid){
             $actity = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."turntable_actity where id = '".$actityid."' and status = 1");
-
             $prize = $GLOBALS['db']->getAll("select * from ".DB_PREFIX."turntable_actity_prize where actityid = '".$actityid."' and status = 1");
         }else{
             //倒叙查找
             $actity = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."turntable_actity where status = 1 order by id desc limit 1");
-
             $prize = $GLOBALS['db']->getAll("select * from ".DB_PREFIX."turntable_actity_prize where id = '".$actityid."' and status = 1");
         }
 
@@ -27,6 +27,7 @@ class turntableApiModule extends MainBaseApiModule{
             $val['type'] = $this->type[$val['type']];
         });
 
+        $root['list']['actitys'] = $actitys;
         $root['list']['actity'] = ($actity);
         $root['list']['prize'] = ($prize);
         $root['list']['actity_json'] = json_encode($actity);
