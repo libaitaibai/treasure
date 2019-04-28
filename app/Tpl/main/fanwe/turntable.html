@@ -111,11 +111,23 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
         var actity = {$actity_json};
         //奖品等信息
         var prize = {$prize_json};
+        console.log(actity,prize);
+        var prizeArray=new Array();
+        var probability=new Array();
+        var ratiovalue=new Array();
+        var probabilitys=0;
 
-        var prizeArray=new Array()
         for(var i in prize){
             prizeArray[i] = prize[i].name;
+            probability[i]= parseFloat(prize[i].probability);
+            probabilitys+=probability[i];
+
         }
+        for(var i in prize){
+            ratiovalue[i]=probability[i]/probabilitys;
+        }
+        console.log(ratiovalue)
+
 
         //动态添加大转盘的奖品与奖品区域背景颜色
         //turnplate.restaraunts = ["50M免费流量包", "10金币", "谢谢参与", "5金币", "10M免费流量包", "20M免费流量包", "20金币 ", "30M免费流量包", "100M免费流量包", "2金币"];
@@ -135,15 +147,15 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
         };
 
         //旋转转盘 item:奖品位置; txt：提示语;
-        var rotateFn = function (item, txt){
-            var angles = item * (360 / turnplate.restaraunts.length) - (360 / (turnplate.restaraunts.length*2));
+        var rotateFn = function (index, txt){
+            var angles = index * (360 / turnplate.restaraunts.length) - (360 / (turnplate.restaraunts.length*2));
+            console.log(angles)
             if(angles<270){
                 angles = 270 - angles;
             }else{
                 angles = 360 - angles + 270;
             }
-            console.log(this);
-
+            
             $('#wheelcanvas').stopRotate();
             $('#wheelcanvas').rotate({
                 angle:0,
@@ -156,13 +168,29 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
             });
         };
 
+        var rand = function (){
+            probabilitys = probabilitys*100;
+            var val=rnd(1,probabilitys);
+            console.log(val);
+            for(var h in probability){
+                val -= (probability[h]*100);
+                console.log(h,val,(probability[h]*100));
+                if(val <= 0){
+                    return (h);
+                }
+            }
+        }
+
+
         $('.pointer').click(function (){
             if(turnplate.bRotate)return;
             turnplate.bRotate = !turnplate.bRotate;
             //获取随机数(奖品个数范围内)
-            var item = rnd(1,turnplate.restaraunts.length);
+            // var index=rnd(1,turnplate.restaraunts.length);
+            var index=rand();
+            // var item = rnd(1,turnplate.restaraunts.length);
             //奖品数量等于10,指针落在对应奖品区域的中心角度[252, 216, 180, 144, 108, 72, 36, 360, 324, 288]
-            rotateFn(item, turnplate.restaraunts[item-1]);
+            rotateFn((index+1), turnplate.restaraunts[index]);
         });
     });
 
