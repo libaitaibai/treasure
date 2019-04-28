@@ -39848,3 +39848,5 @@ CREATE TABLE `fanwei_scratchstatics` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='刮刮乐中奖统计';
 
 ---------------------刮刮乐--------------------------------
+
+alter table fanwe_user add column  `jewel` int(11) unsigned NOT NULL DEFAULT 0  COMMENT '钻石数量'
