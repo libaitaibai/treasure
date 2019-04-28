@@ -10,6 +10,7 @@
 class turntableModule extends MainBaseModule
 {
     public  $type = [1=>'金币', 2=>'钻石' , 3=>'优惠券' , 4=>'实物'];
+    public  $source = [1=>'money',2=>'jewel'];
 
     public function index()
     {
@@ -35,7 +36,7 @@ class turntableModule extends MainBaseModule
         $actity['type'] = $this->type[$actity['type']];
         $actity['expenditure'] = round($actity['expenditure']);
         array_walk($prize,function(&$val){
-            $val['type'] = $this->type[$val['type']];
+            $val['type_source'] = $this->type[$val['type']];
         });
 
         $GLOBALS['tmpl']->assign("prize",$prize);
@@ -46,6 +47,39 @@ class turntableModule extends MainBaseModule
         $GLOBALS['tmpl']->assign("web_article_id",$web_article_id);
         $GLOBALS['tmpl']->assign("shptel",$shptel);
         $GLOBALS['tmpl']->display("turntable.html");
+    }
+
+    /**
+     * 查看数量是否够用
+     * ?ctl=turntable&act=check
+     *         echo '/index.php?ctl=payment&act=check&class_name=Alipay';
+     */
+    public function check()
+    {
+        global_run();
+        $actityid = strim($_REQUEST['actityid']);
+        $type = strim($_REQUEST['type']);
+        $user_info = $GLOBALS['user_info'];
+
+        if(empty($user_info)){
+            $this->Json([],500,'请先登录!');
+        }
+        if(empty($actityid) || empty($type) || !in_array($type,array_keys($this->source))){
+            $this->Json([],500,'数据传输不全');
+        }
+
+        $type = $this->source[$type];
+        $actity = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."turntable_actity where id = '".$actityid."' and status = 1");
+        $field = 'id,user_name,'.$type;
+        $use =  $GLOBALS['db']->getRow("select {$field} from ".DB_PREFIX."user where id = '".$user_info['id']."'");
+
+        if($use[$type]<$actity['expenditure']){
+            $this->Json([],500,"没有足够的{$this->type[$actity['type']]}");
+        }else{
+            //减去消费的钻石
+            $GLOBALS['db']->getRow("update ".DB_PREFIX."user set `{$type}` = `{$type}`-{$actity['expenditure']} WHERE `id` = {$user_info['id']}");
+            $this->Json([],200,'成功!');
+        }
     }
 }
 //echo '<pre>';var_dump();exit;

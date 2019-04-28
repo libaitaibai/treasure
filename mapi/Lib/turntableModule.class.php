@@ -26,7 +26,7 @@ class turntableApiModule extends MainBaseApiModule{
         $actity['type'] = $this->type[$actity['type']];
         $actity['expenditure'] = round($actity['expenditure']);
         array_walk($prize,function(&$val){
-            $val['type'] = $this->type[$val['type']];
+            $val['type_source'] = $this->type[$val['type']];
         });
 
         $root['list']['actitys'] = $actitys;
