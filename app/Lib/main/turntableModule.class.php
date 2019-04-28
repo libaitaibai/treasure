@@ -10,7 +10,7 @@
 class turntableModule extends MainBaseModule
 {
     public  $type = [1=>'金币', 2=>'钻石' , 3=>'优惠券' , 4=>'实物'];
-    public  $source = [1=>'money',2=>'jewel'];
+    public  $source = [1=>'money',2=>'jewel',3=>'coupons'];
 
     public function index()
     {
@@ -40,6 +40,7 @@ class turntableModule extends MainBaseModule
             $val['name'] = empty($val['name'])?'谢谢惠顾!':$val['name'];
         });
 
+        $GLOBALS['tmpl']->assign("actitys",$actitys);
         $GLOBALS['tmpl']->assign("prize",$prize);
         $GLOBALS['tmpl']->assign("prize_json",json_encode($prize));
         $GLOBALS['tmpl']->assign("actity",$actity);
@@ -87,6 +88,37 @@ class turntableModule extends MainBaseModule
      */
     public function save()
     {
+        $prizeid = strim($_REQUEST['prizeid']);
+        global_run();
+        $user_info = $GLOBALS['user_info'];
+        $prizeid = 19;
+
+        if(empty($user_info)){
+            $this->Json([],500,'请先登录!');
+        }
+        if(empty($prizeid) ){
+            $this->Json([],500,'数据传输不全');
+        }
+
+        $prize =  $GLOBALS['db']->getRow("select * from ".DB_PREFIX."turntable_actity_prize where id = '".$prizeid."'");
+        if($prize['count'] < 1){
+            $this->Json([],500,'奖品库存不足!');
+        }
+
+        //用户添加奖品,非实物类型
+        if(in_array($prize['type'],array_keys($this->source))){
+            $type = $this->source[$prize['type']];
+            $money = (int)$prize['name'];
+            $GLOBALS['db']->getRow("update ".DB_PREFIX."user set `{$type}` = `{$type}`+{$money} WHERE `id` = {$user_info['id']}");
+        }
+        //奖品的商品数量-1
+        $GLOBALS['db']->getRow("update ".DB_PREFIX."turntable_actity_prize set `{count}` = `{count}`-1 WHERE `id` = {$prizeid}");
+
+        $save_data = ['actityid'=>$prize['actityid'],'prizeyid'=>$prize['id'],'userid'=>$user_info['id'],'name'=>$prize['name']];
+        $GLOBALS['db']->autoExecute(DB_PREFIX."turntable_win",$save_data,'INSERT','','SILENT');
+        $insert_id = $GLOBALS['db']->insert_id();
+
+        $this->Json([],200,'恭喜中奖!');
 
     }
 }
