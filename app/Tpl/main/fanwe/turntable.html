@@ -155,7 +155,7 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
             }else{
                 angles = 360 - angles + 270;
             }
-            
+
             $('#wheelcanvas').stopRotate();
             $('#wheelcanvas').rotate({
                 angle:0,
@@ -170,7 +170,7 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
 
         var rand = function (){
             probabilitys = probabilitys*100;
-            var val=rnd(1,probabilitys);
+            var val=rnd(0,probabilitys);
             console.log(val);
             for(var h in probability){
                 val -= (probability[h]*100);
@@ -187,10 +187,11 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
             turnplate.bRotate = !turnplate.bRotate;
             //获取随机数(奖品个数范围内)
             // var index=rnd(1,turnplate.restaraunts.length);
-            var index=rand();
+            var index=parseFloat(rand())+1;
+            console.log(index)
             // var item = rnd(1,turnplate.restaraunts.length);
             //奖品数量等于10,指针落在对应奖品区域的中心角度[252, 216, 180, 144, 108, 72, 36, 360, 324, 288]
-            rotateFn((index+1), turnplate.restaraunts[index]);
+            rotateFn((index), turnplate.restaraunts[index-1]);
         });
     });
 
