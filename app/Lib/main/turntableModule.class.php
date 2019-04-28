@@ -58,18 +58,17 @@ class turntableModule extends MainBaseModule
     {
         global_run();
         $actityid = strim($_REQUEST['actityid']);
-        $type = strim($_REQUEST['type']);
         $user_info = $GLOBALS['user_info'];
 
         if(empty($user_info)){
             $this->Json([],500,'请先登录!');
         }
-        if(empty($actityid) || empty($type) || !in_array($type,array_keys($this->source))){
+        if(empty($actityid) ){
             $this->Json([],500,'数据传输不全');
         }
 
-        $type = $this->source[$type];
         $actity = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."turntable_actity where id = '".$actityid."' and status = 1");
+        $type = $this->source[$actity['type']];
         $field = 'id,user_name,'.$type;
         $use =  $GLOBALS['db']->getRow("select {$field} from ".DB_PREFIX."user where id = '".$user_info['id']."'");
 
@@ -80,6 +79,14 @@ class turntableModule extends MainBaseModule
             $GLOBALS['db']->getRow("update ".DB_PREFIX."user set `{$type}` = `{$type}`-{$actity['expenditure']} WHERE `id` = {$user_info['id']}");
             $this->Json([],200,'成功!');
         }
+    }
+
+    /**
+     * 保存中奖结果
+     */
+    public function save()
+    {
+
     }
 }
 //echo '<pre>';var_dump();exit;
