@@ -100,5 +100,14 @@ class MainBaseModule{
 		}
 		unset($this);
 	}
+
+    /**
+     * 返回json数据
+     */
+	public function Json($data,$code=200,$msg='')
+    {
+        header('Content-Type:application/json; charset=utf-8');
+        exit( json_encode(['data'=>$data,'code'=>$code,'msg'=>$msg]));
+    }
 }
 ?>
