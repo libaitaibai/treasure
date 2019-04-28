@@ -91,7 +91,6 @@ class turntableModule extends MainBaseModule
         $prizeid = strim($_REQUEST['prizeid']);
         global_run();
         $user_info = $GLOBALS['user_info'];
-        $prizeid = 19;
 
         if(empty($user_info)){
             $this->Json([],500,'请先登录!');
@@ -116,7 +115,7 @@ class turntableModule extends MainBaseModule
 
         $save_data = ['actityid'=>$prize['actityid'],'prizeyid'=>$prize['id'],'userid'=>$user_info['id'],'name'=>$prize['name']];
         $GLOBALS['db']->autoExecute(DB_PREFIX."turntable_win",$save_data,'INSERT','','SILENT');
-        $insert_id = $GLOBALS['db']->insert_id();
+//        $insert_id = $GLOBALS['db']->insert_id();
 
         $this->Json([],200,'恭喜中奖!');
 
