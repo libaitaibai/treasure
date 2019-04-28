@@ -9,6 +9,8 @@
 
 class turntableModule extends MainBaseModule
 {
+    public  $type = [1=>'金币', 2=>'钻石' , 3=>'优惠券' , 4=>'实物'];
+
     public function index()
     {
         global_run();
@@ -30,7 +32,11 @@ class turntableModule extends MainBaseModule
             $prize = $GLOBALS['db']->getAll("select * from ".DB_PREFIX."turntable_actity_prize where id = '".$actityid."' and status = 1");
         }
 
-//        echo '<pre>';var_dump($prize);exit;
+        $actity['type'] = $this->type[$actity['type']];
+        $actity['expenditure'] = round($actity['expenditure']);
+        array_walk($prize,function(&$val){
+            $val['type'] = $this->type[$val['type']];
+        });
 
         $GLOBALS['tmpl']->assign("prize",$prize);
         $GLOBALS['tmpl']->assign("prize_json",json_encode($prize));

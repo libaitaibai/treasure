@@ -23,6 +23,8 @@ class turntableApiModule extends MainBaseApiModule{
             $prize = $GLOBALS['db']->getAll("select * from ".DB_PREFIX."turntable_actity_prize where id = '".$actityid."' and status = 1");
         }
 
+        $actity['type'] = $this->type[$actity['type']];
+        $actity['expenditure'] = round($actity['expenditure']);
         array_walk($prize,function(&$val){
             $val['type'] = $this->type[$val['type']];
         });
