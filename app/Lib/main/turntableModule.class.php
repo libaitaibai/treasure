@@ -37,6 +37,7 @@ class turntableModule extends MainBaseModule
         $actity['expenditure'] = round($actity['expenditure']);
         array_walk($prize,function(&$val){
             $val['type_source'] = $this->type[$val['type']];
+            $val['name'] = empty($val['name'])?'谢谢惠顾!':$val['name'];
         });
 
         $GLOBALS['tmpl']->assign("prize",$prize);
