@@ -12,16 +12,23 @@ class TurntableWinAction extends CommonEnhanceAction
         $model = D ('TurntableWinView');
         $map = $this->_search ($model);
 
-//        $_REQUEST ['_order'] = 'TurntableWin.id';
+        $map['TurntableActityPrize.name'] = array('gt',0);
 
-
+        if($_REQUEST['id']){
+            $map['TurntableWin.id'] = $_REQUEST['id'];
+        }
         if($_REQUEST['name']){
-            $map['name'] = $_REQUEST['name'];
+            $map['TurntableActity.name'] = ['like','%'.$_REQUEST['name']."%"];
+        }
+        if($_REQUEST['expenditure']){
+            $map['TurntableActity.expenditure'] = $_REQUEST['expenditure'];
+        }
+        if($_REQUEST['type']){
+            $map['TurntableActityPrize.type'] = $_REQUEST['type'];
         }
 
         $this->_list ( $model, $map );
-//        $model = $model->findAll();
-        echo '<pre>';var_dump($model);exit;
+
         $this->display ();
     }
 }

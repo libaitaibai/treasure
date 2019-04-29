@@ -7,9 +7,7 @@
 <PHP>
     function get_handle($id, $duobao)
     {
-    $str = "<a href='".u("Turntable/edit",array("id"=>$id))."'>编辑</a>";
-    $str.="&nbsp;&nbsp;<a href='javascript:foreverdel(".$id.");'>".l("DEL")."</a>";
-    $str.="&nbsp;&nbsp;<a href='".u("Turntable/show",array("actityid"=>$id))."'>".'详细信息'."</a>";
+    $str="&nbsp;&nbsp;<a href='javascript:foreverdel(".$id.");'>".l("DEL")."</a>";
     return $str;
     }
 
@@ -35,6 +33,14 @@
             $expression = '金币' ;
         }
         return $expression;
+    }
+
+    function win($win)
+    {
+        if(empty($win)){
+            $win = '谢谢惠顾!';
+        }
+        return $win;
     }
 
 </php>
@@ -63,14 +69,8 @@
                 <option value="3" <if condition="intval($_REQUEST['type']) eq 3">selected="selected"</if>>优惠券</option>
                 <option value="3" <if condition="intval($_REQUEST['type']) eq 4">selected="selected"</if>>实物</option>
             </select>
-            状态:
-            <select name="status">
-                <option value="1" <if condition="intval($_REQUEST['status']) eq 1">selected="selected"</if>>有效</option>
-                <option value="0" <if condition="intval($_REQUEST['status']) eq 0">selected="selected"</if>>无效</option>
-                <option value="5" <if condition="intval($_REQUEST['status']) eq 5">selected="selected"</if>>全部</option>
-            </select>
 
-            <input type="hidden" value="Turntable" name="m" />
+            <input type="hidden" value="TurntableWin" name="m" />
             <input type="hidden" value="index" name="a" />
 
             <input type="submit" class="button" value="{%SEARCH}" />
@@ -87,9 +87,9 @@
             show="id:{%ID}|50px
 			,actityName:活动名称
 			,user_name:中奖者
-			,prizeName:中奖物品
-			,type|type=$duobao['id']:支付类型
-		 	,status|get_status:有效"
+			,expenditure:抽奖一次的花费
+			,prizeType|type=$duobao['id']:奖品类型
+			,prizeName|win=$duobao['id']:中奖物品"
             actionlist="id|get_handle=$duobao" />
 
     <div class="blank5"></div>
