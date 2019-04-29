@@ -48,7 +48,7 @@ return array(
                 "key"	=>	"Turntable",
                 "nodes"	=>	array(
                     array("name"=>"幸运大转盘","module"=>"Turntable","action"=>"index"),
-                    array("name"=>"大转盘活动","module"=>"Turntable","action"=>"active"),
+                    array("name"=>"大转盘活动","module"=>"TurntableWin","action"=>"index"),
                 ),
             ),
             "yuyuanchoujiang"	=>	array(
