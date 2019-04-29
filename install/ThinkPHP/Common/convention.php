@@ -27,7 +27,7 @@ if (!defined('THINK_PATH')) exit();
 return  array(
 
     /* 项目设定 */
-    'APP_DEBUG'				=> false,	// 是否开启调试模式
+    'APP_DEBUG'				=> true,	// 是否开启调试模式
     'APP_DOMAIN_DEPLOY'     => false,   // 是否使用独立域名部署项目
     'APP_PLUGIN_ON'         => false,   // 是否开启插件机制
     'APP_FILE_CASE'         => false,   // 是否检查文件的大小写 对Windows平台有效
