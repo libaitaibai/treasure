@@ -169,7 +169,7 @@ class TurntableAction extends CommonAction
 
     public function prizeinsert()
     {
-        if(!($_REQUEST['count']) || !($_REQUEST['probability']) || !($_REQUEST['name'])||!($_REQUEST['actityid'])){
+        if(!($_REQUEST['count']) || !($_REQUEST['probability']) ||!($_REQUEST['actityid'])){
             $this->error('请检查一些必要字段不能为空!');
         }
 
@@ -224,7 +224,7 @@ class TurntableAction extends CommonAction
 
         $id = $_REQUEST['id'];
 
-        if(!($_REQUEST['count']) || !($_REQUEST['probability']) || !($_REQUEST['name'])||!($_REQUEST['actityid'])){
+        if(!($_REQUEST['count']) || !($_REQUEST['probability']) ||!($_REQUEST['actityid'])){
             $this->error('请检查一些必要字段不能为空!');
         }
 
