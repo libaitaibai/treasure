@@ -1,5 +1,5 @@
 <?php
-class TurntableAction extends CommonAction
+class TurntableAction extends CommonEnhanceAction
 {
     public function index()
     {
@@ -246,12 +246,24 @@ class TurntableAction extends CommonAction
 
     }
 
-
     //--------------------中奖人员信息-------------------------------
 
 
     public function active()
     {
+        $model = D ('TurntableWinView');
+        $map = $this->_search ($model);
+
+        $_REQUEST ['_order'] = 'TurntableWin.id';
+
+
+        if($_REQUEST['name']){
+            $map['name'] = $_REQUEST['name'];
+        }
+
+        $this->_list ( $model, $map );
+//        $model = $model->findAll();
+        echo '<pre>';var_dump($model);exit;
         $this->display ();
 
     }
