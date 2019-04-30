@@ -111,12 +111,14 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
         var actity = {$actity_json};
         //奖品等信息
         var prize = {$prize_json};
-        console.log(actity,prize);
         var prizeArray=new Array();
         var probability=new Array();
         var ratiovalue=new Array();
         var probabilitys=0;
 
+        var actityid = actity.id;
+
+        console.log(prize);
         for(var i in prize){
             prizeArray[i] = prize[i].name;
             probability[i]= parseFloat(prize[i].probability);
@@ -126,7 +128,6 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
         for(var i in prize){
             ratiovalue[i]=probability[i]/probabilitys;
         }
-        console.log(ratiovalue)
 
 
         //动态添加大转盘的奖品与奖品区域背景颜色
@@ -180,26 +181,69 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
                 }
             }
         }
+        var check_url = APP_ROOT + "/index.php?ctl=turntable&act=check";
+        var save_url = APP_ROOT + "/index.php?ctl=turntable&act=save";
 
+        console.log(check_url);
+        //接收数据传出
+        // $.ajax({
+        //     url: save_url,
+        //     type: "POST",
+        //     data: ,
+        //     success: function (data) {
+        //         console.log(data.header.status);
+        //     }
+        // });
 
         $('.pointer').click(function (){
+            //传送id判断是否登录等
+            $.ajax({
+                url:check_url,
+                type:'GET',
+                data:{'actityid':actityid},
+                success:function(arg){
+                    if(arg.code==200){
+                        turntable();
+                    }else if(arg.code==500){
+                        alert(arg.msg);
+                    }
+
+
+                }
+            })
+
+        });
+
+        function turntable(){
             if(turnplate.bRotate)return;
             turnplate.bRotate = !turnplate.bRotate;
             //获取随机数(奖品个数范围内)
             // var index=rnd(1,turnplate.restaraunts.length);
-            var index=parseFloat(rand())+1;
-            console.log(index)
+            var index=parseFloat(rand());
+
+            $prizeid = prize[index].id;
+            $.ajax({
+                url:save_url,
+                type:'POST',
+                data:{'prizeid':$prizeid},
+                success:function(arg){
+
+                }
+            })
             // var item = rnd(1,turnplate.restaraunts.length);
             //奖品数量等于10,指针落在对应奖品区域的中心角度[252, 216, 180, 144, 108, 72, 36, 360, 324, 288]
-            rotateFn((index), turnplate.restaraunts[index-1]);
-        });
+            item = index+1;
+            rotateFn((item), turnplate.restaraunts[item-1]);
+
+        }
+        function rnd(n, m){
+            var random = Math.floor(Math.random()*(m-n+1)+n);
+            return random;
+
+        }
+
     });
 
-    function rnd(n, m){
-        var random = Math.floor(Math.random()*(m-n+1)+n);
-        return random;
-
-    }
 
 
     //页面所有元素加载完毕后执行drawRouletteWheel()方法对转盘进行渲染
