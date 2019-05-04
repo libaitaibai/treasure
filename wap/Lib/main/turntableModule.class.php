@@ -2,6 +2,8 @@
 
 class turntableModule extends MainBaseModule
 {
+    public  $type = [1=>'金币', 2=>'钻石' , 3=>'优惠券' , 4=>'实物'];
+    public  $source = [1=>'money',2=>'jewel',3=>'coupons'];
 
     public function index()
     {
