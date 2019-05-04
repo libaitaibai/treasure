@@ -117,7 +117,6 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
 
         var actityid = actity.id;
 
-        console.log(prize);
         for(var i in prize){
             prizeArray[i] = prize[i].name;
             probability[i]= parseFloat(prize[i].probability);
@@ -149,7 +148,6 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
         //旋转转盘 item:奖品位置; txt：提示语;
         var rotateFn = function (index, txt){
             var angles = index * (360 / turnplate.restaraunts.length) - (360 / (turnplate.restaraunts.length*2));
-            console.log(angles)
             if(angles<270){
                 angles = 270 - angles;
             }else{
@@ -171,10 +169,8 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
         var rand = function (){
             probabilitys = probabilitys*100;
             var val=rnd(0,probabilitys);
-            console.log(val);
             for(var h in probability){
                 val -= (probability[h]*100);
-                console.log(h,val,(probability[h]*100));
                 if(val <= 0){
                     return (h);
                 }
@@ -182,17 +178,6 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
         }
         var check_url = APP_ROOT + "/index.php?ctl=turntable&act=check";
         var save_url = APP_ROOT + "/index.php?ctl=turntable&act=save";
-
-        console.log(check_url);
-        //接收数据传出
-        // $.ajax({
-        //     url: save_url,
-        //     type: "POST",
-        //     data: ,
-        //     success: function (data) {
-        //         console.log(data.header.status);
-        //     }
-        // });
 
         $('.pointer').click(function (){
             //传送id判断是否登录等

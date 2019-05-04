@@ -99,7 +99,6 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
 
         //活动相关信息
         var actity = {$list.actity_json};
-        console.log(actity);
         var actityid=actity.id;
         //奖品等信息
         var prize = {$list.prize_json};
@@ -120,9 +119,6 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
         for(var i in prize){
             ratiovalue[i]=probability[i]/probabilitys;
         }
-        console.log(probabilitys)
-        console.log(prize);
-        console.log(prizeArray);
 
     // sdfasd = ["50M免费流量包", "10金币", "谢谢参与", "5金币", "10M免费流量包", "20M免费流量包", "20金币 ", "30M免费流量包", "100M免费流量包", "2金币"];
         // ["50M免费流量包", "10金币", "谢谢参与", "5金币", "10M免费流量包", "20M免费流量包", "20金币 ", "30M免费流量包", "100M免费流量包", "2金币"]
@@ -163,26 +159,23 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
         var rand = function (){
             probabilitys = probabilitys*100;
             var val=rnd(0,probabilitys);
-            console.log(val);
             for(var h in probability){
                 val -= (probability[h]*100);
-                console.log(h,val,(probability[h]*100));
                 if(val <= 0){
                     return (h);
                 }
             }
         }
 
-        var check_url = APP_ROOT + "/index.php?ctl=turntable&act=check";
-        var save_url = APP_ROOT + "/index.php?ctl=turntable&act=save";
+        var check_url = APP_ROOT + "/wap/index.php?ctl=turntable&act=check";
+        var save_url = APP_ROOT + "/wap/index.php?ctl=turntable&act=save";
+
         $('.pointer').click(function (){
-            console.log("aaa")
             $.ajax({
                 url:check_url,
                 type:'GET',
                 data:{'actityid':actityid},
                 success:function(arg){
-                    console.log(123,arg)
                     if(arg.code==200){
                         turntable();
                     }else if(arg.code==500){
@@ -208,7 +201,6 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
 
                 }
             })
-            console.log(item)
             //奖品数量等于10,指针落在对应奖品区域的中心角度[252, 216, 180, 144, 108, 72, 36, 360, 324, 288]
             rotateFn(item, turnplate.restaraunts[item-1]);
         }
