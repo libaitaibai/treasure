@@ -51,6 +51,7 @@ class turntableModule extends MainBaseModule
         $use =  $GLOBALS['db']->getRow("select {$field} from ".DB_PREFIX."user where id = '".$user_info['id']."'");
 
         if($use[$type]<$actity['expenditure']){
+//            echo '<pre>';var_dump($actity);exit;
             $this->Json([],500,"没有足够的{$this->type[$actity['type']]}");
         }else{
             //减去消费的钻石

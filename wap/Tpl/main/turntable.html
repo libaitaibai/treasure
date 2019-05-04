@@ -26,7 +26,31 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
 
 ?>
 {include file="inc/header_title_home.html"}
+<style>
+    .box{
+        width:105px;
+        height:45px;
+        margin:10px;
+        padding:0px 0px 0px 30px;
+        -webkit-appearance: none; /*隐藏默认样式中的小三角*/
+        -moz-appearance: none;
+        background: url("{$TMPL}/images/truntable/cd1.2.png") no-repeat;
+        background-position: 5px;
+        /*font-size: 16px;*/
+    }
+
+
+
+</style>
 <div class="wrap">
+
+    <select class="box">
+        <option value ="one" ><a href="#"><p>一元专区</p></a></option>
+        <option value ="five" ><a href="#"><p>五元专区</p></a></option>
+        <option value ="ten"><a href="#"><p>十元专区</p></a></option>
+        <option value ="hunderd"><a href="#"><p>百元专区</p></a></option>
+
+    </select>
     <div class="content">
         <div class="container">
             <img src="{$TMPL}/images/truntable/1.png" id="shan-img" style="display:none;" />
