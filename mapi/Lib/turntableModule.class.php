@@ -9,8 +9,7 @@ class turntableApiModule extends MainBaseApiModule{
     public function index(){
     	$root = array();
         $root['page_title']="大转盘";
-        $actityid = strim($GLOBALS['request']['actityid']);
-        $actityid = 1;
+        $actityid = strim($GLOBALS['_GET']['actityid'])?$GLOBALS['_GET']['actityid']:1;
 
         $actitys = $GLOBALS['db']->getAll("select * from ".DB_PREFIX."turntable_actity where   status = 1");
 
@@ -30,6 +29,7 @@ class turntableApiModule extends MainBaseApiModule{
             $val['name'] = empty($val['name'])?'谢谢惠顾!':$val['name'];
         });
 
+        $root['list']['actityid'] = $actityid;
         $root['list']['actitys'] = $actitys;
         $root['list']['actity'] = ($actity);
         $root['list']['prize'] = ($prize);
