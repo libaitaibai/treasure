@@ -9,7 +9,7 @@
     {
     $str = "<a href='".u("Scratch/edit",array("id"=>$id))."'>编辑</a>";
     $str.="&nbsp;&nbsp;<a href='javascript:foreverdel(".$id.");'>".l("DEL")."</a>";
-    $str.=" <a href='".u("Scratch/detail",array("id"=>$id))."'>详情</a>";
+    $str.=" <a href='".u("Scratch/detail",array("scratch_id"=>$id))."'>详情</a>";
     return $str;
     }
 
@@ -20,6 +20,22 @@
 
     function change_create_time($time){
         return date('Y-m-d H:i:s',$time);
+    }
+
+    function change_type($type){
+        $type_str = '金币';
+        switch($type){
+            case 2:
+                $type_str = '钻石';
+                break;
+            case 3:
+                $type_str = '优惠券';
+                break;
+            default:
+                break;
+
+        }
+        return $type_str;
     }
 
 </php>
@@ -40,6 +56,12 @@
             编号：<input type="text" class="textbox" name="id" value="{:strim($_REQUEST['id'])}" style="width:100px;" />
             名称：<input type="text" class="textbox" name="name" value="{:strim($_REQUEST['name'])}" style="width:100px;" />
             金额：<input type="text" class="textbox" name="money" value="{:strim($_REQUEST['money'])}" style="width:100px;" />
+            消费类型: <select  name="s_type">
+                        <option value="0" >全部</option>
+                        <option value="1" >金币</option>
+                        <option value="2" >钻石</option>
+                        <option value="3" >优惠券</option>
+                    </select>
             <input type="hidden" value="Scratch" name="m" />
             <input type="hidden" value="index" name="a" />
 
@@ -57,6 +79,7 @@
             show="id:{%ID}|50px
 			,name:活动名称
 			,money:消费金额
+			,type|change_type:消费类型
 			,parti_num:参与人数
 			,parti_score:参与金额
 			,create_time|change_create_time:创建时间
