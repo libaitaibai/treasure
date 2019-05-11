@@ -40,6 +40,7 @@ class turntableModule extends MainBaseModule
             $val['name'] = empty($val['name'])?'谢谢惠顾!':$val['name'];
         });
 
+        $GLOBALS['tmpl']->assign("actityid",$actityid);
         $GLOBALS['tmpl']->assign("actitys",$actitys);
         $GLOBALS['tmpl']->assign("prize",$prize);
         $GLOBALS['tmpl']->assign("prize_json",json_encode($prize));

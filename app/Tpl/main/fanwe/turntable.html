@@ -50,12 +50,14 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
 </style>
 <div class="wrap_full_w clearfix">
 
-    <select class="box">
-        <option value ="one" ><a href="#"><p>一元专区</p></a></option>
-        <option value ="five" ><a href="#"><p>五元专区</p></a></option>
-        <option value ="ten"><a href="#"><p>十元专区</p></a></option>
-        <option value ="hunderd"><a href="#"><p>百元专区</p></a></option>
-
+    <select class="box" onchange="window.location=this.value">
+        {foreach from=$actitys item=item}
+            {if $item.id eq $actityid}
+            <option selected=true value="{url r="index" b="turntable#index"  }&actityid={$item.id}">{$item.name}</option>
+            {else}
+            <option value="{url r="index" b="turntable#index"  }&actityid={$item.id}">{$item.name}</option>
+            {/if}
+        {/foreach}
     </select>
     <div class="container">
         <img src="{$TMPL}/images/truntable/1.png" id="shan-img" style="display:none;" />
