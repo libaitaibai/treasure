@@ -1,0 +1,110 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<load href='__TMPL__Common/js/duobao.js' />
+<div class="main">
+    <div class="main_title">奖品设置 <a href="{:u('Scratch/detail',array('scratch_id'=>$scratch_id))}" class="back_list"> 返回列表</a></div>
+    <div class="blank5"></div>
+    <form name="edit" action="__APP__" method="post" enctype="multipart/form-data">
+        <table class="form" cellpadding=0 cellspacing=0>
+            <tr>
+                <td colspan=2 class="topTd"></td>
+            </tr>
+
+            <tr>
+                <td class="item_title">类型:</td>
+                <td class="item_input">
+                    <select class="require" name="s_type">
+                        <option value="1" <if condition="$scratch_prize['prize_type'] eq 1">selected="selected"</if>>商品</option>
+                        <option value="2" <if condition="$scratch_prize['prize_type'] eq 2">selected="selected"</if>>金币</option>
+                        <option value="3" <if condition="$scratch_prize['prize_type'] eq 3">selected="selected"</if>>钻石</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr id="total_buy_name">
+                <td class="item_title">商品:</td>
+                <td class="item_input">
+                    <input type="text" class="textbox require" name="deal_key" value="{$scratch_prize['prize_deal']}"/>
+                    <span class="tip_span">商品请填写ID，其它填写具体数额</span>
+                    <!--<span id="show_deal"><select name="deal_id">
+                        <option value="0" >==未选取商品==</option>
+                    </select>
+                    <input type="button" name="deal_key_btn" class="button" value="搜索" />
+                    </span>-->
+                </td>
+            </tr>
+
+            <tr>
+                <td class="item_title">奖项:</td>
+                <td class="item_input">
+                    <input type="text" class="textbox require" name="prize" value="{$scratch_prize['prize']}"/>
+                    <span class="tip_span">请填写奖项名称，如一等奖</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="item_title">奖项数量:</td>
+                <td class="item_input">
+                    <input type="text" class="textbox require" name="prize_num" value="{$scratch_prize['prize_num']}"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="item_title">中奖概率:</td>
+                <td class="item_input">
+                    <input type="text" class="textbox require" name="rate" value="{$scratch_prize['rate']}"/>
+                    <span class="tip_span">请填写一个小数，如0.1</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="item_title">预设库存:</td>
+                <td class="item_input">
+                    <input type="text" class="textbox require" name="aim_profit" value="{$scratch_prize['aim_profit']}"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="item_title">指定中奖人:</td>
+                <td class="item_input">
+                    <input type="text" class="textbox" name="book_ids" value="{$scratch_prize['book_ids']}"/>
+                    <span class="tip_span">请输入中奖人ID编号，多个以逗号分隔，如1,2</span>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="item_title"></td>
+                <td class="item_input">
+                    <!--隐藏元素-->
+                    <input type="hidden" name="{:conf("VAR_MODULE")}" value="Scratch" />
+                    <input type="hidden" name="{:conf("VAR_ACTION")}" value="detailInsert" />
+                    <input type="hidden" name="is_effect" value="1" />
+                    <!--隐藏元素-->
+                    <input type="submit" class="button" value="添加" />
+                    <input type="reset" class="button" value="重置" />
+                    <input type="hidden" name="scratch_id" value="{$scratch_id}">
+                    <input type="hidden" name="id" value="{$scratch_prize['id']}">
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2 class="bottomTd"></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+
+    $('select[name="s_type"]').bind('change',function(){
+          // $('input[name="deal_key"]').val('');
+           if($(this).val()==1){
+               $('#show_deal').show();
+           }else{
+               $('#show_deal').hide();
+           }
+    });
+
+
+</script>
+<include file="Public:footer" />

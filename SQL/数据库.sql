@@ -39817,26 +39817,28 @@ CREATE TABLE `fanwe_scratch` (
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `is_effect` tinyint(1) NOT NULL DEFAULT '1' COMMENT '活动是否有效',
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态 1可用 0作废',
+  `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '扣除类型，1金币2钻石3优惠券',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='刮刮乐活动表';
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COMMENT='刮刮乐活动表';
 
-CREATE TABLE `fanwei_scratchprize` (
+
+CREATE TABLE `fanwe_scratchprize` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `scratch_id` int(11) NOT NULL DEFAULT '0' COMMENT '刮刮乐活动ID',
-  `deal_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品ID',
-  `prize_score` int(11) NOT NULL DEFAULT '0' COMMENT '奖励积分',
-  `prize_diamond` int(11) NOT NULL DEFAULT '0' COMMENT '奖励钻石',
-  `rate` decimal(10,0) NOT NULL DEFAULT '0' COMMENT '中奖概率',
-  `aim_profit` int(11) NOT NULL DEFAULT '0' COMMENT '预设库存，希望赚的金币',
+  `rate` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '中奖概率',
+  `aim_profit` int(11) NOT NULL DEFAULT '0' COMMENT '预设库存，希望转的金币',
   `prize` varchar(255) NOT NULL DEFAULT '' COMMENT '奖项 一等奖等',
   `prize_num` tinyint(4) NOT NULL DEFAULT '0' COMMENT '几个奖项',
   `last_num` tinyint(4) NOT NULL DEFAULT '0' COMMENT '剩余奖项数量',
   `book_ids` varchar(255) NOT NULL DEFAULT '' COMMENT '是否指定中奖人ID列表',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `prize_type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '奖品类型 1商品 2金币 3钻石',
+  `prize_deal` varchar(255) NOT NULL DEFAULT '' COMMENT '奖品的商品，实物金币或钻石',
   PRIMARY KEY (`id`),
   KEY `scratch_key` (`scratch_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='刮刮乐奖品设置';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='刮刮乐奖品设置';
 
-CREATE TABLE `fanwei_scratchstatics` (
+CREATE TABLE `fanwe_scratchstatics` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `scratch_id` int(11) NOT NULL DEFAULT '0' COMMENT '刮刮乐活动ID',
   `prize_id` int(11) NOT NULL DEFAULT '0' COMMENT '刮刮乐奖品ID',
@@ -39847,16 +39849,9 @@ CREATE TABLE `fanwei_scratchstatics` (
   KEY `scratchsta_pkey` (`prize_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='刮刮乐中奖统计';
 
+
+
 ---------------------刮刮乐--------------------------------
 
 alter table fanwe_user add column  `jewel` int(11) unsigned NOT NULL DEFAULT 0  COMMENT '钻石数量';
-alter table fanwe_scratch add column `type` tinyint(1) NOT NULL DEFAULT 1 COMMENT '扣除类型，1金币2钻石3优惠券';
-alter table fanwei_scratchprize rename fanwe_scratchprize;
-alter table fanwei_scratchstatics rename fanwe_scratchstatics;
-alter table fanwe_scratchprize add column create_time int not null default 0 comment '创建时间';
-alter table fanwe_scratchprize add column prize_type tinyint not null default 1 comment '奖品类型 1商品 2金币 3钻石';
-alter table fanwe_scratchprize add column prize_deal int not null default 0 comment '奖品的商品，实物金币或钻石';
-alter table fanwe_scratchprize drop column prize_diamond;
-alter table fanwe_scratchprize drop column prize_score;
-alter table fanwe_scratchprize drop column deal_id;
-alter table fanwe_scratchprize modify prize_deal varchar(255) not null default '' comment '奖品的商品，实物金币或钻石';
+

@@ -1,0 +1,96 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<script type="text/javascript" src="__TMPL__Common/js/scratch.js"></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<php>
+    function get_handle($id, $duobao)
+    {
+    $a = '"detailDel"';
+    $str = "<a href='".u("Scratch/detailEdit",array("id"=>$id))."'>编辑</a>";
+    $str.="&nbsp;&nbsp;<a href='javascript:scratchdel(".$a.",".$id.");'>".l("DEL")."</a>";
+    return $str;
+    }
+
+    function get_current_schedule($schedule, $duobao_id){
+    $str = "<a href='".u("DuobaoItem/index",array("duobao_id"=>$duobao_id))."'>".$schedule."</a>";
+    return $str;
+    }
+
+    function change_create_time($time){
+    return date('Y-m-d H:i:s',$time);
+    }
+
+    function change_type($type){
+    $type_str = '商品';
+    switch($type){
+    case 3:
+    $type_str = '钻石';
+    break;
+    case 2:
+    $type_str = '金币';
+    break;
+    default:
+    break;
+
+    }
+    return $type_str;
+    }
+
+
+</php>
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<div class="main">
+    <div class="main_title">{$scratch['name']} 详细设置</div>
+    <div class="blank5"></div>
+    <form name="search" action="__APP__" method="get">
+        <div class="button_row">
+            <input type="button" class="button" value="新增" onclick="scratchAdd('detailAdd','scratch_id-{$scratch_id}')" />
+            <input type="button" class="button" value="删除" onclick="scratchdel('detailDel');" />
+        </div>
+        <div class="blank5"></div>
+        <div class="search_row">
+
+            编号：<input type="text" class="textbox" name="id" value="{:strim($_REQUEST['id'])}" style="width:100px;" />
+            奖项：<input type="text" class="textbox" name="prize" value="{:strim($_REQUEST['prize'])}" style="width:100px;" />
+            商品ID：<input type="text" class="textbox" name="prize_deal" value="{:strim($_REQUEST['prize_deal'])}" style="width:100px;" />
+            奖品类型: <select  name="s_type">
+            <option value="0" >全部</option>
+            <option value="1" >商品</option>
+            <option value="2" >金币</option>
+            <option value="3" >钻石</option>
+        </select>
+            <input type="hidden" value="Scratch" name="m" />
+            <input type="hidden" value="detail" name="a" />
+            <input type="hidden" value="{$scratch_id}" name="scratch_id" />
+            <input type="submit" class="button" value="{%SEARCH}" />
+        </div>
+    </form>
+    <div class="blank5"></div>
+    <html:list
+            id="dataTable"
+            style="dataTable"
+            name="scratch"
+            checkbox="true"
+            action="true"
+            datasource="list"
+            show="id:{%ID}|50px
+			,prize_deal:商品
+			,prize_type|change_type:奖品类型
+			,prize:奖项
+			,prize_num:奖项数量
+			,aim_profit:预设库存
+			,rate:中奖概率
+			,book_ids:指定中奖人
+			,create_time|change_create_time:创建时间"
+            actionlist="id|get_handle=$scratch" />
+
+
+    <div class="blank5"></div>
+    <div class="page">{$page}</div>
+</div>
+<include file="Public:footer" />
