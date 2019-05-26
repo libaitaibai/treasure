@@ -30,9 +30,13 @@
 		<a href="{url r="index" r="duobaos"}">{if $nav.iconfont}<i class="diyfont">{$nav.iconfont}</i>&nbsp;{/if}全部商品</a>
 </li>
 {foreach from=$cate_tree item=nav name=cate_loop}
-	<li>
-		<a href="{url r="index" r="duobaos" p="id=$nav.id"}">{if $nav.iconfont}<i class="diyfont">{$nav.iconfont}</i>&nbsp;{/if}{$nav.name}</a>
-	</li>
+	{if $nav.id eq 53}
+	<li><a href="{url r="index" ctl="turntable" p="id=$nav.id"}">{if $nav.iconfont}<i class="diyfont">{$nav.iconfont}</i>&nbsp;{/if}{$nav.name}</a></li>
+	{elseif $nav.id eq 55}
+	<li><a href="{url r="index" ctl="scratch" p="id=$nav.id"}">{if $nav.iconfont}<i class="diyfont">{$nav.iconfont}</i>&nbsp;{/if}{$nav.name}</a></li>
+	{else}
+	<li><a href="{url r="index" r="duobaos" p="id=$nav.id"}">{if $nav.iconfont}<i class="diyfont">{$nav.iconfont}</i>&nbsp;{/if}{$nav.name}</a></li>
+	{/if}
 {/foreach}
 </ul>
 </div>
