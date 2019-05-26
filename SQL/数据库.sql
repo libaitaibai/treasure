@@ -39854,4 +39854,4 @@ CREATE TABLE `fanwe_scratchstatics` (
 ---------------------刮刮乐--------------------------------
 
 alter table fanwe_user add column  `jewel` int(11) unsigned NOT NULL DEFAULT 0  COMMENT '钻石数量';
-
+fanwe_deal_cate 加入刮刮乐 大转盘等
