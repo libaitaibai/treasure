@@ -1293,6 +1293,64 @@ class duobao
 		$list = $GLOBALS['db']->getAll($sql);
 		return $list;
 	}
+
+    /**
+     * 获取中奖列表
+     */
+    public static function get_lottery_list_all($num)
+    {
+        $sql = "select di.name,di.id , di.lottery_time,di.max_buy, u.user_name,u.avatar,di.luck_user_id from ".DB_PREFIX."duobao_item as di left join ".DB_PREFIX."user as u on di.luck_user_id=u.id where di.progress=100 and di.has_lottery=1 and u.user_name!='' ";
+        $sql.="order by di.id desc limit ".$num;
+        $list = $GLOBALS['db']->getAll($sql);
+        array_walk($list,function(&$val){
+            $val['time'] = date('Y-m-d',$val['lottery_time']);
+            $val['img'] = './public/avatar/temp/duobao.jpg';
+        });
+
+        //大转盘数据
+        $type1 = [1=>'金币', 2=>'钻石' , 3=>'优惠券' , 4=>'实物'];
+        $sql1 = "select u.user_name,di.on_create,p.type,p.name,d.name as prize,d.icon   from ".DB_PREFIX."turntable_win as di 
+        left join ".DB_PREFIX."user as u on di.userid=u.id 
+        left join ".DB_PREFIX."turntable_actity_prize  as p  on  p.id = di.prizeyid 
+        left join ".DB_PREFIX."deal as d on p.name=d.id 
+        where di.name > 0 ";
+        $sql1.=" order by di.id desc limit ".$num;
+        $list1 = $GLOBALS['db']->getAll($sql1);
+        array_walk($list1,function(&$val) use ($type1){
+            if($val['type']==4){
+                $val['name'] = $val['prize'];
+            }else{
+                $val['name'] = $type1[$val['type']].$val['name'];
+            }
+            $val['source'] ='大转盘';
+            $val['time'] = date('Y-m-d',strtotime($val['on_create']));
+            $val['img'] = './public/avatar/temp/dazhuanpan.jpg';
+        });
+
+        //刮刮乐中奖信息
+        $type2 = [1=>'商品', 2=>'金币' , 3=>'钻石'];
+        $sql2 = 'select u.user_name,w.create_time,p.prize_type,p.prize_deal,d.name as prize,d.icon from '.DB_PREFIX.'scratchstatics as w 
+        left join '.DB_PREFIX.'user as u on w.user_id=u.id 
+        left join '.DB_PREFIX.'scratchprize as p on w.prize_id=p.id
+        left join '.DB_PREFIX.'deal as d on p.prize_deal=d.id ';
+        $sql2.=" order by w.id desc limit ".$num;
+        $list2 = $GLOBALS['db']->getAll($sql2);
+        array_walk($list2,function(&$val2) use ($type2){
+            if($val2['prize_type']==1){
+                $val2['name'] = $val2['prize'];
+            }else{
+                $val2['name'] = $type2[$val2['prize_type']].$val2['prize_deal'];
+            }
+            $val2['source'] ='刮刮乐';
+            $val2['time'] = date('Y-m-d',$val2['create_time']);
+            $val2['img'] = './public/avatar/temp/guaguale.jpg';
+        });
+
+        $list = array_merge($list,$list1,$list2);
+        shuffle($list);
+
+        return $list;
+    }
 	/**
 	 * 格式化中奖时间
 	 * @param unknown_type $lottery_time

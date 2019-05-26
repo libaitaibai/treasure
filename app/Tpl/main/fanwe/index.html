@@ -320,15 +320,16 @@ $(function(){
 						<ul class="lottery_box infoList">
 						{foreach from=$newest_lottery_list item=newest_lottery name="newest_lottery_foreach"}
 							<li class="clearfix lottery_info {if $smarty.foreach.newest_lottery_foreach.index%2 eq 0}gray-bac{/if}" >
-									<div class="user-pic f_l"><img src="{function name="get_user_avatar" uid=$newest_lottery.luck_user_id type="small"}" width="40" height="40"></div>
+									<!--<div class="user-pic f_l"><img src="{function name="get_user_avatar" uid=$newest_lottery.luck_user_id type="small"}" width="40" height="40"></div>-->
+									<div class="user-pic f_l"><img src="{$newest_lottery.img}" width="40" height="40"></div>
 									<div class="f_l bonus-info">
 									<div class="user-time clearfix">
-										<a href="{url x="index" r="home" p="id=$newest_lottery.luck_user_id"}" class="user_name f_l" title="{$newest_lottery.user_name}(ID:{$newest_lottery.luck_user_id})">{$newest_lottery.user_name}</a><sapn class="duobao-time f_r">于{$newest_lottery.span_time}</sapn>
+										<a href="{url x="index" r="home" p="id=$newest_lottery.luck_user_id"}" class="user_name f_l" title="{$newest_lottery.user_name}(ID:{$newest_lottery.luck_user_id})">{$newest_lottery.user_name}</a><sapn class="duobao-time f_r">于{$newest_lottery.time}</sapn>
 									</div>
-									<p class="info">夺得<a href="{url r="index" r="duobao" p="id=$newest_lottery.id"}" class="bonus-goods">{$newest_lottery.name}</a></p>
-									<div class="p-price">
-										总需：{$newest_lottery.max_buy}人次
-									</div>
+									<p class="info">中奖:<a href="{url r="index" r="duobao" p="id=$newest_lottery.id"}" class="bonus-goods">{$newest_lottery.name}</a></p>
+									<!--<div class="p-price">-->
+										<!--总需：{$newest_lottery.max_buy}人次-->
+									<!--</div>-->
 									</div>
 							</li>
 						{/foreach}
