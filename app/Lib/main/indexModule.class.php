@@ -108,7 +108,9 @@ class indexModule extends MainBaseModule
 		$newest_lottery_list = load_dynamic_cache("newest_lottery_list");
 		if($newest_lottery_list===false)
 		{
-			$newest_lottery_list=duobao::get_lottery_list(10);		
+
+            $newest_lottery_list=duobao::get_lottery_list_all(10);
+
 			foreach($newest_lottery_list as $k=>$v)
 			{
 				$newest_lottery_list[$k]['span_time']=duobao::format_lottery_time($v['lottery_time']);
