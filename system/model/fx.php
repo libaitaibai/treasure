@@ -3,7 +3,7 @@
  * 为订单发放分销的佣金
  * @param unknown_type $order_id 订单ID
  */
-function send_fx_order_salary($order_info)
+function send_fx_order_salary($order_info,$returnLevel=false)
 {
     require_once APP_ROOT_PATH."system/model/user.php";
     
@@ -125,6 +125,10 @@ function send_fx_order_salary($order_info)
         $GLOBALS['db']->autoExecute(DB_PREFIX."fx_user_reward",$data);
         // 用户资金账户函数
         modify_account(array('money'=>$level_three_money),$p_p_pid, '三级分销获取奖励金额');
+    }
+
+    if($returnLevel==true){
+        return array($level_one_money,$level_two_money,$level_three_money);
     }
 }
 
