@@ -152,8 +152,27 @@ class indexModule extends MainBaseModule
 			if(count($duobao_item_cate_id[$v['cate_id']])<4)
 			$duobao_item_cate_id[$v['cate_id']][]=$v;
 		}
+
+		//获得实体抽奖信息 大转盘
+        $turntable=$GLOBALS['db']->getAll("select name from ".DB_PREFIX."turntable_actity_prize where status=1 and type =4 order by id desc limit 4 ");
+        $turntable=array_column($turntable,'name');
+        $ids = implode(',',$turntable);
+        $turntabledeal=$GLOBALS['db']->getAll("select * from ".DB_PREFIX."deal where id in ({$ids})");
+
+        //获得实体抽奖信息 刮刮乐
+        $scratch=$GLOBALS['db']->getAll("select prize_deal from ".DB_PREFIX."scratchprize where prize_type =1 order by id desc  limit 4 ");
+        $scratch = array_column($scratch,'prize_deal');
+        $ids = implode(',',$scratch);
+        $scratchdeal=$GLOBALS['db']->getAll("select * from ".DB_PREFIX."deal where id in ({$ids})");
+
 		foreach($cate_list as $k=>$v){
-			$cate_list_product[$k]['duobao_list']=$duobao_item_cate_id[$v['id']];
+		    if($v['id'] == 53){
+                $cate_list_product[$k]['duobao_list']=$turntabledeal;
+            }elseif($v['id'] == 55){
+                $cate_list_product[$k]['duobao_list']=$scratchdeal;
+            }else{
+                $cate_list_product[$k]['duobao_list']=$duobao_item_cate_id[$v['id']];
+            }
 			$cate_list_product[$k]['image']=$cate_sort[$k];
 		}
 		$GLOBALS['tmpl']->assign("cate_list_product",$cate_list_product);  //分类列表
