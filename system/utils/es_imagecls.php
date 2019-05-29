@@ -590,6 +590,50 @@ class es_imagecls
         imagejpeg($sImage,$source,100);
         imagedestroy($sImage);
     }
+
+
+    public function watero($source,$water,$sourcefile,$alpha=80)
+    {
+        //检查文件是否存在
+        if(!file_exists($source)||!file_exists($water))
+            return false;
+
+        //图片信息
+        $sInfo = es_imagecls::getImageInfo($source);
+        $wInfo = es_imagecls::getImageInfo($water);
+
+        //如果图片小于水印图片，不生成图片
+        if($sInfo["0"] < $wInfo["0"] || $sInfo['1'] < $wInfo['1'])
+            return false;
+
+        if(is_animated_gif($source))
+        {
+            return true;
+        }
+
+        //建立图像
+        $sCreateFun="imagecreatefrom".$sInfo['type'];
+        if(!function_exists($sCreateFun))
+            $sCreateFun = 'imagecreatefromjpeg';
+        $sImage=$sCreateFun($source);
+
+        $wCreateFun="imagecreatefrom".$wInfo['type'];
+        if(!function_exists($wCreateFun))
+            $wCreateFun = 'imagecreatefromjpeg';
+        $wImage=$wCreateFun($water);
+
+        //设定图像的混色模式
+        imagealphablending($wImage, true);
+
+        $posY=$sInfo[1]*2/5-$wInfo[1]/5;
+        $posX=$sInfo[0]*4/5-$wInfo[0]/2;
+        //生成混合图像
+        imagecopymerge($sImage, $wImage, $posX, $posY, 0, 0, $wInfo[0],$wInfo[1],$alpha);
+
+        //保存图像
+        imagejpeg($sImage,$sourcefile,100);
+        imagedestroy($sImage);
+    }
 }
 
 if(!function_exists('image_type_to_extension'))

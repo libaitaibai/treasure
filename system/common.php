@@ -1906,6 +1906,48 @@ function gen_qrcode($str,$size = 5,$img=false)
 }
 
 
+function gen_qrcodeq($str,$size = 5,$img=false)
+{
+	require_once APP_ROOT_PATH."system/phpqrcode/qrlib.php";
+
+	if($img)
+	{
+		QRcode::png($str, false, 'Q', $size, 2);
+		return;
+	}
+	$root_dir = APP_ROOT_PATH."public/images/qrcode/";
+	if (!is_dir($root_dir)) {
+		@mkdir($root_dir);
+		@chmod($root_dir, 0777);
+	}
+
+	$filename = md5($str."|".$size);
+	$hash_dir = $root_dir. '/c' . substr(md5($filename), 0, 1)."/";
+	if (!is_dir($hash_dir))
+	{
+		@mkdir($hash_dir);
+		@chmod($hash_dir, 0777);
+	}
+
+	$filesave = $hash_dir.$filename.'.png';
+	$fileurl =  "./public/images/qrcode/c". substr(md5($filename), 0, 1)."/".$filename.".png";
+	if(!file_exists($filesave))
+	{
+		QRcode::png($str, $filesave, 'Q', $size, 2);
+		if($GLOBALS['distribution_cfg']['OSS_TYPE']&&$GLOBALS['distribution_cfg']['OSS_TYPE']!="NONE"){
+			syn_to_remote_image_server($fileurl);
+		}
+		//生成推广的样式
+		require APP_ROOT_PATH.'system/utils/es_imagecls.php';
+
+		$Image = new es_imagecls;
+		$sdf ='./public/avatar/temp/good.png';
+		$Image->watero($sdf,$fileurl,$fileurl,100);
+	}
+
+	return $fileurl;
+}
+
 function valid_tag($str)
 {
 
