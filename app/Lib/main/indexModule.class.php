@@ -49,7 +49,7 @@ class indexModule extends MainBaseModule
 		            DuobaoItem.is_effect = 1 AND
 		            DuobaoItem.progress = 100  ORDER BY
                 	 DuobaoItem.lottery_time desc";   //未开奖的
-		$limit=6;
+		$limit=12;
 		$lastet_list = $GLOBALS['db']->getAll($sql ." limit " . $limit);
 		
 		//倒计时多加10秒，等待开奖
@@ -89,12 +89,15 @@ class indexModule extends MainBaseModule
 
 			set_dynamic_cache("recomend_list", $recomend_list);
 		}
-		
+
+		$showdazhuanpan = [['img'=>'./public/avatar/temp/dazhuanpan.jpg','title'=>'大转盘游戏活动','r'=>'turntable'],
+            ['img'=>'./public/avatar/temp/guaguale.jpg','title'=>'刮刮乐游戏活动','r'=>'scratch']];
+        $GLOBALS['tmpl']->assign("showdazhuanpan",$showdazhuanpan);
+
 		$GLOBALS['tmpl']->assign("recomend_list",$recomend_list);  //新品推荐列表
 		$recomend_one = $recomend_list[rand(0,count($recomend_list)-1)];		
 		$GLOBALS['tmpl']->assign("recomend_one",$recomend_one);  //随机推荐夺宝(一个)
-	
-		 
+
 		//注册送红包弹窗
 		if ( es_session::get("is_send_reg_ecv") == 1 ){
 		    $GLOBALS['tmpl']->assign('is_send_reg_ecv', 1);
