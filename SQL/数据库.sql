@@ -39858,3 +39858,17 @@ fanwe_deal_cate 加入刮刮乐 大转盘等
 
 alter table fanwe_scratch add column `reward` double(20,4) not null default '0.0000' comment '本次活动统计的总代理提成';
 
+---------------------刮刮乐新增数据表--------------------------------
+CREATE TABLE `fanwe_scratchprizelist` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `scratch_id` int(11) NOT NULL DEFAULT '0' COMMENT '刮刮乐活动ID',
+  `prize_id` int(11) NOT NULL DEFAULT '0' COMMENT '奖项ID',
+  `prize_type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '奖品类型 1商品 2金币 3钻石',
+  `prize_deal` int(11) NOT NULL COMMENT '奖品的商品，实物,金币或钻石',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `scratch_prize_key` (`scratch_id`,`prize_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='奖项详情表';
+
+alter table fanwe_scratchprize drop column prize_type;
+alter table fanwe_scratchprize drop column prize_deal;

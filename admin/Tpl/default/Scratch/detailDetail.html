@@ -1,0 +1,65 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<load href='__TMPL__Common/js/duobao.js' />
+<div class="main">
+    <div class="main_title">奖品设置 <a href="{:u('Scratch/detail',array('scratch_id'=>$scratch_id))}" class="back_list"> 返回列表</a></div>
+    <div class="blank5"></div>
+        <table class="form" cellpadding=0 cellspacing=0>
+            <tr>
+                <td colspan=2 class="topTd"></td>
+            </tr>
+
+            <tr>
+                <td class="item_title">奖项名称:</td>
+                <td class="item_input">{$prize['prize']}</td>
+            </tr>
+
+            <tr>
+                <td class="item_title">奖项数量:</td>
+                <td class="item_input">{$prize['prize_num']}</td>
+            </tr>
+
+
+            <tr>
+                <td class="item_title">剩余数量:</td>
+                <td class="item_input">{$prize['last_num']}</td>
+            </tr>
+
+
+            <tr>
+                <td class="item_title">中奖概率:</td>
+                <td class="item_input">{$prize['rate']}</td>
+            </tr>
+
+            <tr>
+                <td class="item_title">预设库存:</td>
+                <td class="item_input">{$prize['aim_profit']}</td>
+            </tr>
+
+            <tr>
+                <td class="item_title">指定中奖人:</td>
+                <td class="item_input">{$users}</td>
+            </tr>
+
+            <tr>
+                <td class="item_title">奖品:</td>
+                <td class="item_input">
+                    <foreach name="statistics" item="sta">
+
+                        <p style="height:25px">{$sta}</p>
+
+                    </foreach>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan=2 class="bottomTd"></td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+
+<include file="Public:footer" />
