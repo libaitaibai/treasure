@@ -39813,7 +39813,7 @@ CREATE TABLE `fanwe_scratch` (
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT '刮刮乐活动名称',
   `money` int(11) NOT NULL DEFAULT '0' COMMENT '刮刮乐所需花费',
   `parti_num` int(11) NOT NULL DEFAULT '0' COMMENT '总参与人数',
-  `parti_score` int(11) NOT NULL DEFAULT '0' COMMENT '总得积分',
+  `parti_score` int(11) NOT NULL DEFAULT '0' COMMENT '本次活动总获得的金币',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `is_effect` tinyint(1) NOT NULL DEFAULT '1' COMMENT '活动是否有效',
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态 1可用 0作废',
@@ -39826,7 +39826,7 @@ CREATE TABLE `fanwe_scratchprize` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `scratch_id` int(11) NOT NULL DEFAULT '0' COMMENT '刮刮乐活动ID',
   `rate` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '中奖概率',
-  `aim_profit` int(11) NOT NULL DEFAULT '0' COMMENT '预设库存，希望转的金币',
+  `aim_profit` int(11) NOT NULL DEFAULT '0' COMMENT '预设库存，希望赚的金币',
   `prize` varchar(255) NOT NULL DEFAULT '' COMMENT '奖项 一等奖等',
   `prize_num` tinyint(4) NOT NULL DEFAULT '0' COMMENT '几个奖项',
   `last_num` tinyint(4) NOT NULL DEFAULT '0' COMMENT '剩余奖项数量',
@@ -39855,3 +39855,6 @@ CREATE TABLE `fanwe_scratchstatics` (
 
 alter table fanwe_user add column  `jewel` int(11) unsigned NOT NULL DEFAULT 0  COMMENT '钻石数量';
 fanwe_deal_cate 加入刮刮乐 大转盘等
+
+alter table fanwe_scratch add column `reward` double(20,4) not null default '0.0000' comment '本次活动统计的总代理提成';
+

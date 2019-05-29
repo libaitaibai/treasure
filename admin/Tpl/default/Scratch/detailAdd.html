@@ -50,6 +50,15 @@
                 </td>
             </tr>
 
+            <if condition="$scratch_id gt 0">
+            <tr>
+                <td class="item_title">剩余数量:</td>
+                <td class="item_input">
+                    <input type="text" class="textbox require" name="last_num" value="{$scratch_prize['last_num']}"/>
+                </td>
+            </tr>
+            </if>
+
             <tr>
                 <td class="item_title">中奖概率:</td>
                 <td class="item_input">

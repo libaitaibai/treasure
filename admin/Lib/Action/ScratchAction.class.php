@@ -234,6 +234,7 @@ class ScratchAction extends  CommonEnhanceAction{
         //$deal_id = isset($_REQUEST['deal_id'])?intval($_REQUEST['deal_id']):0;
         $prize = isset($_REQUEST['prize'])?trim($_REQUEST['prize']):'';
         $prize_num = isset($_REQUEST['prize_num'])?intval($_REQUEST['prize_num']):1;
+        $last_num = isset($_REQUEST['last_num'])?intval($_REQUEST['last_num']):0;
         $rate = isset($_REQUEST['rate'])?trim($_REQUEST['rate']):'';
         $aim_profit = isset($_REQUEST['aim_profit'])?intval($_REQUEST['aim_profit']):0;
         $book_ids = isset($_REQUEST['book_ids'])?trim($_REQUEST['book_ids']):1;
@@ -261,6 +262,7 @@ class ScratchAction extends  CommonEnhanceAction{
             'aim_profit'=>$aim_profit,
             'prize'=>$prize,
             'prize_num'=>$prize_num,
+            'last_num'=>$last_num,
             'book_ids'=>$book_ids,
             'prize_type'=>$s_type,
             'prize_deal'=>$deal_key
@@ -269,6 +271,7 @@ class ScratchAction extends  CommonEnhanceAction{
         $model = D('scratchprize');
 
         if(empty($id)){ //添加
+
             $data['scratch_id'] = $scratch_id;
             $data['create_time'] = time();
             $id = $model->data($data)->add();

@@ -32,6 +32,7 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
 $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
 
 
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
 
 ?>
 {include file="inc/header.html"}
@@ -40,9 +41,13 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
 
 <div class="htmleaf-container">
     <figure id="bridgeContainer" >
-        <canvas id="bridge" width="750" height="465"></canvas>
-
+        <!--<canvas id="bridge" width="750" height="465"></canvas>-->
+        <div class="redux_c" style="margin: 0 auto;background-size: cover;width: 100%;">
+            <div id="mask_img_bg"><span class="cont-span"></span></div>
+            <img id="redux" src="{$TMPL}/images/scratch/img/layer.png"/>
+        </div>
     </figure>
+
 
 </div>
 <div class="text1">呱呱中大奖</div>
@@ -105,9 +110,59 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
             </table>
         </div>
     </div>
+
+
 </div>
 <script type="text/javascript">
-    var bridge = document.getElementById("bridge"),
+
+    $(document).ready(function(){
+        var num = 1,lock = false;
+        var get_result = APP_ROOT + "/index.php?ctl=scratch&act=get_result",
+            user_login = APP_ROOT + "/index.php?ctl=user&act=login",
+            user_center = APP_ROOT + "/index.php?ctl=uc_center";
+
+        $('#redux').mousedown(function(){
+
+            if(num==1){
+                num++;
+                $.get(get_result,{},function(xhr){
+
+                    if(xhr.code!=200){
+                        num=1;
+                        if(xhr.code==401){
+                            ajax_login();
+                            //window.location.href= user_login;
+                        }else if(xhr.code==402){
+                            $.showErr(xhr.msg,function(){
+                                window.location.href= user_center;
+                            });
+                        }else{
+                            $.showErr(xhr.msg);
+                        }
+                        return false;
+                    }
+
+
+                    $('#redux').eraser({
+                        size: 50,   //设置橡皮擦大小
+                        completeRatio: .5, //设置擦除面积比例
+                    });
+
+                    $("#mask_img_bg>span").text(xhr.data.prize);
+                },'json');
+
+            }
+
+        });
+
+
+
+    });
+
+
+
+
+    /*var bridge = document.getElementById("bridge"),
         bridgeCanvas = bridge.getContext('2d'),
         brushRadius = (bridge.width / 100) * 5,
         img = new Image();
@@ -116,14 +171,14 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
         bridgeCanvas.drawImage(img, 0, 0, bridge.width, bridge.height);
     }
     //静态资源位置
-    img.loc = '{$TMPL}/images/scratch/img/';
+    /!*img.loc = '{$TMPL}/images/scratch/img/';
     img.filename = 'scratch-1.jpg';
     if (window.devicePixelRatio >= 2) {
         var nameParts = img.filename.split('.');
         img.src = img.loc + nameParts[0]+"-2x"+"."+nameParts[1];
     } else {
         img.src = img.loc + img.filename;
-    }
+    }*!/
     function detectLeftButton(event) {
         if ('buttons' in event) {
             return event.buttons === 1;
@@ -161,7 +216,7 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
             var brushPos = getBrushPos(touch.pageX, touch.pageY);
             drawDot(brushPos.x, brushPos.y);
         }
-    }, false);
+    }, false);*/
 </script>
 </div>
 
