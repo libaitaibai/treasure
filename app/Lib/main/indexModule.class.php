@@ -157,15 +157,15 @@ class indexModule extends MainBaseModule
         $turntable=$GLOBALS['db']->getAll("select name from ".DB_PREFIX."turntable_actity_prize where status=1 and type =4 order by id desc limit 4 ");
         $turntable=array_column($turntable,'name');
         $ids = implode(',',$turntable);
-        $turntabledeal=$GLOBALS['db']->getAll("select * from ".DB_PREFIX."deal where id in ({$ids})");
+        $turntabledeal=$GLOBALS['db']->getAll("select *,(max_buy-current_buy) as less_buy from ".DB_PREFIX."duobao_item where deal_id in ({$ids}) and is_effect=1 and success_time = 0 and is_coupons = 0 and progress < 100 group by deal_id order by id desc");
 
         //获得实体抽奖信息 刮刮乐
         $scratch=$GLOBALS['db']->getAll("select prize_deal from ".DB_PREFIX."scratchprize where prize_type =1 order by id desc  limit 4 ");
         $scratch = array_column($scratch,'prize_deal');
         $ids = implode(',',$scratch);
-        $scratchdeal=$GLOBALS['db']->getAll("select *,id as deal_id from ".DB_PREFIX."deal where id in ({$ids})");
+        $scratchdeal=$GLOBALS['db']->getAll("select *,(max_buy-current_buy) as less_buy from ".DB_PREFIX."duobao_item where deal_id in ({$ids}) and  is_effect=1 and success_time = 0 and is_coupons = 0 and progress < 100 group by deal_id order by id desc");
 
-		foreach($cate_list as $k=>$v){
+        foreach($cate_list as $k=>$v){
 		    if($v['id'] == 53){
                 $cate_list_product[$k]['duobao_list']=$turntabledeal;
             }elseif($v['id'] == 55){
