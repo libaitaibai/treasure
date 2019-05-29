@@ -218,8 +218,12 @@ class ScratchAction extends  CommonEnhanceAction{
         if(empty($scratch)){
             $this->error('活动设置不存在');
         }
+        //奖项具体设置
+        $details = M('scratchprizelist')->where(array('scratch_id'=>$scratch['scratch_id'],'prize_id'=>$scratch['id']))->select();
+
         $this->assign('scratch_id',$scratch['scratch_id']);
         $this->assign('scratch_prize',$scratch);
+        $this->assign('details',$details);
         $this->display('detailAdd');
     }
 
@@ -227,11 +231,11 @@ class ScratchAction extends  CommonEnhanceAction{
     //刮刮乐活动详情页奖品设置 新增 编辑
     public function detailInsert(){
 
+
         $id = isset($_REQUEST['id'])?intval($_REQUEST['id']):0;
         $scratch_id = isset($_REQUEST['scratch_id'])?intval($_REQUEST['scratch_id']):0;
-        $s_type = isset($_REQUEST['s_type'])?intval($_REQUEST['s_type']):1;
-        $deal_key = isset($_REQUEST['deal_key'])?trim($_REQUEST['deal_key']):'';
-        //$deal_id = isset($_REQUEST['deal_id'])?intval($_REQUEST['deal_id']):0;
+        $s_type = isset($_REQUEST['s_type'])?$_REQUEST['s_type']:array();
+        $deal_key = isset($_REQUEST['deal_key'])?$_REQUEST['deal_key']:array();
         $prize = isset($_REQUEST['prize'])?trim($_REQUEST['prize']):'';
         $prize_num = isset($_REQUEST['prize_num'])?intval($_REQUEST['prize_num']):1;
         $last_num = isset($_REQUEST['last_num'])?intval($_REQUEST['last_num']):0;
@@ -244,11 +248,6 @@ class ScratchAction extends  CommonEnhanceAction{
         }
 
 
-        if($s_type!=1){
-            if(!preg_match('/^\d+$/',$deal_key)){
-                $this->error('填写的必须是整数');
-            }
-        }
         $cond = array('prize'=>$prize);
         !empty($id) && $cond['id'] = array('NEQ',$id);
         $one = M('scratchprize')->where($cond)->find();
@@ -262,11 +261,18 @@ class ScratchAction extends  CommonEnhanceAction{
             'aim_profit'=>$aim_profit,
             'prize'=>$prize,
             'prize_num'=>$prize_num,
-            'last_num'=>$last_num,
+            'last_num'=>(empty($id)?$prize_num:$last_num),
             'book_ids'=>$book_ids,
-            'prize_type'=>$s_type,
-            'prize_deal'=>$deal_key
         );
+
+        $details = array();
+        if(!empty($deal_key)){
+            foreach($deal_key as $k=>$v){
+                 if(!empty($v)){
+                     $details[] = array('prize_deal'=>$v,'prize_type'=>$s_type[$k]);
+                 }
+            }
+        }
 
         $model = D('scratchprize');
 
@@ -275,13 +281,27 @@ class ScratchAction extends  CommonEnhanceAction{
             $data['scratch_id'] = $scratch_id;
             $data['create_time'] = time();
             $id = $model->data($data)->add();
-
+            $prize_id = $id;
         }else{
+            $prize_id = $id;
             $id = $model->where(array('id'=>$id))->save($data);
             $id!==false && $id=1;
         }
 
         if($id){
+
+            //奖项记录详情scratchprizelist
+            M('scratchprizelist')->where(array('prize_id'=>$prize_id,'scratch_id'=>$scratch_id))->delete();
+            $data = array();
+            $data['prize_id'] = $prize_id;
+            $data['create_time'] = time();
+            $data['scratch_id'] = $scratch_id;
+            foreach($details as $k=>$v){
+                $data['prize_type'] = $v['prize_type'];
+                $data['prize_deal'] = $v['prize_deal'];
+                M('scratchprizelist')->add($data);
+            }
+
             $this->assign('jumpUrl',U('Scratch/detail',array('scratch_id'=>$scratch_id)));
             $this->success('添加成功');
         }else{
@@ -289,7 +309,72 @@ class ScratchAction extends  CommonEnhanceAction{
         }
 
 
+    }
 
+
+    //奖项详情页
+    public function detailDetail(){
+
+        $prize_id = isset($_REQUEST['id'])?intval($_REQUEST['id']):0;
+        $scratch_id = isset($_REQUEST['scratch_id'])?intval($_REQUEST['scratch_id']):0;
+        if(empty($prize_id) || empty($scratch_id)){
+            $this->error('参数错误');
+        }
+        //查询指定中奖人
+        $prize = M('scratchprize')->where(array('id'=>$prize_id))->find();
+        $users = '';
+        if(!empty($prize['book_ids'])){
+
+             $users_tmp = M('user')->where(array('id'=>array('in',$prize['book_ids'])))->select();
+             foreach($users_tmp as $v){
+                 $users .= $v['user_name'].',';
+             }
+
+        }
+        $users = rtrim($users,',');
+        //奖项具体设置
+        $details = M('scratchprizelist')->where(array('prize_id'=>$prize_id,'scratch_id'=>$scratch_id))->select();
+
+        $statistics = array();
+        $jinbi = 0;
+        $zuanshi = 0;
+        $deal_ids = '';
+        $deal_id = array();
+        foreach($details as $k=>$detail){
+
+            if($detail['prize_type']==2){
+                $jinbi += $detail['prize_deal'];
+            }else if($detail['prize_type']==3){
+                $zuanshi += $detail['prize_deal'];
+            }else{
+                 $deal_ids .= $detail['prize_deal'].',';
+                 if(!isset($deal_id[$detail['prize_deal']])){
+                     $deal_id[$detail['prize_deal']] = 1;
+                 }else{
+                     $deal_id[$detail['prize_deal']]++;
+                 }
+            }
+        }
+
+        if(!empty($deal_ids)){
+            $deal_ids = rtrim($deal_ids,',');
+            $deals = M('deal')->where(array('id'=>array('in',$deal_ids)))->select();
+            foreach($deals as $deal){
+                if(isset($deal_id[$deal['id']])){
+                    array_push($statistics,$deal['name'].'  ×'.$deal_id[$deal['id']]);
+                }
+            }
+
+        }
+        $jinbi!=0 && array_push($statistics,$jinbi.'金币  ×1');
+        $zuanshi!=0 && array_push($statistics,$zuanshi.'钻石  ×1');
+
+        $this->assign('scratch_id',$scratch_id);
+        $this->assign('prize_id',$prize_id);
+        $this->assign('prize',$prize);
+        $this->assign('users',$users);
+        $this->assign('statistics',$statistics);
+        $this->display('detailDetail');
     }
 
 

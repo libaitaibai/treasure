@@ -12,31 +12,7 @@
             </tr>
 
             <tr>
-                <td class="item_title">类型:</td>
-                <td class="item_input">
-                    <select class="require" name="s_type">
-                        <option value="1" <if condition="$scratch_prize['prize_type'] eq 1">selected="selected"</if>>商品</option>
-                        <option value="2" <if condition="$scratch_prize['prize_type'] eq 2">selected="selected"</if>>金币</option>
-                        <option value="3" <if condition="$scratch_prize['prize_type'] eq 3">selected="selected"</if>>钻石</option>
-                    </select>
-                </td>
-            </tr>
-
-            <tr id="total_buy_name">
-                <td class="item_title">商品:</td>
-                <td class="item_input">
-                    <input type="text" class="textbox require" name="deal_key" value="{$scratch_prize['prize_deal']}"/>
-                    <span class="tip_span">商品请填写ID，其它填写具体数额</span>
-                    <!--<span id="show_deal"><select name="deal_id">
-                        <option value="0" >==未选取商品==</option>
-                    </select>
-                    <input type="button" name="deal_key_btn" class="button" value="搜索" />
-                    </span>-->
-                </td>
-            </tr>
-
-            <tr>
-                <td class="item_title">奖项:</td>
+                <td class="item_title">奖项名称:</td>
                 <td class="item_input">
                     <input type="text" class="textbox require" name="prize" value="{$scratch_prize['prize']}"/>
                     <span class="tip_span">请填写奖项名称，如一等奖</span>
@@ -50,7 +26,7 @@
                 </td>
             </tr>
 
-            <if condition="$scratch_id gt 0">
+            <if condition="$scratch_prize['id'] gt 0">
             <tr>
                 <td class="item_title">剩余数量:</td>
                 <td class="item_input">
@@ -81,6 +57,61 @@
                     <span class="tip_span">请输入中奖人ID编号，多个以逗号分隔，如1,2</span>
                 </td>
             </tr>
+
+            <if condition="$scratch_prize['id'] gt 0">
+           <foreach name="details" item="detail" key="key">
+
+            <tr>
+                <td class="item_title">类型:</td>
+                <td class="item_input">
+                    <select class="require" name="s_type[]">
+                        <option value="1" <if condition="$detail['prize_type'] eq 1">selected="selected"</if>>商品</option>
+                        <option value="2" <if condition="$detail['prize_type'] eq 2">selected="selected"</if>>金币</option>
+                        <option value="3" <if condition="$detail['prize_type'] eq 3">selected="selected"</if>>钻石</option>
+                    </select>
+                    <if condition="$key eq 0">
+                    <button class="add_btn" style="margin-left:30px;cursor:pointer">添加商品</button>
+                    <else />
+                        <button class="del_btn" style="margin-left:30px;cursor:pointer">删除商品</button>
+                    </if>
+                 </td>
+            </tr>
+
+               <tr class="total_buy_name">
+                <td class="item_title">商品:</td>
+                <td class="item_input">
+                    <input type="text" class="textbox require" name="deal_key[]" value="{$detail['prize_deal']}"/>
+                    <span class="tip_span">商品请填写ID，其它填写具体数额</span>
+                </td>
+            </tr>
+
+           </foreach>
+           <else />
+
+                <tr>
+                    <td class="item_title">类型:</td>
+                    <td class="item_input">
+                        <select class="require" name="s_type[]">
+                            <option value="1">商品</option>
+                            <option value="2">金币</option>
+                            <option value="3">钻石</option>
+                        </select>
+                         <button class="add_btn" style="margin-left:30px;cursor:pointer">添加商品</button>
+
+                    </td>
+                </tr>
+
+                <tr class="total_buy_name">
+                    <td class="item_title">商品:</td>
+                    <td class="item_input">
+                        <input type="text" class="textbox require" name="deal_key[]" value=""/>
+                        <span class="tip_span">商品请填写ID，其它填写具体数额</span>
+                    </td>
+                </tr>
+
+
+            </if>
+
 
 
             <tr>
@@ -113,6 +144,31 @@
                $('#show_deal').hide();
            }
     });
+
+
+    $('.add_btn').bind('click',function(){
+        var str = '<tr><td class="item_title">类型:</td><td class="item_input"><select name="s_type[]">' +
+            '<option value="1" selected="selected">商品</option><option value="2">金币</option><option value="3" >钻石</option></select>' +
+            ' <button class="del_btn" style="margin-left:30px;cursor:pointer">删除商品</button></td></tr>'+
+            '<tr class="total_buy_name"><td class="item_title">商品:</td><td class="item_input"><input type="text" class="textbox" name="deal_key[]" value=""/>'+
+            '<span class="tip_span">商品请填写ID，其它填写具体数额</span> </td></tr>';
+
+          $('.total_buy_name:last').after(str);
+          $('.del_btn').unbind();
+        $('.del_btn').bind('click',function(){
+            $(this).parents('tr').next().remove();
+            $(this).parents('tr').remove();
+            return false;
+
+        });
+          return false;
+
+    });
+
+
+
+
+
 
 
 </script>

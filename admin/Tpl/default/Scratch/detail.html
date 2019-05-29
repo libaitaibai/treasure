@@ -11,6 +11,7 @@
     $a = '"detailDel"';
     $str = "<a href='".u("Scratch/detailEdit",array("id"=>$id))."'>编辑</a>";
     $str.="&nbsp;&nbsp;<a href='javascript:scratchdel(".$a.",".$id.");'>".l("DEL")."</a>";
+    $str .= "  <a href='".u("Scratch/detailDetail",array("id"=>$id,"scratch_id"=>$duobao['scratch_id']))."'>详细</a>";
     return $str;
     }
 
@@ -45,7 +46,7 @@
 <load href='__TMPL__Common/js/jquery.weebox.js' />
 <load href='__TMPL__Common/style/weebox.css' />
 <div class="main">
-    <div class="main_title">{$scratch['name']} 详细设置</div>
+    <div class="main_title">{$scratch['name']} 详细设置<a href="{:u('Scratch/index')}" class="back_list"> 返回列表</a></div>
     <div class="blank5"></div>
     <form name="search" action="__APP__" method="get">
         <div class="button_row">
@@ -55,7 +56,7 @@
         <div class="blank5"></div>
         <div class="search_row">
 
-            编号：<input type="text" class="textbox" name="id" value="{:strim($_REQUEST['id'])}" style="width:100px;" />
+      <!--      编号：<input type="text" class="textbox" name="id" value="{:strim($_REQUEST['id'])}" style="width:100px;" />
             奖项：<input type="text" class="textbox" name="prize" value="{:strim($_REQUEST['prize'])}" style="width:100px;" />
             商品ID：<input type="text" class="textbox" name="prize_deal" value="{:strim($_REQUEST['prize_deal'])}" style="width:100px;" />
             奖品类型: <select  name="s_type">
@@ -63,11 +64,11 @@
             <option value="1" >商品</option>
             <option value="2" >金币</option>
             <option value="3" >钻石</option>
-        </select>
+        </select>-->
             <input type="hidden" value="Scratch" name="m" />
             <input type="hidden" value="detail" name="a" />
             <input type="hidden" value="{$scratch_id}" name="scratch_id" />
-            <input type="submit" class="button" value="{%SEARCH}" />
+          <!--  <input type="submit" class="button" value="{%SEARCH}" />-->
         </div>
     </form>
     <div class="blank5"></div>
@@ -79,10 +80,9 @@
             action="true"
             datasource="list"
             show="id:{%ID}|50px
-			,prize_deal:商品
-			,prize_type|change_type:奖品类型
 			,prize:奖项
 			,prize_num:奖项数量
+			,last_num:剩余数量
 			,aim_profit:预设库存
 			,rate:中奖概率
 			,book_ids:指定中奖人
