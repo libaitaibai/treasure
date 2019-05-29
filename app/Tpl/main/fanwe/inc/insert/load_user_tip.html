@@ -1,6 +1,7 @@
 {if $user_info}
 	<span class="user_name">
 		欢迎您，<a href="{url x="index" r="uc_center"}" >{$user_info.user_name}</a>
+		拥有 金币:{$user_info.money} 钻石:{$user_info.jewel} 优惠券:{$user_info.coupons}
 		{if $user_info.level gt 0}
 		<span title="{$user_info.level_name}" class="level_bg level_{$user_info.level}"></span>
 		{/if}
@@ -30,4 +31,4 @@
 		<dd><a href="{url x="index" r="uc_money"}">帐户充值</a></dd>
 	</dl>
 </div>
-<a href="{url x="index" r="uc_voucher"}">我的红包</a>
+<!--<a href="{url x="index" r="uc_voucher"}">我的红包</a>-->
