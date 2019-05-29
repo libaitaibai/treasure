@@ -33,11 +33,26 @@ class turntableModule extends MainBaseModule
             $prize = $GLOBALS['db']->getAll("select * from ".DB_PREFIX."turntable_actity_prize where id = '".$actityid."' and status = 1");
         }
 
+        //查看实物信息
+        $physical = array_map(function($val){
+            if($val['type']==4){
+                return $val['name'];
+            }
+        },$prize);
+        $physical = array_filter($physical);
+        if(!empty($physical)){
+            $physical=implode(',',$physical);
+            $deal = $GLOBALS['db']->getAll("select id,name from ".DB_PREFIX."deal where id in ({$physical})");
+            $deal = array_column($deal,'name','id');
+        }
+
         $actity['type'] = $this->type[$actity['type']];
         $actity['expenditure'] = round($actity['expenditure']);
-        array_walk($prize,function(&$val){
+        array_walk($prize,function(&$val) use ($deal){
             $val['type_source'] = $this->type[$val['type']];
-            $val['name'] = empty($val['name'])?'谢谢惠顾!':$val['name'];
+            isset($deal[$val['name']]) ? $val['name'] = $deal[$val['name']]:'';
+            $val['name'] = empty($val['name'])?'谢谢惠顾!':$val['type_source'].$val['name'];
+            $val['abbrename'] = mb_substr($val['name'],0,6);
         });
 
         $GLOBALS['tmpl']->assign("actityid",$actityid);

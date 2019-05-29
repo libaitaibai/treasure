@@ -76,7 +76,7 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
                         </tr>
                         {foreach from=$list.prize item=item}
                             <tr>
-                                <td>{$item.type_source}{$item.name}</td>
+                                <td>{$item.name}</td>
                                 <td>{$item.count}个</td>
                             </tr>
                         {/foreach}
@@ -136,7 +136,7 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/awardRotate.js";
 
         var probabilitys=0;
         for(var i in prize){
-            prizeArray[i] = prize[i].name;
+            prizeArray[i] = prize[i].abbrename;
             prizeid[i] = prize[i].id;
             probability[i] = parseFloat(prize[i].probability);
             probabilitys+=probability[i];
