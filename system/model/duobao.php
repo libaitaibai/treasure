@@ -398,7 +398,7 @@ class duobao
 		$invite_score = intval($this->duobao_item['invite_score'])*$buy_num;
 		$duobao_score = intval($this->duobao_item['duobao_score'])*$buy_num;
 
-		
+
 		if($duobao_score)
 		{
 			modify_account(array("score"=>$duobao_score), $user_id,"参与".$this->duobao_item['name']."夺宝活动");			
