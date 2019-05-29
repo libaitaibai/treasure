@@ -1,6 +1,6 @@
 <?php
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/style.css";
-$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/index.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/duobaoshh.css";
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/utils/weebox.css";
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/utils/fanweUI.css";
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/zone.css";
@@ -24,7 +24,6 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/index.js";
 $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/index.js";
 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
 $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
-
 
 
 ?>
@@ -96,12 +95,13 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
         </ul>
         </div>
     </div>
+{if $newest_lottery_list}
 <div class="lottery_list f_r">
     <h1 class="lottery-title">中奖记录</h1>
     <div class="txtScroll-top">
         <div class="bd">
             <div class="tempWrap">
-                <ul class="lottery_box infoList">
+                <ul class="lottery_box infoList ">
                     {foreach from=$newest_lottery_list item=newest_lottery name="newest_lottery_foreach"}
                     <li class="clearfix lottery_info {if $smarty.foreach.newest_lottery_foreach.index%2 eq 0}gray-bac{/if}" >
                         <div class="user-pic f_l"><img src="{function name="get_user_avatar" uid=$newest_lottery.luck_user_id type="small"}" width="40" height="40"></div>
@@ -122,5 +122,7 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
     </div>
     <h2>看看谁的手气最好！</h2>
 </div>
+{/if}
 </div>
+
 {include file="inc/footer.html"}

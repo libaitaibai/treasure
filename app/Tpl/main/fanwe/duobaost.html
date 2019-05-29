@@ -1,6 +1,6 @@
 <?php
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/style.css";
-$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/index.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/duobaoshh.css";
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/utils/weebox.css";
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/utils/fanweUI.css";
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/zone.css";
@@ -24,7 +24,6 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/index.js";
 $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/index.js";
 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
 $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
-
 
 
 ?>
@@ -100,6 +99,7 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
         </ul>
         </div>
     </div>
+{if $newest_lottery_list}
 <div class="lottery_list f_r">
     <h1 class="lottery-title">中奖记录</h1>
     <div class="txtScroll-top">
@@ -126,5 +126,6 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/dc/js/page_js/slider.js";
     </div>
     <h2>看看谁的手气最好！</h2>
 </div>
+{/if}
 </div>
 {include file="inc/footer.html"}

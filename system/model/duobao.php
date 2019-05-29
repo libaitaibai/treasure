@@ -1297,6 +1297,19 @@ class duobao
     /**
      * 获取中奖列表
      */
+    public static function get_lottery_list_show($num,$price)
+    {
+        $sql = "select di.name,di.id , di.lottery_time,di.max_buy, u.user_name,u.avatar,di.luck_user_id from ".DB_PREFIX."duobao_item as di left join ".DB_PREFIX."user as u on di.luck_user_id=u.id where di.progress=100 and di.has_lottery=1 and u.user_name!='' and  di.unit_price = {$price} ";
+        $sql.="order by di.id desc limit ".$num;
+
+        //logger::write($sql);
+        $list = $GLOBALS['db']->getAll($sql);
+        return $list;
+    }
+
+    /**
+     * 获取中奖列表
+     */
     public static function get_lottery_list_all($num)
     {
         $sql = "select di.name,di.id , di.lottery_time,di.max_buy, u.user_name,u.avatar,di.luck_user_id from ".DB_PREFIX."duobao_item as di left join ".DB_PREFIX."user as u on di.luck_user_id=u.id where di.progress=100 and di.has_lottery=1 and u.user_name!='' ";

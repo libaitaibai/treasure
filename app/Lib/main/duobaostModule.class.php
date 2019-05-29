@@ -68,7 +68,7 @@ class duobaostModule extends MainBaseModule
         if($newest_lottery_list===false)
         {
 
-            $newest_lottery_list=duobao::get_lottery_list(10);
+            $newest_lottery_list=duobao::get_lottery_list_show(10,10);
 
             foreach($newest_lottery_list as $k=>$v)
             {

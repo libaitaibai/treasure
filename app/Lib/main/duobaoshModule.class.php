@@ -20,7 +20,6 @@ class duobaoshModule extends MainBaseModule
         $id = intval($_REQUEST['id']);
         $min_buy = 1;
   
-
         $page_size =app_conf("DEAL_PAGE_SIZE");
 
         if($id>0)
@@ -63,12 +62,13 @@ class duobaoshModule extends MainBaseModule
         else
             $data['page_title'] =$min_buy."元专区";
 
+
         // 获取中奖列表，已开奖的
         $newest_lottery_list = load_dynamic_cache("newest_lottery_list");
         if($newest_lottery_list===false)
         {
 
-            $newest_lottery_list=duobao::get_lottery_list(10);
+            $newest_lottery_list=duobao::get_lottery_list_show(10,100);
 
             foreach($newest_lottery_list as $k=>$v)
             {
