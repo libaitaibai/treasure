@@ -30,7 +30,32 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/duobaos.js";
 {include file="inc/header.html"}
 
 <div class="wrap_full_w clearfix sub_nav">
-    <a href="{url x="index"}">首页</a> > <a href="{url x="index" r="duobaos"}">全部商品</a>{if $cate_info} > <a href="{url x="index" r="duobaos" p="id=$cate_info.id"}">{$cate_info.name}</a>{/if}
+    <a href="{url x="index"}">首页</a> > <a href="{url x="index" r="duobaoz"}">夺宝专区</a>{if $cate_info} > <a href="{url x="index" r="duobaoz" p="id=$cate_info.id"}">{$cate_info.name}</a>{/if}
+
+    <div class="order-list-wrap">
+        <ul class="ordered_List">
+            <li class="scurrent">
+                <a href="{url r="index" r="anno" p="t=sort&id=$data.id"}">
+                最新揭晓
+                </a>
+            </li>
+            <li {if $data.prize == 1 }class="scurrent" {/if}>
+                <a href="{url r="index" r="duobaoz" p="prize=1"}">
+                一元专区
+                </a>
+            </li>
+            <li {if $data.prize == 10 }class="scurrent" {/if}>
+                <a href="{url r="index" r="duobaoz" p="prize=10"}">
+                十元专区
+                </a>
+            </li>
+            <li {if $data.prize == 100 }class="scurrent" {/if}>
+                <a href="{url r="index" r="duobaoz" p="prize=100"}">
+                百元专区
+                </a>
+            </li>
+        </ul>
+    </div>
 </div>
 
 {if $cate_list}
@@ -38,14 +63,14 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/duobaos.js";
 <div class="wrap_full_w clearfix">
     <div class="cate-title">
         <h1>
-            <a href="{url r="index" r="duobaos" }">所有商品</a><span class="subtitle" >（共 <b class="standard" >{$data.count}</b> 件相关商品）</span>
+            <a href="{url r="index" r="duobaoz" }">所有商品</a><span class="subtitle" >（共 <b class="standard" >{$data.count}</b> 件相关商品）</span>
         </h1>
     </div>
     <div class="cate-list-wrap">
         <ul class="cate-list">
             {foreach from=$cate_list key=key item=v}
             <li class="cate-item {if $key mod 8 eq 7}last{/if}">
-                <a href="{url r="index" r="duobaos" p="t=$data.order&d=$data.dir&id=$v.id"}">
+                <a href="{url r="index" r="duobaoz" p="t=$data.order&d=$data.dir&prize=$v.prize&id=$v.id"}">
                 <span class="dxys">
                 <i class="diyfont dxys1 txt-red" >{$v.iconfont}</i>
                 <i class="diyfont dxys2 txt-red" >{$v.iconfont}</i>
@@ -69,32 +94,32 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/duobaos.js";
         <h3>排序：</h3>
         <ul class="ordered_List">
             <li class="{if 'hot' eq $data.order or !$data.order }scurrent{/if}">
-                <a href="{url r="index" r="duobaos" p="t=hot&id=$data.id"}">
+                <a href="{url r="index" r="duobaoz" p="t=hot&id=$data.id"}">
                 人气搜索
                 </a>
             </li>
             <li class="{if 'sort' eq $data.order }scurrent{/if}">
-                <a href="{url r="index" r="duobaos" p="t=sort&id=$data.id"}">
+                <a href="{url r="index" r="duobaoz" p="t=sort&id=$data.id"}">
                 平台推荐
                 </a>
             </li>
             <li class="{if 'less' eq $data.order }scurrent{/if}"   >
-                <a href="{url r="index" r="duobaos" p="t=less&id=$data.id"}">
+                <a href="{url r="index" r="duobaoz" p="t=less&id=$data.id"}">
                 剩余次数
                 </a>
             </li>
             <li class="{if 'new' eq $data.order }scurrent{/if}"  >
-                <a href="{url r="index" r="duobaos" p="t=new&id=$data.id"}">
+                <a href="{url r="index" r="duobaoz" p="t=new&id=$data.id"}">
                 最新商品
                 </a>
             </li>
             <li class="{if !$data.dir and ($data.order eq 'max_buy') }scurrent{/if}"  >
-                <a href="{url r="index" r="duobaos" p="t=max_buy&id=$data.id"}">
+                <a href="{url r="index" r="duobaoz" p="t=max_buy&id=$data.id"}">
                 总需人数 <i class="ico ico-arrow-sort ico-arrow-sort-gray-down"></i>
                 </a>
             </li>
             <li class="{if $data.dir }scurrent{/if}"  >
-                <a href="{url r="index" r="duobaos" p="t=max_buy&d=1&id=$data.id"}" >
+                <a href="{url r="index" r="duobaoz" p="t=max_buy&d=1&id=$data.id"}" >
                 总需人数 <i class="ico ico-arrow-sort ico-arrow-sort-gray-up"></i>
                 </a>
             </li>

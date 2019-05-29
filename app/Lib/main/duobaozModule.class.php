@@ -16,9 +16,12 @@ class duobaozModule extends MainBaseModule
         //分类
 
         $cate_list = load_cate_list(8);
+        $prize = intval($_REQUEST['prize']);
+        array_walk($cate_list,function(&$val)use ($prize){
+            $val['prize'] =$prize;
+        });
+
         $GLOBALS['tmpl']->assign("cate_list",$cate_list);
-        
-        
         $id = intval($_REQUEST['id']);
         $keyword = strim($_REQUEST['keyword']);
         $order= strim($_REQUEST['t']);
@@ -65,7 +68,12 @@ class duobaozModule extends MainBaseModule
         {
             $sql .=" and di.cate_id = ".$id." ";
         }
-        
+
+        if($prize>0)
+        {
+            $sql .=" and di.unit_price = ".$prize." ";
+        }
+
         if($order=="hot")
         {
         	$order_field = "click_count";
@@ -114,7 +122,8 @@ class duobaozModule extends MainBaseModule
         $data['order']=$order;
         $data['dir']=$order_dir;
         $data['keyword']=$keyword;
-       
+        $data['prize']=$prize;
+
         if($list)
             $data['page_title'] = $list[0]['name'];
         else
@@ -128,7 +137,7 @@ class duobaozModule extends MainBaseModule
         $GLOBALS['tmpl']->assign("list", $data['list']);
         $GLOBALS['tmpl']->assign("data", $data);
         $GLOBALS['tmpl']->assign("cate_info", $cate_info);
-        $GLOBALS['tmpl']->display("duobaos.html");
+        $GLOBALS['tmpl']->display("duobaoz.html");
     }
     
 }
