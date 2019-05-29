@@ -221,25 +221,47 @@ $(function(){
 	    {if $recomend_list}
 		<div class="new-goods-recommend">
 		<!-- 图标 -->
-			<i class="ico new-goods-recommend-logo" title="新品推荐"></i>
+			<!--<i class="ico new-goods-recommend-logo" title="新品推荐"></i>-->
 			<!-- 轮播 -->
 			<div class="txtScroll-left-2">
 				<div class="bd">
 					<div class="tempWrap">
 					<ul>
-					{foreach from=$recomend_list item=recomend}
-					<li>
-						<div class="goods-pic">
-							<a href="{url r="index" r="duobao" p="id=$recomend.id"}" target="_blank">
-								<img src="{function name="get_spec_image" v=$recomend.icon w=120 h=120 g=1}" width="120" height="120">
-							</a>
-						</div>
-						<div class="goods-info">
-							<a href="{url r="index" r="duobao" p="id=$recomend.id"}" class="goods-title" title="{$recomend.duobaoitem_name}">{$recomend.duobaoitem_name}</a>
-							<p title="{$recomend.duobaoitem_brief}" style="text-align:center;color: #808080;    overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{$recomend.duobaoitem_brief}</p>
-						</div>
-					</li>
-					{/foreach}
+					<!--{foreach from=$recomend_list item=recomend}-->
+					<!--<li>-->
+						<!--<div class="goods-pic">-->
+							<!--<a href="{url r="index" r="duobao" p="id=$recomend.id"}" target="_blank">-->
+								<!--<img src="{function name="get_spec_image" v=$recomend.icon w=120 h=120 g=1}" width="120" height="120">-->
+							<!--</a>-->
+						<!--</div>-->
+						<!--<div class="goods-info">-->
+							<!--<a href="{url r="index" r="duobao" p="id=$recomend.id"}" class="goods-title" title="{$recomend.duobaoitem_name}">{$recomend.duobaoitem_name}</a>-->
+							<!--<p title="{$recomend.duobaoitem_brief}" style="text-align:center;color: #808080;    overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{$recomend.duobaoitem_brief}</p>-->
+						<!--</div>-->
+					<!--</li>-->
+					<!--{/foreach}-->
+
+						{foreach from=$showdazhuanpan item=dazhuanpan}
+						<li>
+							<div class="goods-pic">
+								{if $dazhuanpan.r == 'turntable'}
+								<a href="{url r="index"  r="turntable" }" target="_blank">
+								{else}
+								<a href="{url r="index"  r="scratch" }" target="_blank">
+								{/if}
+								<img src="{$dazhuanpan.img}" width="120" height="120">
+								</a>
+							</div>
+							<div class="goods-info">
+								<p class="goods-title" style="text-align:center;color: #808080;    overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{$dazhuanpan.title}</p>
+							</div>
+							<!--<div class="goods-info">-->
+								<!--<a href="{url r="index" r="duobao" p="id=$recomend.id"}" class="goods-title" title="{$recomend.duobaoitem_name}">{$recomend.duobaoitem_name}</a>-->
+								<!--<p title="{$recomend.duobaoitem_brief}" style="text-align:center;color: #808080;    overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{$recomend.duobaoitem_brief}</p>-->
+							<!--</div>-->
+						</li>
+						{/foreach}
+
 					</ul>
 					</div>
 				</div>
