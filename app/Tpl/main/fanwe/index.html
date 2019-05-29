@@ -398,10 +398,24 @@ $(function(){
 							</li>
 							<div class="clear"></div>
 						</ul>
+
+						{if $cate_list.id==53 }
+						<div class="btn-box">
+							<a class="duobao-now btn" href="{url r="index" r="turntable" }" buy_num="{$hot_duobao.min_buy}" data_id="{$hot_duobao.id}" title="立即夺宝" >立即大转盘</a>
+							<!--<a class="cart-btn" buy_num="{$hot_duobao.min_buy}" data_id="{$hot_duobao.id}" title="添加到购物车" onclick="add_cart(this,0)"></a>-->
+						</div>
+						{elseif $cate_list.id==55}
+						<div class="btn-box">
+							<a class="duobao-now btn"href="{url r="index" r="scratch" }" buy_num="{$hot_duobao.min_buy}" data_id="{$hot_duobao.id}" title="立即夺宝" >立即刮刮乐</a>
+							<!--<a class="cart-btn" buy_num="{$hot_duobao.min_buy}" data_id="{$hot_duobao.id}" title="添加到购物车" onclick="add_cart(this,0)"></a>-->
+						</div>
+						{else}
 						<div class="btn-box">
 							<a class="duobao-now btn" buy_num="{$hot_duobao.min_buy}" data_id="{$hot_duobao.id}" title="立即夺宝" onclick="add_cart(this,1)">立即夺宝</a>
 							<a class="cart-btn" buy_num="{$hot_duobao.min_buy}" data_id="{$hot_duobao.id}" title="添加到购物车" onclick="add_cart(this,0)"></a>
 						</div>
+						{/if}
+
 					</div>
 					</div>
 				</li>

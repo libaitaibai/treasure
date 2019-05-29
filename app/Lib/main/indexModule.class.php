@@ -163,7 +163,7 @@ class indexModule extends MainBaseModule
         $scratch=$GLOBALS['db']->getAll("select prize_deal from ".DB_PREFIX."scratchprize where prize_type =1 order by id desc  limit 4 ");
         $scratch = array_column($scratch,'prize_deal');
         $ids = implode(',',$scratch);
-        $scratchdeal=$GLOBALS['db']->getAll("select * from ".DB_PREFIX."deal where id in ({$ids})");
+        $scratchdeal=$GLOBALS['db']->getAll("select *,id as deal_id from ".DB_PREFIX."deal where id in ({$ids})");
 
 		foreach($cate_list as $k=>$v){
 		    if($v['id'] == 53){

@@ -15,12 +15,23 @@ class duobaoModule extends MainBaseModule
         init_app_page();
         $id = intval($_REQUEST['id']);
         $dbid = intval($_REQUEST['dbid']);
-        if($dbid)
-        {
-        	$item_data = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."duobao_item where duobao_id=".$dbid." and progress < 100 order by create_time desc");
+
+        if($id < 1000){
+            if($dbid)
+            {
+                $item_data = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."deal where duobao_id=".$dbid." and progress < 100 order by create_time desc");
+            }
+            else
+                $item_data = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."deal where id=".$id);
+        }else{
+            if($dbid)
+            {
+                $item_data = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."duobao_item where duobao_id=".$dbid." and progress < 100 order by create_time desc");
+            }
+            else
+                $item_data = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."duobao_item where id=".$id);
         }
-        else
-        $item_data = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."duobao_item where id=".$id);
+
 
         $user_info = $GLOBALS['user_info'];
         require_once APP_ROOT_PATH.'system/model/duobao.php';
