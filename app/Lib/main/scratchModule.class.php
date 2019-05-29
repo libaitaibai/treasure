@@ -17,10 +17,10 @@ class scratchModule extends MainBaseModule
         init_app_page();
         $scratch_id = intval($_REQUEST['scratch_id']);
         if(empty($scratch_id)){
-            $one = $GLOBALS['db']->getRow('select * from '.DB_PREFIX.'scratch order by id desc limit 1');
+            $one = $GLOBALS['db']->getRow('select * from '.DB_PREFIX.'scratch where status=1 order by id desc limit 1');
             !empty($one) && $scratch_id = $one['id'];
         }else{
-            $one = $GLOBALS['db']->getRow('select * from '.DB_PREFIX.'scratch where id='.$scratch_id);
+            $one = $GLOBALS['db']->getRow('select * from '.DB_PREFIX.'scratch where status=1 and id='.$scratch_id);
         }
 
         if(!empty($one)){

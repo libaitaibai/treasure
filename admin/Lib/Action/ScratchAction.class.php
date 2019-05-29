@@ -401,5 +401,168 @@ class ScratchAction extends  CommonEnhanceAction{
     }
 
 
+    //中奖列表
+    public function active(){
+
+        //编号 活动名称 消费类型 消费金额 奖项名称 奖品 中奖人 是否为指定中奖人
+
+        $model = D ('ScratchWin');
+        $map = $this->_search ($model);
+
+        if(!empty($_REQUEST['id'])){
+            $map['scratchstatistics.id'] = intval($_REQUEST['id']);
+        }
+
+        if(!empty($_REQUEST['name'])){
+            $map['scratch.name'] = array('like','%'.$_REQUEST['name'].'%');
+        }
+
+        if(!empty($_REQUEST['prize'])){
+            $map['scratchprize.prize'] = intval($_REQUEST['prize']);
+        }
+
+        if(!empty($_REQUEST['s_type'])){
+            $map['scratch.type'] = intval($_REQUEST['s_type']);
+        }
+        $rst = $this->getlist($model,$map);
+
+        $list = !empty($rst)?$rst['list']:array();
+        $prize_ids = [];
+        foreach($list as $k=>$v){
+            !isset($prize_ids[$v['prize_id']]) && $prize_ids[$v['prize_id']] = $v['prize_id'];
+        }
+
+        $list_tmp = array();
+        if(!empty($prize_ids)){
+             $prizelist = M('scratchprizelist')->where(array('prize_id'=>array('in',$prize_ids)))->select();
+             foreach($prizelist as $k=>$v){
+                 if(!isset($list_tmp[$v['prize_id']])){
+                     $list_tmp[$v['prize_id']] = [];
+                 }
+                 array_push($list_tmp[$v['prize_id']],$v);
+             }
+        }
+         foreach($list_tmp as $k=>$v){
+              $list_tmp[$k]['show'] = implode(', ',$this->statistics($v));
+         }
+
+        foreach($list as $k=>$v){
+             $list[$k]['is_book'] = !empty($v['book_ids'])?'是':'否';
+             $list[$k]['deals'] = isset($list_tmp[$v['prize_id']])?$list_tmp[$v['prize_id']]['show']:'';
+        }
+
+        $this->assign ( 'list', $list);
+        $this->assign ( 'sort', $rst['sort'] );
+        $this->assign ( 'order', $rst['order'] );
+        $this->assign ( 'sortImg', $rst['sortImg'] );
+        $this->assign ( 'sortType', $rst['sortType'] );
+        $this->assign ( "page", $rst['page']);
+        $this->assign ( "nowPage",$rst['nowPage']);
+        $this->display('statistics');
+    }
+
+
+    //统计
+    private function statistics($details){
+
+        $statistics = array();
+        $jinbi = 0;
+        $zuanshi = 0;
+        $deal_ids = '';
+        $deal_id = array();
+        foreach($details as $k=>$detail){
+
+            if($detail['prize_type']==2){
+                $jinbi += $detail['prize_deal'];
+            }else if($detail['prize_type']==3){
+                $zuanshi += $detail['prize_deal'];
+            }else{
+                $deal_ids .= $detail['prize_deal'].',';
+                if(!isset($deal_id[$detail['prize_deal']])){
+                    $deal_id[$detail['prize_deal']] = 1;
+                }else{
+                    $deal_id[$detail['prize_deal']]++;
+                }
+            }
+        }
+
+        if(!empty($deal_ids)){
+            $deal_ids = rtrim($deal_ids,',');
+            $sql = 'select * from '.DB_PREFIX.'deal where id in('.$deal_ids.')';
+            $deals = $GLOBALS['db']->getAll($sql);
+            foreach($deals as $deal){
+                if(isset($deal_id[$deal['id']])){
+                    array_push($statistics,$deal['name'].'  ×'.$deal_id[$deal['id']]);
+                }
+            }
+
+        }
+        $jinbi!=0 && array_push($statistics,$jinbi.'金币  ×1');
+        $zuanshi!=0 && array_push($statistics,$zuanshi.'钻石  ×1');
+
+        return $statistics;
+
+    }
+
+
+    protected function getlist($model, $map, $sortBy = '', $asc = false) {
+        //排序字段 默认为主键名
+        if (isset ( $_REQUEST ['_order'] )) {
+            $order = $_REQUEST ['_order'];
+        } else {
+            $order = ! empty ( $sortBy ) ? $sortBy : $this->getActionName().'.'.$model->getPk ();
+        }
+        //排序方式默认按照倒序排列
+        //接受 sost参数 0 表示倒序 非0都 表示正序
+        if (isset ( $_REQUEST ['_sort'] )) {
+            $sort = $_REQUEST ['_sort'] ? 'asc' : 'desc';
+        } else {
+            $sort = $asc ? 'asc' : 'desc';
+        }
+        //取得满足条件的记录数
+        $count = $model->where ( $map )->count ();
+        // echo($model->getLastSql());
+        if ($count > 0 ) {
+            //创建分页对象
+            if (! empty ( $_REQUEST ['listRows'] )) {
+                $listRows = $_REQUEST ['listRows'];
+            } else {
+                $listRows = '30';
+            }
+            $p = new Page ( $count, $listRows );
+            //分页查询数据
+
+            $voList = $model->where($map)->order( $order . " " . $sort)->limit($p->firstRow . ',' . $p->listRows)->findAll ();
+
+
+            //echo($model->getLastSql());exit;
+            //分页跳转的时候保证查询条件
+            foreach ( $map as $key => $val ) {
+                if (! is_array ( $val )) {
+                    $p->parameter .= "$key=" . urlencode ( $val ) . "&";
+                }
+            }
+            //分页显示
+
+            $page = $p->show ();
+            //列表排序显示
+            $sortImg = $sort; //排序图标
+            $sortAlt = $sort == 'desc' ? l("ASC_SORT") : l("DESC_SORT"); //排序提示
+            $sort = $sort == 'desc' ? 1 : 0; //排序方式
+
+            //print_r($voList);exit;
+            return array(
+                'list'=>$voList,
+                'sort'=>$sort,
+                'order'=>$order,
+                'sortImg'=>$sortImg,
+                'sortType'=>$sortAlt,
+                'page'=>$page,
+                'nowPage'=>$p->nowPage
+                );
+        }
+        return array();
+    }
+
 
 }
