@@ -50,106 +50,100 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
 
 
 </div>
-<div class="text1">呱呱中大奖</div>
-
-
+<div class="text1" style="height:66px">呱呱中大奖</div>
 
 <div class="col-md-4">
+
     <div class="g_3">
-        <div class="g_3_tit"><span class="g_3_txt">游戏介绍</span></div>
-        <div class="g_3_cet1">视觉中国事件目前持续发酵中。起因于4月11日，视觉中国网站发布了人类历史上首张黑洞照片，版权所有一栏，写的是视觉中国。此事引发巨大争议。昨日下午，视觉中国将使用说明改为「不得用于商业用途」，并把版权所有改为「欧洲南方天文台」。百度、凤凰网等公司官方微博发文称，自己的商标被视觉中国收录并打上水印。共青团中央微博发文称，国旗、国徽的图片也在视觉中国网站上售卖。视觉中国道歉</div>
-    </div>
-    <div class="g_3">
-        <div class="g_3_tit"><span class="g_3_txt">游戏规则</span></div>
-        <div class="g_3_cet1">视觉中国事件目前持续发酵中。起因于4月11日，视觉中国网站发布了人类历史上首张黑洞照片，版权所有一栏，写的是视觉中国。此事引发巨大争议。昨日下午，视觉中国将使用说明改为「不得用于商业用途」，并把版权所有改为「欧洲南方天文台」。百度、凤凰网等公司官方微博发文称，自己的商标被视觉中国收录并打上水印。共青团中央微博发文称，国旗、国徽的图片也在视觉中国网站上售卖。视觉中国道歉</div>
-    </div>
-    <div class="g_3">
-        <div class="g_3_tit"><span class="g_3_txt">奖励设置</span></div>
+        <div class="g_3_tit"><span class="g_3_txt">奖励设置</span>
+            <input type="hidden" name="scratch_tip" value="{$scratch_tip}">
+            <input type="hidden" name="scratch_id" value="{$scratch_id}">
+        </div>
         <div class="g_3_cet">
             <table>
+
                 <tr>
                     <td width="30%">奖级</td>
-                    <td width="70%">中奖金额</td>
+                    <td width="70%">奖品</td>
                 </tr>
+                {if $prizes}
+                {foreach from=$prizes item=prize key=key}
                 <tr>
-                    <td>1</td>
-                    <td>250,000元</td>
+                    <td>{$key}</td>
+                    <td style="font-size:13px">
+                        {foreach from=$prize item=v}
+                          <p>{$v}</p>
+                        {/foreach}
+                    </td>
                 </tr>
+                {/foreach}
+                {else}
                 <tr>
-                    <td>2</td>
-                    <td>10,000元</td>
+                    <td colspan="2" align="center">暂无奖项设置</td>
                 </tr>
-                <tr>
-                    <td>3</td>
-                    <td>1,000元</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>500元</td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>200元</td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td>100元</td>
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td>50元</td>
-                </tr>
-                <tr>
-                    <td>8</td>
-                    <td>20元</td>
-                </tr>
-                <tr>
-                    <td>9</td>
-                    <td>10元</td>
-                </tr>
+                {/if}
             </table>
         </div>
     </div>
 
+    <div class="g_3">
+        <div class="g_3_tit"><span class="g_3_txt">游戏介绍</span></div>
+        <div class="g_3_cet1">刮开页面“请开始刮奖”区域，凡出现××等奖字样即为中奖。</div>
+    </div>
+    <div class="g_3">
+        <div class="g_3_tit"><span class="g_3_txt">游戏规则</span></div>
+        <div class="g_3_cet1">刮刮乐会消耗用户的金币，钻石或者优惠券，具体根据每个游戏设定不同。如果玩家中了虚拟货币如金币钻石等，会自动充值到到玩家账号；如果是实物商品就需要玩家填写收货地址。</div>
+    </div>
 
 </div>
 <script type="text/javascript">
 
     $(document).ready(function(){
-        var num = 1,lock = false;
+        var num = 1;
         var get_result = APP_ROOT + "/index.php?ctl=scratch&act=get_result",
             user_login = APP_ROOT + "/index.php?ctl=user&act=login",
             user_center = APP_ROOT + "/index.php?ctl=uc_center";
+        var scratch_id = $('input[name="scratch_id"]').val();
+        var scratch_tip = $('input[name="scratch_tip"]').val();
 
         $('#redux').mousedown(function(){
 
             if(num==1){
-                num++;
-                $.get(get_result,{},function(xhr){
+                if(!scratch_id){
+                    $.showErr('参数错误');
+                    return false;
+                }
+                $.showConfirm('消耗'+scratch_tip+'，是否继续？',function(){
 
-                    if(xhr.code!=200){
-                        num=1;
-                        if(xhr.code==401){
-                            ajax_login();
-                            //window.location.href= user_login;
-                        }else if(xhr.code==402){
-                            $.showErr(xhr.msg,function(){
-                                window.location.href= user_center;
-                            });
-                        }else{
-                            $.showErr(xhr.msg);
+                    num++;
+                    $.get(get_result,{scratch_id:scratch_id},function(xhr){
+
+                        if(xhr.code!=200){
+                            num=1;
+                            if(xhr.code==401){
+                                ajax_login();
+                                //window.location.href= user_login;
+                            }else if(xhr.code==402){
+                                $.showErr(xhr.msg,function(){
+                                    window.location.href= user_center;
+                                });
+                            }else{
+                                $.showErr(xhr.msg);
+                            }
+                            return false;
                         }
-                        return false;
-                    }
 
 
-                    $('#redux').eraser({
-                        size: 50,   //设置橡皮擦大小
-                        completeRatio: .5, //设置擦除面积比例
-                    });
+                        $('#redux').eraser({
+                            size: 50,   //设置橡皮擦大小
+                            completeRatio: .5, //设置擦除面积比例
+                        });
 
-                    $("#mask_img_bg>span").text(xhr.data.prize);
-                },'json');
+                        $("#mask_img_bg>span").text(xhr.data.prize);
+                    },'json');
+
+
+                });
 
             }
 

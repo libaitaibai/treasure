@@ -15,17 +15,104 @@ class scratchModule extends MainBaseModule
     {
         global_run();
         init_app_page();
-        $web_article_id = intval($_REQUEST['id']);
-        $is_agreement = strim($_REQUEST['t']);
-        $shptel = app_conf("SHOP_TEL");
-        $page =intval($_REQUEST['p']);
-        $page_size =app_conf("PAGE_SIZE");
+        $scratch_id = intval($_REQUEST['scratch_id']);
+        if(empty($scratch_id)){
+            $one = $GLOBALS['db']->getRow('select * from '.DB_PREFIX.'scratch order by id desc limit 1');
+            !empty($one) && $scratch_id = $one['id'];
+        }else{
+            $one = $GLOBALS['db']->getRow('select * from '.DB_PREFIX.'scratch where id='.$scratch_id);
+        }
 
-        $GLOBALS['tmpl']->assign("is_agreement",$is_agreement);
-        $GLOBALS['tmpl']->assign("web_article_id",$web_article_id);
-        $GLOBALS['tmpl']->assign("shptel",$shptel);
+        if(!empty($one)){
+            $one['tip'] = $one['money'].$this->tips[$one['type']];
+            $scratch = $one;
+        }else{
+            $scratch = array();
+        }
 
+        $scratch = !empty($one)?$one:array();
+        $prizes = array();
+        $prizes_tmp = array();
+        if(!empty($scratch_id)){
+
+            $t_prize = DB_PREFIX.'scratchprize';
+            $t_prized = DB_PREFIX.'scratchprizelist';
+
+            $sql = 'select p.id,p.rate,p.prize_num,p.prize,pd.prize_type,pd.prize_deal from '.$t_prize.' p left join '.$t_prized.' pd on p.id=pd.prize_id and p.scratch_id=pd.scratch_id'
+            .' where p.scratch_id='.$scratch_id.' order by p.rate asc';
+            $res = $GLOBALS['db']->getAll($sql);
+
+
+            foreach($res as $k=>$v){
+
+                if(!isset($prizes[$v['id']])){
+                    $prizes[$v['id']] = [];
+                    $prizes_tmp[$v['id']] = array('prize'=>$v['prize'],'prize_num'=>$v['prize_num']);
+                }
+
+                array_push($prizes[$v['id']],$v);
+
+            }
+
+            $prizes_last = array();
+
+            foreach($prizes as $k=>$v){
+               $prizes_last[$prizes_tmp[$k]['prize'].' ('.$prizes_tmp[$k]['prize_num'].'个)'] = $this->statistics($v);
+            }
+
+            $prizes = $prizes_last;
+
+        }
+        empty($prizes) && $prizes = array();
+
+        $GLOBALS['tmpl']->assign("scratch",$scratch);
+        $GLOBALS['tmpl']->assign("scratch_id",$scratch_id);
+        $GLOBALS['tmpl']->assign("scratch_tip",isset($scratch['tip'])?$scratch['tip']:'');
+        $GLOBALS['tmpl']->assign("prizes",$prizes);
         $GLOBALS['tmpl']->display("scratch.html");
+    }
+
+
+    //统计
+    private function statistics($details){
+
+        $statistics = array();
+        $jinbi = 0;
+        $zuanshi = 0;
+        $deal_ids = '';
+        $deal_id = array();
+        foreach($details as $k=>$detail){
+
+            if($detail['prize_type']==2){
+                $jinbi += $detail['prize_deal'];
+            }else if($detail['prize_type']==3){
+                $zuanshi += $detail['prize_deal'];
+            }else{
+                $deal_ids .= $detail['prize_deal'].',';
+                if(!isset($deal_id[$detail['prize_deal']])){
+                    $deal_id[$detail['prize_deal']] = 1;
+                }else{
+                    $deal_id[$detail['prize_deal']]++;
+                }
+            }
+        }
+
+        if(!empty($deal_ids)){
+            $deal_ids = rtrim($deal_ids,',');
+            $sql = 'select * from '.DB_PREFIX.'deal where id in('.$deal_ids.')';
+            $deals = $GLOBALS['db']->getAll($sql);
+            foreach($deals as $deal){
+                if(isset($deal_id[$deal['id']])){
+                    array_push($statistics,$deal['name'].'  ×'.$deal_id[$deal['id']]);
+                }
+            }
+
+        }
+        $jinbi!=0 && array_push($statistics,$jinbi.'金币  ×1');
+        $zuanshi!=0 && array_push($statistics,$zuanshi.'钻石  ×1');
+
+        return $statistics;
+
     }
 
 
@@ -42,8 +129,7 @@ class scratchModule extends MainBaseModule
             ajax_return($res);
         }
 
-        //$scratch_id = intval($_REQUEST['scratch_id']);
-        $scratch_id = 18;
+        $scratch_id = intval($_REQUEST['scratch_id']);
         if(empty($scratch_id)){
              $res = array('code'=>201,'msg'=>'参数错误，刷新页面重试','data'=>array());
              ajax_return($res);
@@ -77,7 +163,7 @@ class scratchModule extends MainBaseModule
 
         try{
             $db->query('begin');
-            
+
             $activity = $db->getRow('select * from '.$t_scratch.' where id='.$scratch_id.' for update');
             $type = $activity['type'];
 
@@ -198,7 +284,9 @@ class scratchModule extends MainBaseModule
     {
         $activity = $GLOBALS['db']->getRow('select * from '.DB_PREFIX.'scratch where id='.$scratch_id.' for update');
 
-        $prizes = $GLOBALS['db']->getAll('select * from '.DB_PREFIX.'scratchprize where scratch_id='.$activity['id']);
+        $sql = 'select * from '.DB_PREFIX.'scratchprize p join '.DB_PREFIX.'scratchprizelist pd 
+        on p.scratch_id=pd.scratch_id and p.id=pd.prize_id where p.scratch_id='.$activity['id'];
+        $prizes = $GLOBALS['db']->getAll($sql);
 
         if(empty($prizes)){
             return -1;
@@ -230,10 +318,12 @@ class scratchModule extends MainBaseModule
 
         foreach($prizes as $k=>$prize){
             if($prize['prize_type']==1){
-                $tmp = explode(',',$prize['prize_deal']);
-                foreach($tmp as $kk=>$vv){
-                   isset($deals_tmp[$vv]) && ($profit_deal += $deals_tmp[$vv]*$prize['prize_num']);
-                }
+
+                isset($deals_tmp[$prize['prize_deal']]) && ($profit_deal +=$deals_tmp[$prize['prize_deal']] );
+                //$tmp = explode(',',$prize['prize_deal']);
+                //foreach($tmp as $kk=>$vv){
+                  // isset($deals_tmp[$vv]) && ($profit_deal += $deals_tmp[$vv]*$prize['prize_num']);
+                //}
             }
         }
 
