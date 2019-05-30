@@ -135,16 +135,15 @@ class indexModule extends MainBaseModule
 		
 		
         //广告排序
-		$adv = $GLOBALS['db']->getAll("select cate_id,image from ".DB_PREFIX."adv where is_effect = 1 and cate_id > 0");
-		foreach ($adv as $k=>$v){
+        $adv = $GLOBALS['db']->getAll("select cate_id,image,sort from ".DB_PREFIX."adv where is_effect = 1 and cate_id > 0");
+        foreach ($adv as $k=>$v){
 		        $adv_list[$v['cate_id']]=$v;
 		}
-		
 		$cate_sort = $GLOBALS['db']->getAll("select id from ".DB_PREFIX."deal_cate where is_effect = 1 order by sort");
 		foreach ($cate_sort as $k=>$v){
 		    $cate_sort[$k]=$adv_list[$v['id']]['image'];
+		    $sort_show[$k]=$adv_list[$v['id']]['sort'];
 		}
-		
 		$cate_list = $GLOBALS['db']->getAll("select id,name,iconfont,iconcolor,icon from ".DB_PREFIX."deal_cate where is_effect = 1 order by sort");
 		$GLOBALS['tmpl']->assign("cate_list",$cate_list);
 		
@@ -177,7 +176,10 @@ class indexModule extends MainBaseModule
                 $cate_list_product[$k]['duobao_list']=$duobao_item_cate_id[$v['id']];
             }
 			$cate_list_product[$k]['image']=$cate_sort[$k];
+            $cate_list_product[$k]['sort']=$sort_show[$k];
 		}
+        array_multisort($sort_show,SORT_DESC,$cate_list_product);
+
 		$GLOBALS['tmpl']->assign("cate_list_product",$cate_list_product);  //分类列表
         //最新上架
         $newest_sql="select * from ".DB_PREFIX."duobao_item where is_effect=1 and success_time = 0 and is_coupons = 0 and is_pk=0 and is_number_choose=0 and progress < 100 order by create_time desc limit 20";
