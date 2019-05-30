@@ -187,16 +187,14 @@ class scratchModule extends MainBaseModule
 
             }
 
-            //统计参与人数 参与金额
-            $db->query('update '.$t_scratch.' set parti_num=parti_num+1,parti_score=parti_score+'.$two['money'].' where id='.$scratch_id);
-
-
             //指定玩家中奖 中奖之后相同奖项不能再中
             $sql1 = 'select * from '.$t_scratchprize.' where scratch_id='.$scratch_id.
                 ' and last_num>0 and find_in_set('.$user_id.',book_ids) for update';
             $sql2 = 'select * from '.$t_scratch.' where id = '.$scratch_id.' for update';
-            $one = $db->getRow($sql1);
             $two = $db->getRow($sql2);
+
+            //统计参与人数 参与金额
+            $db->query('update '.$t_scratch.' set parti_num=parti_num+1,parti_score=parti_score+'.$two['money'].' where id='.$scratch_id);
 
             $ones = $db->getAll($sql1);
             $zhiding = array();
@@ -227,7 +225,6 @@ class scratchModule extends MainBaseModule
                 }
 
             }
-
 
 
             //统计成本 商品成本加代理提成
@@ -264,20 +261,24 @@ class scratchModule extends MainBaseModule
             $values = array_values($probability);
             $key_id = $this->wheel($values);
 
-            if($key_id==-1 || $key_id==0){
+            if($key_id==-1){
                 $db->query('commit');
                 $this->showRes(200,'未中奖',array('prize'=>'谢谢参与'));
             }
 
-            $prize_id = $keys[$key_id];
 
+            $prize_id = $keys[$key_id];
             $db->query('update '.$t_scratchprize.' set last_num=last_num-1 where id='.$prize_id);
+            if(empty($prize_id)){
+                $db->query('commit');
+                $this->showRes(200,'未中奖',array('prize'=>'谢谢参与'));
+            }
 
             $db->query('insert into '.$t_statistics.'(scratch_id,prize_id,user_id,create_time) values('.$scratch_id.','.$prize_id.','.$user_id.','.time().')');
 
             $db->query('commit');
 
-            $this->showRes(200,'',array('prize'=>$prizes_tmp[$prize_id]['prize']));
+            $this->showRes(200,'已中奖',array('prize'=>$prizes_tmp[$prize_id]['prize']));
 
         }catch(Exception $e){
 
