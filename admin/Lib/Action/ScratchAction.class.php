@@ -424,7 +424,8 @@ class ScratchAction extends  CommonEnhanceAction{
         if(!empty($_REQUEST['s_type'])){
             $map['scratch.type'] = intval($_REQUEST['s_type']);
         }
-        $rst = $this->getlist($model,$map);
+        $rst = $this->getlist($model,$map,'scratchstatics.id');
+
 
         $list = !empty($rst)?$rst['list']:array();
         $prize_ids = [];
@@ -450,6 +451,7 @@ class ScratchAction extends  CommonEnhanceAction{
              $list[$k]['is_book'] = !empty($v['book_ids'])?'是':'否';
              $list[$k]['deals'] = isset($list_tmp[$v['prize_id']])?$list_tmp[$v['prize_id']]['show']:'';
         }
+
 
         $this->assign ( 'list', $list);
         $this->assign ( 'sort', $rst['sort'] );

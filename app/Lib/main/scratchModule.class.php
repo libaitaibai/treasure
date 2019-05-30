@@ -176,6 +176,18 @@ class scratchModule extends MainBaseModule
             //扣除参与活动费用
             $this->updateUserM($user_id,$activity);
 
+            //统计代理提成
+            $levels = array();
+            if($activity['type']==1){
+                $levels = $this->calculateAgent($user_id,$activity['money']);
+                if(!empty($levels)){
+                    $reward = array_sum($levels);
+                    $GLOBALS['db']->query('update '.DB_PREFIX.'scratch set reward=reward+'.$reward.' where id='.$activity['id']);
+                }
+
+            }
+
+
             //指定玩家中奖
             $sql1 = 'select * from '.$t_scratchprize.' where scratch_id='.$scratch_id.
                 ' and last_num>0 and find_in_set('.$user_id.',book_ids) for update';
@@ -193,11 +205,11 @@ class scratchModule extends MainBaseModule
                 $this->showRes(200,'已中奖',array('prize'=>$one['prize']));
             }
 
-            //计算目前库存
-            $now_profit = $this->calculateProfit($scratch_id);
+            //统计成本 商品成本加代理提成
+            $profit = $this->calculateProfit($scratch_id,$levels);
 
             $sql = 'select * from '.$t_scratchprize.' where scratch_id='.$scratch_id.
-                ' and last_num>0 and aim_profit<='.$now_profit.' for update';
+                ' and last_num>0 for update';
             $prize = $db->getAll($sql);
             //小于所有预设库存不中奖
             if(empty($prize)){
@@ -208,8 +220,13 @@ class scratchModule extends MainBaseModule
             $probability = array();
             $prizes_tmp = array();
             foreach($prize as $k=>$v){
-                $probability[$v['id']] = round($v['rate'],2);
                 $prizes_tmp[$v['id']] = $v;
+                if(!isset($profit[$v['id']]) ||
+                    (isset($profit[$v['id']]) && $v['aim_profit']<$profit[$v['id']['sum']])){
+                    continue;
+                }
+                $probability[$v['id']] = round($v['rate'],2);
+
             }
             $probability[0] = 1-array_sum($probability);
             asort($probability);
@@ -257,34 +274,34 @@ class scratchModule extends MainBaseModule
         //记录活动收益
         $GLOBALS['db']->query('update '.DB_PREFIX.'scratch set parti_num=parti_num+1,parti_score=parti_score+'+$money.' where id='.$activity['scratch_id']);
 
+    }
+
+
+    //计算代理提成
+    private function calculateAgent($user_id,$money){
+
         //代理提成
-        if($activity['type']==1){
-            require_once APP_ROOT_PATH."system/model/fx.php";
-            $order_info = array(
-                'user_id'=>$user_id,
-                'refund_amount'=>0,
-                'pay_amount'=>$money,
-                'order_sn'=>''
-            );
-            $levels = send_fx_order_salary($order_info,true);
-            if(is_array($levels)){
-                $reward = array_sum($levels);
-                $GLOBALS['db']->query('update '.DB_PREFIX.'scratch set reward=reward+'.$reward.' where id='.$activity['id']);
-            }
+        require_once APP_ROOT_PATH."system/model/fx.php";
+        $order_info = array(
+            'user_id'=>$user_id,
+            'refund_amount'=>0,
+            'pay_amount'=>$money,
+            'order_sn'=>''
+        );
+        $levels = send_fx_order_salary($order_info,true);
+        empty($levels) && $levels = array();
 
-        }
-
-
+        return $levels;
     }
 
 
 
    //计算当前利润
-    private function calculateProfit($scratch_id)
+    private function calculateProfit($scratch_id,$levels=array())
     {
         $activity = $GLOBALS['db']->getRow('select * from '.DB_PREFIX.'scratch where id='.$scratch_id.' for update');
 
-        $sql = 'select * from '.DB_PREFIX.'scratchprize p join '.DB_PREFIX.'scratchprizelist pd 
+        $sql = 'select p.*,pd.prize_type,pd.prize_deal from '.DB_PREFIX.'scratchprize p left join '.DB_PREFIX.'scratchprizelist pd 
         on p.scratch_id=pd.scratch_id and p.id=pd.prize_id where p.scratch_id='.$activity['id'];
         $prizes = $GLOBALS['db']->getAll($sql);
 
@@ -292,7 +309,7 @@ class scratchModule extends MainBaseModule
             return -1;
         }
 
-        $deal_ids = '';
+/*        $deal_ids = '';
         $profit_other = 0;
         $profit_deal = 0;
         foreach($prizes as $k=>$prize){
@@ -308,6 +325,7 @@ class scratchModule extends MainBaseModule
         //查询商品表
         $deals_tmp = array();
         $deal_ids = rtrim($deal_ids,',');
+
         if(!empty($deal_ids)){
 
             $deals = $GLOBALS['db']->getAll('select * from '.DB_PREFIX.'deal where id in('.$deal_ids.')');
@@ -331,9 +349,63 @@ class scratchModule extends MainBaseModule
         $profit = $profit_other + $profit_deal;
         if($activity['type']==1){ //金币去掉代理提成
             $profit += $activity['reward'];
+        }*/
+
+        $deal_ids = '';
+        $profit = array();
+        foreach($prizes as $k=>$prize){
+
+            if($prize['prize_type']==1){ //商品
+                $deal_ids .= $prize['prize_deal'].',';
+            }else{
+                if(!isset($profit_other[$prize['id']])){
+                    $profit[$prize['id']]['other'] = $prize['prize_deal'];
+                }else{
+                    $profit[$prize['id']]['other'] += $prize['prize_deal'];
+                }
+            }
+
         }
 
-        return ($activity['parti_score']-$profit);
+        //查询商品表
+        $deals_tmp = array();
+        $deal_ids = rtrim($deal_ids,',');
+
+        if(!empty($deal_ids)){
+
+            $deals = $GLOBALS['db']->getAll('select * from '.DB_PREFIX.'deal where id in('.$deal_ids.')');
+            foreach($deals as $v){
+                $deals_tmp[$v['id']] = $v['origin_price'];
+            }
+        }
+
+        foreach($prizes as $k=>$prize){
+            if($prize['prize_type']==1){
+
+                if(!isset($deals_tmp[$prize['prize_deal']])){
+                    $profit[$prize['id']]['deal']=$deals_tmp[$prize['prize_deal']];
+                }else{
+                    $profit[$prize['id']]['deal']+=$deals_tmp[$prize['prize_deal']];
+                }
+
+            }
+        }
+
+
+         //金币去掉代理提成
+        $agent = !empty($levels)?array_sum($levels):0;
+
+        foreach($profit as $k=>&$t){
+
+            $deal = isset($t['deal'])?$t['deal']:0;
+            $other = isset($t['other'])?$t['other']:0;
+            $t['deal'] = $deal;
+            $t['other'] = $other;
+            $t['agent'] = $agent;
+            $t['sum'] = $deal+$other+$agent;
+        }
+
+        return $profit;
     }
 
 
