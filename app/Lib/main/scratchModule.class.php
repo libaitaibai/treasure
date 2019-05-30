@@ -187,23 +187,48 @@ class scratchModule extends MainBaseModule
 
             }
 
+            //统计参与人数 参与金额
+            $db->query('update '.$t_scratch.' set parti_num=parti_num+1,parti_score=parti_score+'.$two['money'].' where id='.$scratch_id);
 
-            //指定玩家中奖
+
+            //指定玩家中奖 中奖之后相同奖项不能再中
             $sql1 = 'select * from '.$t_scratchprize.' where scratch_id='.$scratch_id.
                 ' and last_num>0 and find_in_set('.$user_id.',book_ids) for update';
             $sql2 = 'select * from '.$t_scratch.' where id = '.$scratch_id.' for update';
             $one = $db->getRow($sql1);
             $two = $db->getRow($sql2);
 
-            //统计参与人数 参与金额
-            $db->query('update '.$t_scratch.' set parti_num=parti_num+1,parti_score=parti_score+'.$two['money'].' where id='.$scratch_id);
+            $ones = $db->getAll($sql1);
+            $zhiding = array();
+            $zhongjiang = array();
+            if(!empty($ones)){
 
-            if(!empty($one)){
-                $db->query('update '.$t_scratchprize.' set last_num=last_num-1 where id='.$one['id']);
-                $db->query('insert into '.$t_statistics.'(scratch_id,prize_id,user_id,create_time) values('.$scratch_id.','.$one['prize_id'].','.$user_id.','.time().')');
-                $db->query('commit');
-                $this->showRes(200,'已中奖',array('prize'=>$one['prize']));
+                $ones_tmp = array();
+                foreach($ones as $v){
+                    $zhiding[$v['id']] = $v['id'];
+                    $ones_tmp[$v['id']] = $v;
+                }
+
+                //查询当前用户中奖纪录
+                $tmp2 = $db->getAll('select prize_id from '.$t_statistics.
+                    ' where scratch_id='.$scratch_id.' and user_id='.$user_id.' group by prize_id');
+                foreach($tmp2 as $v){
+                    $zhongjiang[] = $v['prize_id'];
+                }
+
+                $diff = array_diff($zhiding,$zhongjiang);
+                $one = $ones_tmp[$diff[array_rand($diff)]];
+
+                if(!empty($one)){
+                    $db->query('update '.$t_scratchprize.' set last_num=last_num-1 where id='.$one['id']);
+                    $db->query('insert into '.$t_statistics.'(scratch_id,prize_id,user_id,create_time) values('.$scratch_id.','.$one['id'].','.$user_id.','.time().')');
+                    $db->query('commit');
+                    $this->showRes(200,'已中奖',array('prize'=>$one['prize']));
+                }
+
             }
+
+
 
             //统计成本 商品成本加代理提成
             $profit = $this->calculateProfit($scratch_id,$levels);
@@ -216,6 +241,7 @@ class scratchModule extends MainBaseModule
                 $db->query('commit');
                 $this->showRes(200,'未中奖',array('prize'=>'谢谢参与'));
             }
+
             //获取大于预设库存的记录
             $probability = array();
             $prizes_tmp = array();
@@ -223,6 +249,9 @@ class scratchModule extends MainBaseModule
                 $prizes_tmp[$v['id']] = $v;
                 if(!isset($profit[$v['id']]) ||
                     (isset($profit[$v['id']]) && $v['aim_profit']<$profit[$v['id']['sum']])){
+                    continue;
+                }
+                if(isset($zhiding[$v['id']])){
                     continue;
                 }
                 $probability[$v['id']] = round($v['rate'],2);
