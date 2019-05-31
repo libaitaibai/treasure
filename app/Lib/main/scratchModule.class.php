@@ -119,7 +119,6 @@ class scratchModule extends MainBaseModule
     //获取中奖结果
     public function get_result(){
 
-
         global_run();
         init_app_page();
 
@@ -187,6 +186,9 @@ class scratchModule extends MainBaseModule
 
             }
 
+            //统计成本 商品成本加代理提成
+            $profit = $this->calculateProfit($scratch_id,$levels);
+
             //指定玩家中奖 中奖之后相同奖项不能再中
             $sql1 = 'select * from '.$t_scratchprize.' where scratch_id='.$scratch_id.
                 ' and last_num>0 and find_in_set('.$user_id.',book_ids) for update';
@@ -220,15 +222,13 @@ class scratchModule extends MainBaseModule
                 if(!empty($one)){
                     $db->query('update '.$t_scratchprize.' set last_num=last_num-1 where id='.$one['id']);
                     $db->query('insert into '.$t_statistics.'(scratch_id,prize_id,user_id,create_time) values('.$scratch_id.','.$one['id'].','.$user_id.','.time().')');
+                    $this->updateMoney($user_id,$profit[$one['id']]);
                     $db->query('commit');
                     $this->showRes(200,'已中奖',array('prize'=>$one['prize']));
                 }
 
             }
 
-
-            //统计成本 商品成本加代理提成
-            $profit = $this->calculateProfit($scratch_id,$levels);
 
             $sql = 'select * from '.$t_scratchprize.' where scratch_id='.$scratch_id.
                 ' and last_num>0 for update';
@@ -268,14 +268,15 @@ class scratchModule extends MainBaseModule
 
 
             $prize_id = $keys[$key_id];
-            $db->query('update '.$t_scratchprize.' set last_num=last_num-1 where id='.$prize_id);
+
             if(empty($prize_id)){
                 $db->query('commit');
                 $this->showRes(200,'未中奖',array('prize'=>'谢谢参与'));
             }
 
+            $db->query('update '.$t_scratchprize.' set last_num=last_num-1 where id='.$prize_id);
             $db->query('insert into '.$t_statistics.'(scratch_id,prize_id,user_id,create_time) values('.$scratch_id.','.$prize_id.','.$user_id.','.time().')');
-
+            $this->updateMoney($user_id,$profit[$prize_id]);
             $db->query('commit');
 
             $this->showRes(200,'已中奖',array('prize'=>$prizes_tmp[$prize_id]['prize']));
@@ -289,6 +290,34 @@ class scratchModule extends MainBaseModule
     }
 
 
+    //中奖获得金币钻石增加到用户表
+    private function updateMoney($user_id,$get_prize=array()){
+
+           if(empty($get_prize) || !$user_id){
+               return false;
+           }
+           $str = '';
+           $moneys = array();
+           if(isset($get_prize['coin']) && !empty($get_prize['coin'])){
+               $log_msg = '刮刮乐中奖'.$get_prize['coin'].'金币';
+               $moneys['money'] = $get_prize['coin'];
+               $str .= 'money=money+'.$get_prize['coin'].',';
+           }else if(isset($get_prize['jewel']) && !empty($get_prize['jewel'])){
+               $log_msg = '刮刮乐中奖'.$get_prize['coin'].'钻石';
+               $moneys['jewel'] = $get_prize['jewel'];
+               $str .= 'jewel=jewel+'.$get_prize['coin'].',';
+           }
+
+
+        //增加资金流水
+        $this->moneyLog($user_id,$moneys,$log_msg);
+
+        $sql = 'update '.DB_PREFIX.'user set '.rtrim($str,',').' where id='.$user_id;
+        $GLOBALS['db']->query($sql);
+
+
+        return true;
+    }
 
     //用户金币钻石扣除 增加代理提成
     private function updateUserM($user_id,$activity){
@@ -296,13 +325,56 @@ class scratchModule extends MainBaseModule
         $type = $activity['type'];
         $money = $activity['money'];
 
+        //记录资金流日志
+        $moneys = array($this->type[$type]=>-$money);
+
+        $log_msg = '刮刮乐消费'.$money.$this->tips[$type];
+
+        $this->moneyLog($user_id,$moneys,$log_msg);
+
         //金币 钻石 优惠券扣除
         $tmp_str = "{$this->type[$type]}={$this->type[$type]}-{$money}";
-
         $GLOBALS['db']->query('update '.DB_PREFIX.'user set '.$tmp_str.' where id='.$user_id);
 
         //记录活动收益
         $GLOBALS['db']->query('update '.DB_PREFIX.'scratch set parti_num=parti_num+1,parti_score=parti_score+'+$money.' where id='.$activity['scratch_id']);
+
+    }
+
+
+    private function moneyLog($user_id,$moneys=array(),$log_msg=''){
+
+        $user_info = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."user where is_delete = 0 and is_effect = 1 and id = ".$user_id);
+
+        $log_info = array();
+        $log_info['log_info'] = $log_msg;
+        $log_info['log_time'] = NOW_TIME;
+        $log_info['log_user_id'] = intval($user_info['id']);
+
+
+        $data = array(
+            'money'=>0,
+            'score'=>0,
+            'point'=>0,
+            'coupons'=>0,
+            'jewel'=>0
+        );
+
+        $data = array_merge($data,$moneys);
+        $log_info['money'] = floatval($data['money']);
+        $log_info['score'] = intval($data['score']);
+        $log_info['point'] = intval($data['point']);
+        $log_info['coupons'] = intval($data['coupons']);
+        $log_info['jewel'] = intval($data['jewel']);
+
+
+        $log_info['current_money'] = floatval($log_info['money']+$user_info['money']);
+        $log_info['current_score'] = intval($log_info['score']+$user_info['score']);
+        $log_info['current_point'] = intval($log_info['point']+$user_info['point']);
+        $log_info['current_coupons'] = intval($log_info['coupons']+$user_info['coupons']);
+        $log_info['current_jewel'] = intval($log_info['jewel']+$user_info['jewel']);
+        $log_info['user_id'] = $user_id;
+        $GLOBALS['db']->autoExecute(DB_PREFIX."user_log",$log_info);
 
     }
 
@@ -383,15 +455,23 @@ class scratchModule extends MainBaseModule
 
         $deal_ids = '';
         $profit = array();
+
         foreach($prizes as $k=>$prize){
 
             if($prize['prize_type']==1){ //商品
                 $deal_ids .= $prize['prize_deal'].',';
-            }else{
-                if(!isset($profit_other[$prize['id']])){
-                    $profit[$prize['id']]['other'] = $prize['prize_deal'];
+            }else if($prize['prize_type']==2){ //金币
+                if(!isset($profit[$prize['id']]['coin'])){
+                    $profit[$prize['id']]['coin'] = $prize['prize_deal'];
                 }else{
-                    $profit[$prize['id']]['other'] += $prize['prize_deal'];
+                    $profit[$prize['id']]['coin'] += $prize['prize_deal'];
+                }
+
+            }else if($prize['prize_type']==3){ //钻石
+                if(!isset($profit[$prize['id']]['jewel'])){
+                    $profit[$prize['id']]['jewel'] = $prize['prize_deal'];
+                }else{
+                    $profit[$prize['id']]['jewel'] += $prize['prize_deal'];
                 }
             }
 
@@ -412,7 +492,7 @@ class scratchModule extends MainBaseModule
         foreach($prizes as $k=>$prize){
             if($prize['prize_type']==1){
 
-                if(!isset($deals_tmp[$prize['prize_deal']])){
+                if(!isset($profit[$prize['id']]['deal'])){
                     $profit[$prize['id']]['deal']=$deals_tmp[$prize['prize_deal']];
                 }else{
                     $profit[$prize['id']]['deal']+=$deals_tmp[$prize['prize_deal']];
@@ -428,11 +508,13 @@ class scratchModule extends MainBaseModule
         foreach($profit as $k=>&$t){
 
             $deal = isset($t['deal'])?$t['deal']:0;
-            $other = isset($t['other'])?$t['other']:0;
+            $coin = isset($t['coin'])?$t['coin']:0;
+            $jewel = isset($t['jewel'])?$t['jewel']:0;
             $t['deal'] = $deal;
-            $t['other'] = $other;
+            $t['jewel'] = $jewel;
+            $t['coin'] = $coin;
             $t['agent'] = $agent;
-            $t['sum'] = $deal+$other+$agent;
+            $t['sum'] = $deal+$coin+$jewel+$agent;
         }
 
         return $profit;
@@ -469,6 +551,18 @@ class scratchModule extends MainBaseModule
         $res = array('code'=>$code,'msg'=>$msg,'data'=>$data);
         ajax_return($res);
     }
+
+
+
+   public function test(){
+
+
+       require_once APP_ROOT_PATH . "system/model/deal_order.php";
+
+       createPaidOrder(['177'=>2],263);
+
+   }
+
 
 
 }
