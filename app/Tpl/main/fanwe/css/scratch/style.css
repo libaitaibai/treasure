@@ -49,7 +49,7 @@ figcaption{
     height:145px;
     position:relative;
     z-index: 22;
-
+    cursor: url(../images/scratch/img/circular-cursor.png) 53 53, crosshair;
 }
 #mask_img_bg {
     position: absolute;
