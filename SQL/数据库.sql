@@ -39872,3 +39872,5 @@ CREATE TABLE `fanwe_scratchprizelist` (
 
 alter table fanwe_scratchprize drop column prize_type;
 alter table fanwe_scratchprize drop column prize_deal;
+
+alter table fanwe_user_log add column  `jewel` int(11) NOT NULL COMMENT '钻石'

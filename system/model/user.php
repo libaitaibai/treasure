@@ -777,6 +777,10 @@ define("LOGIN_STATUS_TEMP",2); //临时登录
 			$GLOBALS['db']->query("update ".DB_PREFIX."user set point = point + ".intval($data['point'])." where id =".$user_id);
 
 		}
+		if(intval($data['jewel'])!=0)
+		{
+			$GLOBALS['db']->query("update ".DB_PREFIX."user set jewel = jewel + ".intval($data['jewel'])." where id =".$user_id);
+		}
 		if(intval($data['coupons'])!=0)
 		{
 		    if($data['send_coupons'] == 1){
@@ -817,6 +821,7 @@ define("LOGIN_STATUS_TEMP",2); //临时登录
 				$log_info['money'] = floatval($data['money']);
 				$log_info['score'] = intval($data['score']);
 				$log_info['point'] = intval($data['point']);
+				$log_info['jewel'] = intval($data['jewel']);
 				$log_info['coupons'] = intval($data['coupons']);
 				$log_info['user_id'] = $user_id;
 				$GLOBALS['db']->autoExecute(DB_PREFIX."user_log",$log_info);
