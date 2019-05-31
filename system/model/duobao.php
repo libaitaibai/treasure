@@ -21,7 +21,9 @@ class duobao
 
 		if($this->duobao_item['progress']<100)
 		{
+
 			$pool_count = $GLOBALS['db']->getOne("select count(*) from ".duobao_item_log_table($this->duobao_item)." where duobao_item_id = ".$id);
+
 			if($pool_count<$this->duobao_item['max_buy'])
 			{
 				self::create_lottery_pool($id);
@@ -29,8 +31,10 @@ class duobao
 
 			if($this->duobao_item['robot_is_db'])
 			{
+
 				$sql = "select count(*) from ".DB_PREFIX."schedule_list where type in ('robot','robot_cfg') and exec_status = 0 and dest = '".$id."'";			
 				$robot_schedule_count = $GLOBALS['db']->getOne($sql);
+
 				if($robot_schedule_count==0)
 					self::init_robot($id);
 			}
