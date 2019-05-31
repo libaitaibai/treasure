@@ -94,7 +94,10 @@ class turntableModule extends MainBaseModule
             $this->Json([],500,"没有足够的{$this->type[$actity['type']]}");
         }else{
             //减去消费的钻石
-            $GLOBALS['db']->getRow("update ".DB_PREFIX."user set `{$type}` = `{$type}`-{$actity['expenditure']} WHERE `id` = {$user_info['id']}");
+            //减去消费的
+            require_once APP_ROOT_PATH."system/model/user.php";
+            modify_account([$this->source[$actity['type']]=>'-'.$actity['expenditure']],$user_info['id'],'大转盘游戏消耗');
+//            $GLOBALS['db']->getRow("update ".DB_PREFIX."user set `{$type}` = `{$type}`-{$actity['expenditure']} WHERE `id` = {$user_info['id']}");
             $this->Json([],200,'成功!');
         }
     }
