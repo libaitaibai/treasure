@@ -1363,6 +1363,8 @@ class duobao
             $val2['img'] = './public/avatar/temp/guaguale.jpg';
         });
 
+        empty($list1)?$list1=[]:'';
+        empty($list2)?$list2=[]:'';
         $list = array_merge($list,$list1,$list2);
         shuffle($list);
 
