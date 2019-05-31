@@ -150,7 +150,9 @@ class turntableModule extends MainBaseModule
         if(in_array($prize['type'],array_keys($this->source))){
             $type = $this->source[$prize['type']];
             $money = (int)$prize['name'];
-            $GLOBALS['db']->getRow("update ".DB_PREFIX."user set `{$type}` = `{$type}`+{$money} WHERE `id` = {$user_info['id']}");
+            require_once APP_ROOT_PATH."system/model/user.php";
+            modify_account([$type=>$money],$user_info['id'],'大转盘游戏中奖!');
+//            $GLOBALS['db']->getRow("update ".DB_PREFIX."user set `{$type}` = `{$type}`+{$money} WHERE `id` = {$user_info['id']}");
         }
         //实物添加到订单
         if($prize['type'] == 4){
