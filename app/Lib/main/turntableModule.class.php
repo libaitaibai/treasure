@@ -115,8 +115,31 @@ class turntableModule extends MainBaseModule
             $this->Json([],500,'数据传输不全');
         }
 
+        //奖品信息
         $prize =  $GLOBALS['db']->getRow("select * from ".DB_PREFIX."turntable_actity_prize where id = '".$prizeid."'");
-        if($prize['count'] < 1){
+
+        //活动信息
+        $actity =  $GLOBALS['db']->getRow("select expenditure,type  from ".DB_PREFIX."turntable_actity where id = '".$prize['actityid']."'");
+
+        if($actity['type'] == 1){  //分销返利
+            $order_info = array(
+                'user_id'=>$user_info['id'],
+                'refund_amount'=>0,
+                'pay_amount'=>$actity['expenditure'],
+                'order_sn'=>''
+            );
+            require_once APP_ROOT_PATH."system/model/fx.php";
+            send_fx_order_salary($order_info);
+        }
+
+        if($prize['name'] == 0){
+            $this->Json([],200,'谢谢惠顾!');
+        }
+
+        //已经中奖的信息
+        $win =  $GLOBALS['db']->getRow("select count(*) as num,actityid from ".DB_PREFIX."turntable_win where prizeyid = '".$prizeid."'");
+
+        if($prize['count'] <= $win['num']){
             $this->Json([],500,'奖品库存不足!');
         }
 
@@ -126,8 +149,14 @@ class turntableModule extends MainBaseModule
             $money = (int)$prize['name'];
             $GLOBALS['db']->getRow("update ".DB_PREFIX."user set `{$type}` = `{$type}`+{$money} WHERE `id` = {$user_info['id']}");
         }
+        //实物添加到订单
+        if($prize['type'] == 4){
+            require_once APP_ROOT_PATH . "system/model/deal_order.php";
+            createPaidOrder([$prize['name']=>1],$user_info['id']);
+        }
+
         //奖品的商品数量-1
-        $GLOBALS['db']->getRow("update ".DB_PREFIX."turntable_actity_prize set `{count}` = `{count}`-1 WHERE `id` = {$prizeid}");
+        //$GLOBALS['db']->getRow("update ".DB_PREFIX."turntable_actity_prize set `{count}` = `{count}`-1 WHERE `id` = {$prizeid}");
 
         $save_data = ['actityid'=>$prize['actityid'],'prizeyid'=>$prize['id'],'userid'=>$user_info['id'],'name'=>$prize['name']];
         $GLOBALS['db']->autoExecute(DB_PREFIX."turntable_win",$save_data,'INSERT','','SILENT');
