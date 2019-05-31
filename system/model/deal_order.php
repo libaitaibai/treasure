@@ -288,4 +288,149 @@ function cancel_totalbuy_order($order_info, $is_user_close=false)
     return false;
 }
 
+
+
+/*
+ *  创建订单
+ *  $deal_ids = [
+ *       '177'=>1, 商品ID=>商品个数
+ *       '178'=>2
+ *  ]
+ *
+ *
+ * */
+function createPaidOrder($deal_ids,$user_id){
+
+    if(!is_array($deal_ids) || !$user_id){
+        return false;
+    }
+    require_once APP_ROOT_PATH . "system/extend/ip.php";
+    require_once APP_ROOT_PATH . "system/model/cart.php";
+    $ids = implode(',',array_keys($deal_ids));
+
+    //查询商品库存 库存不足不考虑
+    //total_buy_stock
+    $deals = array();
+    $sql                = "select * from ".DB_PREFIX."deal where id in(".$ids.")";
+    $tmp   = $GLOBALS['db']->getAll($sql);
+    foreach($tmp as $v){
+        $deals[$v['id']] = $v;
+    }
+
+    foreach($deal_ids as $deal_id=>$num){
+        if(!isset($deals[$deal_id])){
+            unset($deal_ids[$deal_id]);
+        }
+    }
+
+    $duobao = array();
+    $duo_tmp = $GLOBALS['db']->getAll("select * from ".DB_PREFIX."duobao_item where deal_id in(".$ids.")");
+
+    foreach($duo_tmp as $k=>$v){
+        $duobao[$v['deal_id']] = $v;
+    }
+
+    // 开始生成订单
+    $order = array();
+    $now                       = NOW_TIME;
+    $order ['type']            = 3; // 直购订单
+    $order ['user_id']         = $user_id;
+    $order ['create_time']     = $now;
+    $order ['update_time']     = $now;
+    $order ['total_price']     = 0; // 应付总额 商品价 - 会员折扣 + 运费
+
+    // + 支付手续费
+    $order ['pay_amount']          = 0;
+    $order ['pay_status']          = 0; // 新单都为零， 等下面的流程同步订单状态
+    $order ['delivery_status']     = 0;
+    $order ['order_status']        = 0; // 新单都为零， 等下面的流程同步订单状态
+    $order ['return_total_score']  = 0; // 结单后送的积分
+    $order ['memo']                = '';
+
+    // 地址待定
+    $order ['region_info']     = '';
+    $order ['address']         = '';
+    $order ['mobile']          = '';
+    $order ['consignee']       = '';
+    $order ['zip']             = '';
+
+    $order ['ecv_money']       = 0;
+    $order ['account_money']   = 0;
+    $order ['ecv_sn']          = '';
+
+    $order ['payment_id']  = 1; //余额支付
+    $order ['bank_id']     = "";
+
+    // 更新来路
+    $order ['referer']     = '';
+    $order ['user_name']   = isset($GLOBALS['user_info']['user_name'])?isset($GLOBALS['user_info']['user_name']):'';
+    $order ['duobao_ip']   = CLIENT_IP;
+    $ip                    = new iplocate ();
+    $area                  = $ip->getaddress ( CLIENT_IP );
+    $order ['duobao_area'] = $area ['area1'];
+
+    $order['create_date_ymd']  = to_date(NOW_TIME,"Y-m-d");
+    $order['create_date_ym']   = to_date(NOW_TIME,"Y-m");
+    $order['create_date_y']    = to_date(NOW_TIME,"Y");
+    $order['create_date_m']    = to_date(NOW_TIME,"m");
+    $order['create_date_d']    = to_date(NOW_TIME,"d");
+
+    do {
+        $order ['order_sn'] = to_date ( NOW_TIME, "Ymdhis" ) . rand ( 10, 99 );
+        $GLOBALS ['db']->autoExecute ( DB_PREFIX . "deal_order", $order, 'INSERT', '', 'SILENT' );
+        $order_id = intval ( $GLOBALS ['db']->insert_id () );
+
+    } while ( $order_id == 0 );
+
+    // 生成订单商品
+    foreach($deal_ids as $deal_id=>$num){
+        $goods_item = array();
+        $goods_item['id']                       = '';
+        $goods_item['deal_id']                  = $deal_id;
+        $goods_item['duobao_id']                = 0;
+        $goods_item['duobao_item_id']           = 0;
+        if(isset($duobao[$deal_id])){
+            $goods_item['duobao_id']     = $duobao[$deal_id]['duobao_id'];
+            $goods_item['duobao_item_id']           = $duobao[$deal_id]['id'];
+        }
+
+        $goods_item['number']                   = $num;
+        $goods_item['unit_price']               = $deals[$deal_id]['current_price'];
+        $goods_item['total_price']              = $num*$goods_item['unit_price'];
+        $goods_item['name']                     = $deals[$deal_id]['name'];
+        $goods_item['delivery_status']          = 0;
+        $goods_item['return_score']             = 0;
+        $goods_item['return_total_score']       = 0;
+        $goods_item['verify_code']              = 0;
+        $goods_item['order_sn']                 = $order['order_sn'];
+        $goods_item['order_id']                 = $order_id;
+        $goods_item['is_arrival']               = 0;
+        $goods_item['deal_icon']                = $deals[$deal_id]['icon'];
+        $goods_item['user_id']                  = $user_id;
+        $goods_item['duobao_ip']                = $order['duobao_ip'];
+        $goods_item['duobao_area']              = $order['duobao_area'];
+        $goods_item['type']                     = $order['type'];
+        $goods_item['create_time']              = NOW_TIME;
+        $goods_item['create_date_ymd']          = to_date(NOW_TIME,"Y-m-d");
+        $goods_item['create_date_ym']           = to_date(NOW_TIME,"Y-m");
+        $goods_item['create_date_y']            = to_date(NOW_TIME,"Y");
+        $goods_item['create_date_m']            = to_date(NOW_TIME,"m");
+        $goods_item['create_date_d']            = to_date(NOW_TIME,"d");
+
+        $goods_item['consignee']                = '';
+        $goods_item['mobile']                   = '';
+        $goods_item['region_info']              = '';
+        $goods_item['address']                  = '';
+        $goods_item['is_set_consignee']         = 1;
+
+        $GLOBALS ['db']->autoExecute ( DB_PREFIX . "deal_order_item", $goods_item, 'INSERT', '', 'SILENT' );
+    }
+
+    //支付完成
+    $rs = order_paid($order_id);
+
+    return $rs;
+}
+
+
 ?>
