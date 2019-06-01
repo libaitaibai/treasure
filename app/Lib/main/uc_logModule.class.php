@@ -90,6 +90,45 @@ class uc_logModule extends MainBaseModule
 	    $GLOBALS['tmpl']->assign("page_title","用户资金日志"); //title
 	    $GLOBALS['tmpl']->display("uc/uc_log.html"); //title
 	}
+
+    /**
+     * 资金日志
+     */
+    public function jewel()
+    {
+        $user_info = $GLOBALS['user_info'];
+        //业务逻辑部分
+        //分页
+        require_once APP_ROOT_PATH."app/Lib/page.php";
+        $page_size = app_conf("PAGE_SIZE");
+        $page = intval($_REQUEST['p']);
+        if($page==0)
+            $page = 1;
+        $limit = (($page-1)*$page_size).",".$page_size;
+
+        //取出积分信息
+        $uc_query_data['cur_score'] = $user_info['jewel'];
+
+        require_once APP_ROOT_PATH.'system/model/user_center.php';
+        $data = get_user_log($limit,$user_info['id'],'jewel'); //获取资金数据
+//        echo'<pre>';var_dump($data);exit;
+
+        $GLOBALS['tmpl']->assign("uc_query_data",$uc_query_data);
+
+        //分页输出
+        $page = new Page($data['count'],$page_size);   //初始化分页对象
+        $p  =  $page->show();
+        $GLOBALS['tmpl']->assign('pages',$p);
+        //数据
+        $GLOBALS['tmpl']->assign("user_info",$user_info);
+        $GLOBALS['tmpl']->assign('data',$data);
+        //通用模版参数定义
+        assign_uc_nav_list();//左侧导航菜单
+        $GLOBALS['tmpl']->assign("no_nav",true); //无分类下拉
+        $GLOBALS['tmpl']->assign("page_title","用户资金日志"); //title
+        $GLOBALS['tmpl']->display("uc/uc_log.html"); //title
+    }
+
 	/**
 	 * 积分日志
 	 */

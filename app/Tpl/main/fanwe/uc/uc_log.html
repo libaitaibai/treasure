@@ -46,6 +46,7 @@ var ALLOW_EXCHANGE = 0;
 				<ul class="clearfix">
 					<li {if $ACTION_NAME eq 'money'}class="cur"{/if}><a href="{url r="index" b="uc_log#money" }">我的资金</a></li>
 					<li {if $ACTION_NAME eq 'score'} class="cur"{/if}><a href="{url r="index" b="uc_log#score" }">我的积分</a></li>
+					<li {if $ACTION_NAME eq 'jewel'} class="cur"{/if}><a href="{url r="index" b="uc_log#jewel" }">我的钻石</a></li>
 					{if $allow_exchange}<li {if $ACTION_NAME eq 'exchange'} class="cur"{/if}><a href="{url r="index" b="uc_log#exchange" }">uc兑换</a></li>{/if}
 				</ul>
 			</div>
@@ -205,7 +206,52 @@ var ALLOW_EXCHANGE = 0;
 				</div>
 			</div>
 			{/if}
-			
+
+			<!--积分-->
+			{if $ACTION_NAME eq 'jewel'}
+			<div class="info_box">
+				<div class="blank20"></div>
+				<h3>我的积分信息</h3>
+				<div class="blank10"></div>
+				<div class="bg_box ">
+					<div class="info_items">
+						<ul>
+							<li><label>我当前钻石是：</label><span class="main_color">{$uc_query_data.cur_score}</span></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="blank20"></div>
+			<div class="info_box">
+				<h3>我的钻石记录</h3>
+				<div class="blank10"></div>
+				<div class="info_table">
+					<table>
+						<tbody>
+						<tr>
+							<th width="120">时间</th>
+							<th width="auto">详情</th>
+							<th width="70">钻石值</th>
+						</tr>
+						{foreach from=$data.list item=row}
+						<tr class="alt">
+							<td>{$row.flog_time}</td>
+							<td class="detail">{$row.log_info}</td>
+							<td class="value increase" ><span class="growth">{if $row.jewel gt 0}+{/if}{$row.jewel}</span></td>
+						</tr>
+						{/foreach}
+						<tr >
+							{if $data.count gt 0}
+							<td colspan="3"><div class="pages">{$pages}</div></td>
+							{else}
+							<td colspan="3"><span>暂时没有积分记录，^_^ </span></td>
+							{/if}
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			{/if}
 			
 			<!-- 兑换 -->
 			{if $ACTION_NAME eq 'exchange' && $allow_exchange}

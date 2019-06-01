@@ -12,7 +12,7 @@
 //查询会员日志
 function get_user_log($limit,$user_id,$t='')
 {
-	if(!in_array($t,array("money","score","point")))
+	if(!in_array($t,array("money","score","point","jewel")))
 	{
 		$t = "";
 	}
