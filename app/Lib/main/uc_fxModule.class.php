@@ -171,13 +171,32 @@ class uc_fxModule extends MainBaseModule
 		$GLOBALS['tmpl']->assign("data",$root);
 		$GLOBALS['tmpl']->display("uc/uc_fx.html");
 	}
-	
+
+    /**
+     * 显示
+     */
+	public function show()
+    {
+        global_run();
+        init_app_page();
+        assign_uc_nav_list();//左侧导航菜单
+
+        $action = $GLOBALS['_GET']['action'];
+        $this->$action();
+
+    }
+
+    private function starttime($start_time,$new)
+    {
+        return $start_time-($new-1)*60*60*24;
+    }
+
 	public function user_list_one(){
 	    require APP_ROOT_PATH."system/model/uc_center_service.php";
 	    global_run();
 	    init_app_page();
 	    assign_uc_nav_list();//左侧导航菜单
-	    
+        $new = $GLOBALS['_GET']['new']?:1;
 	   
 	    $user_id = intval($GLOBALS['user_info']['id']);
 	    
@@ -197,7 +216,8 @@ class uc_fxModule extends MainBaseModule
 	    $now_time = to_date(NOW_TIME, 'Y-m-d');
 	    $start_time = strtotime($now_time);
 	    $end_time   = $start_time + 24*60*60;
-	     
+        $start_time = $this->starttime($start_time,$new);
+
 	    $fx_user_id = join(',', $fx_user_id);
 	    
 	    if ($fx_user_id) {
@@ -236,7 +256,10 @@ class uc_fxModule extends MainBaseModule
 	    }
 	     
 	    $root['amount_data'] = $user_list;
-	    
+
+        $GLOBALS['tmpl']->assign("new", $new);
+        $GLOBALS['tmpl']->assign("ACTION", 'user_list_one');
+        $GLOBALS['tmpl']->assign("type", '一级');
 	    $GLOBALS['tmpl']->assign("data", $root);
 	    $GLOBALS['tmpl']->display("uc/user_list_one.html");
 	}
@@ -246,7 +269,7 @@ class uc_fxModule extends MainBaseModule
 	    global_run();
 	    init_app_page();
 	    assign_uc_nav_list();//左侧导航菜单
-	    
+        $new = $GLOBALS['_GET']['new']?:1;
 	    
 	  
 	    $user_id = intval($GLOBALS['user_info']['id']);
@@ -280,7 +303,7 @@ class uc_fxModule extends MainBaseModule
 	    $now_time = to_date(NOW_TIME, 'Y-m-d');
 	    $start_time = strtotime($now_time);
 	    $end_time   = $start_time + 24*60*60;
-	    
+        $start_time = $this->starttime($start_time,$new);
 	     
 	   
 	    if ($fx_user_id) {
@@ -318,7 +341,9 @@ class uc_fxModule extends MainBaseModule
 	    }
 	    
 	    $root['amount_data'] = $user_list;
-	    
+        $GLOBALS['tmpl']->assign("new", $new);
+        $GLOBALS['tmpl']->assign("ACTION", 'user_list_two');
+        $GLOBALS['tmpl']->assign("type", '二级');
 	    $GLOBALS['tmpl']->assign("data", $root);
 	    $GLOBALS['tmpl']->display("uc/user_list_one.html");
 	}
@@ -328,7 +353,7 @@ class uc_fxModule extends MainBaseModule
 	    global_run();
 	    init_app_page();
 	    assign_uc_nav_list();//左侧导航菜单
-	    
+        $new = $GLOBALS['_GET']['new']?:1;
 	    
 	    $user_id = intval($GLOBALS['user_info']['id']);
 	    
@@ -371,7 +396,7 @@ class uc_fxModule extends MainBaseModule
 	    $now_time = to_date(NOW_TIME, 'Y-m-d');
 	    $start_time = strtotime($now_time);
 	    $end_time   = $start_time + 24*60*60;
-	     
+        $start_time = $this->starttime($start_time,$new);
 	    $fx_user_id = join(',', $fx_user_id);
 	     
 	    if ($fx_user_id) {
@@ -409,7 +434,9 @@ class uc_fxModule extends MainBaseModule
 	    }
 	     
 	    $root['amount_data'] = $user_list;
-	    
+        $GLOBALS['tmpl']->assign("new", $new);
+        $GLOBALS['tmpl']->assign("ACTION", 'user_list_three');
+        $GLOBALS['tmpl']->assign("type", '三级');
 	    $GLOBALS['tmpl']->assign("data", $root);
 	    $GLOBALS['tmpl']->display("uc/user_list_one.html");
 	}

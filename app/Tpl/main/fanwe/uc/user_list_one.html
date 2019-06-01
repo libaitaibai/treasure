@@ -34,14 +34,19 @@ var MEDAL_BOX_URL = '{url x="index" r="uc_medal#load_medal"}';
 	<div class="right_box">
 		<ul class="web-map clearfix">
 			<li>当前位置：</li>
-			<li><a href="{url x="index" r="uc_center"}">我的云里云</a> ></li>
+			<li><a href="{url x="index" r="uc_center"}">我的夺宝</a> ></li>
 			<li><a href="{url x="index" r="uc_fx"}">我的邀请</a> ></li>
-			<li class="txt-red">我的一级邀请用户</li>
+			<li class="txt-red">我的{$type}邀请用户</li>
 		</ul>
 		{if $data.amount_data}
 		<div class="main_box setting_user_info">
 			<div class="fx-title clearfix">
-				<h1 class="f_l">我的一级邀请用户</h1>
+				<h1 class="f_l">我的{$type}邀请用户</h1>
+				<div style="float:right">
+					<a href="{url x="index" r="uc_fx#show" p="id=$u.id&new=1&action=$ACTION"}" {if $new==1}class="btn btn-main"{else}class="btn "{/if}>今日统计</a>
+					<a href="{url x="index" r="uc_fx#show" p="id=$u.id&new=7&action=$ACTION"}" {if $new==7}class="btn btn-main"{else}class="btn "{/if}>本周统计</a>
+					<a href="{url x="index" r="uc_fx#show" p="id=$u.id&new=30&action=$ACTION"}" {if $new==30}class="btn btn-main"{else}class="btn "{/if}>本月统计</a>
+				</div>
 			</div>
 			<ul class="user-info-list">
 				<li class="user-info-hd clearfix">
