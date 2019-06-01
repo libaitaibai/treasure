@@ -59,7 +59,7 @@ var MEDAL_BOX_URL = '{url x="index" r="uc_medal#load_medal"}';
 				</ul>
 				<div class="fx-info">
 					<p>今日我的一级邀请用户交易：</p>
-					<p><span class="txt-red">{$data.today_first_order_money}</span>个金币，<span class="txt-red">{$data.fx_count.three_fx_count}</span>个订单数，按照{if $data.fx_salary_type==1 }{$data.fx_level_one_salary}%{else}固额{$data.fx_level_one_salary}{/if}的佣金，我收入<span class="txt-red">{$data.today_first_money}</span>个金币</p>
+					<p><span class="txt-red">{$data.today_first_order_money}</span>个金币，<span class="txt-red">{$data.fx_count.three_fx_count}</span>个订单数，按照{if $data.fx_salary_type==1 }{$data.fx_level_one_salary}%{else}固额{$data.fx_level_one_salary}{/if}的佣金，我收入<a href="{url x="index" r="uc_log#money" }"><span class="txt-red">{$data.today_first_money}</span></a>个金币</p>
 				</div>
 			</div>
 			<div class="my-fx-list">
