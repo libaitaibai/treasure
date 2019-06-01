@@ -111,7 +111,6 @@ class uc_logModule extends MainBaseModule
 
         require_once APP_ROOT_PATH.'system/model/user_center.php';
         $data = get_user_log($limit,$user_info['id'],'jewel'); //获取资金数据
-//        echo'<pre>';var_dump($data);exit;
 
         $GLOBALS['tmpl']->assign("uc_query_data",$uc_query_data);
 
