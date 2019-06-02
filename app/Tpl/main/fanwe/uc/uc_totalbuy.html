@@ -120,6 +120,9 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/uc/uc_totalbuy.
 											<td class="col-period">{$value.order_sn}</td>
 											<td class="col-joinNum">{$value.number}次</td>
 											<td class="col-status">
+												{if $value.has_address eq 0}
+												<a style="text-decoration:none;color:red" href='{url x="index" p="uc_totalbuy#show_address" d="order_id=$value.order_id"}'>请填写地址</a>
+												{else}
 												{if $value.pay_status neq 2}
 												<p class="{if $value.order_status==3 || $value.order_status==2}is_delete_status{/if}" style="color:red;">支付未完成</p>
 												{elseif $value.pay_status eq 2&&$value.delivery_status eq 0&&$value.is_arrival eq 0}
@@ -129,6 +132,8 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/uc/uc_totalbuy.
 												{elseif $value.pay_status eq 2&&$value.delivery_status eq 1&&$value.is_arrival eq 1}
 												<p class="txt-green">已签收</p>
 												{/if}
+												{/if}
+
 											</td>
 											<td class="col-opt" style="">
 												{if $value.pay_status eq 2&&$value.delivery_status eq 1&&$value.is_arrival eq 1}
@@ -187,5 +192,6 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/uc/uc_totalbuy.
 		</div>
 	</div>
 </div>
+
 <div class="blank20"></div>
 {include file="inc/footer.html"}

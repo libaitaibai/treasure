@@ -3,15 +3,15 @@
   background-image: url("../images/scratch/img/20190413110146.jpg");
   background-position:center center;
   background-repeat: no-repeat;
-  width:100%;
+  /*width:800px;*/
   height:500px;
   overflow: hidden;
   position: relative;
+    margin:0 auto;
 }
 .text1{
   color:black;
   margin: auto;
-  width:100%;
   height:100px;
   padding: 20px;
   text-align: center;
@@ -22,9 +22,9 @@ figcaption{
 #bridge {
   display: block;
   margin: 0 auto;
-  background-image: url("../images/scratch/img/scratch-2.jpg");
+  /*background-image: url("../images/scratch/img/scratch-2.jpg");
   background-image: -webkit-image-set(url("../images/scratch/img/scratch-2.jpg") 1x, url("../images/scratch/img/scratch-2x.jpg") 2x);
-  background-size: cover;
+  */background-size: cover;
   width: 100%;
   max-width: 750px;
   height: auto;
@@ -37,13 +37,52 @@ figcaption{
   font-family: Avenir, sans-serif;
   width:285px;
   height:145px;
-/*  position: absolute;
-  top:191px;
-  left:65px;*/
-  margin:191px auto;
+    margin:189px auto;
+ /* position: absolute;
+  top:189px;
+  left:40px;*/
   overflow: hidden;
     position:relative;
-    left:3px;
+    left:2px;
+
+
+}
+#redux{
+
+    width:285px;
+    height:145px;
+    position:relative;
+    z-index: 22;
+    cursor: url(../images/scratch/img/circular-cursor.png) 53 53, crosshair;
+}
+#mask_img_bg {
+    /*position: absolute;
+    left: 0.2rem;
+    top: 0.2rem;
+    bottom: 0.2rem;
+    right: 0.2rem;*/
+    background: #fff;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+}
+
+#mask_img_bg img {
+    width: 5.3rem;
+    height: 5.5rem;
+    margin: 0 auto;
+    display: block;
+}
+.cont-span {
+    display: block;
+    width: 120px;
+    height: 38px;
+    text-align: center;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    margin-left: -60px;
+    z-index: 10;
+    font-size:30px;
 }
 
 #bridgeContainer figcaption {
@@ -71,7 +110,7 @@ figcaption{
     .g_3_cet table td{
         border:1px solid rgb(42, 40, 40);
         height:33px;
-        padding:10px 30px;
+        padding:10px 20px;
     }
     .g_3{
         margin-bottom:45px;
