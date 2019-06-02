@@ -41,7 +41,7 @@ class uc_totalbuyApiModule extends MainBaseApiModule
 			
 			$sql_count = "select count(*) from ".DB_PREFIX."deal_order_item as i left join ".DB_PREFIX."deal_order as o on o.id = i.order_id where o.user_id = ".$user_data['id']." and o.type = 3 ".$log_type_condition;
 
-			$sql = "select i.id,i.deal_id,i.duobao_id,i.duobao_item_id,i.number,i.delivery_status,i.name,i.order_sn,i.unit_price,i.total_price,i.order_id,i.is_arrival,i.refund_status,i.deal_icon,i.user_id,i.create_time,i.user_name,o.pay_status,o.create_time,o.order_sn,o.order_status
+			$sql = "select i.id,i.deal_id,i.duobao_id,i.duobao_item_id,i.number,i.delivery_status,i.name,i.order_sn,i.unit_price,i.total_price,i.order_id,i.is_arrival,i.refund_status,i.deal_icon,i.user_id,i.create_time,i.user_name,o.pay_status,o.create_time,o.order_sn,o.order_status,o.region_info
 		    from ".DB_PREFIX."deal_order_item as i left join ".DB_PREFIX."deal_order as o on o.id = i.order_id where o.user_id = ".$user_data['id']." and o.type = 3 ".$log_type_condition." order by i.create_time desc limit ".$limit;
 		
 		    $list = $GLOBALS['db']->getAll($sql);
@@ -55,6 +55,7 @@ class uc_totalbuyApiModule extends MainBaseApiModule
 			foreach($list as $k=>$v)
 			{
 
+                $list[$k]['has_address'] = empty($v['region_info'])?0:1;
 			    if (!$v['id']) {
 			        continue;
 			    }

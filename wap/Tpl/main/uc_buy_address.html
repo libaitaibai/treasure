@@ -1,0 +1,109 @@
+<?php
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/weebox.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/fanweUI.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/style.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/public.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/color.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/totalbuy.css";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery-1.6.2.min.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.bgiframe.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.timer.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.weebox.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.touchwipe.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/fastclick.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/TouchSlide.1.1.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/onload.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/swipe.js";
+
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/duoobao_item_num.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/duoobao_item_num.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/totalbuy.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/totalbuy.js";
+
+?>
+{include file="inc/header_title_only.html"}
+
+
+<div class="add-address">
+    <a href="{url x="index" r="totalbuy#add_consignee"}">添加地址</a>
+</div>
+
+
+<div class="blank10"></div>
+<form name="buy_form" id="buy_form" action="{url x="index" r="totalbuy#done"}" method="post">
+
+<a class="address-box" data-id="{$data.consignee.id}" href="{url x="index" r="totalbuy#consignee_list" p="conid=$data.consignee.id"}">
+<div class="user-info">
+    <p class="user-name fl">{$data.consignee.consignee}</p>
+    <p class="user-phone fr">{$data.consignee.mobile}</p>
+    <div class="clear"></div>
+    <p class="uc-add">{$data.consignee.address}</p>
+</div>
+<i class="iconfont">&#xe6fa;</i>
+</a>
+
+<div class="blank10"></div>
+
+<div class="blank10"></div>
+
+
+
+<div class="blank10"></div>
+
+<div class="blank10"></div>
+<div class="blank50"></div>
+<div class="buy-bar">
+    <input type="hidden" name="order_id" value="{$order_id}" />
+    <a id="sure_address">确认地址</a>
+</div>
+</form>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+
+        $('#sure_address').bind('click',function(){
+
+
+            if($('.address-box').length==0){
+                $.showErr('请添加地址');
+                return false;
+            }
+            var data = {
+                order_id:$('input[name="order_id"]').val(),
+                address_id:$('.address-box').attr('data-id')
+            };
+
+            $.ajax({
+                type:'post',
+                url:APP_ROOT + "/wap/index.php?ctl=uc_totalbuy&act=orderAddress",
+                data:data,
+                dataType:'json',
+                success:function(xhr){
+                    if(!xhr.status){
+                        $.showErr(xhr.info);
+                        return false;
+                    }
+
+                    window.location.href=APP_ROOT + "/wap/index.php?ctl=uc_totalbuy";
+
+                }
+            });
+         return false;
+
+        });
+
+    });
+
+</script>
+
+{include file="inc/no_footer.html"}
