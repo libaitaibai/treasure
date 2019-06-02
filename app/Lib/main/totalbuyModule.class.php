@@ -473,9 +473,8 @@ class totalbuyModule extends MainBaseModule
 	        ajax_return($result);
 	    }
 	    $jump_type = strim($_REQUEST['jump_type']);
-	
-	
-	
+
+
 	    $consignee_id = intval($_REQUEST['consignee_id']);
 	    $consignee_count=intval($GLOBALS['db']->getOne("select count(*) from ".DB_PREFIX."user_consignee where user_id = ".$GLOBALS['user_info']['id']));
 	

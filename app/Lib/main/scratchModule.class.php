@@ -556,7 +556,6 @@ class scratchModule extends MainBaseModule
 
    public function test(){
 
-
        require_once APP_ROOT_PATH . "system/model/deal_order.php";
 
        createPaidOrder(['177'=>2],263);

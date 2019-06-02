@@ -13,8 +13,7 @@ class uc_totalbuyModule extends MainBaseModule
 {
 	public function index()
 	{
-	   
-		require APP_ROOT_PATH."system/model/uc_center_service.php";
+	    require APP_ROOT_PATH."system/model/uc_center_service.php";
 		global_run();
 		init_app_page();
 		assign_uc_nav_list();//左侧导航菜单
@@ -94,16 +93,17 @@ class uc_totalbuyModule extends MainBaseModule
 		if ($page == 0) $page = 1;
 		$limit = (($page - 1) * $page_size) . "," . $page_size;
 		
-		$sql = "select i.id,i.deal_id,i.duobao_id,i.duobao_item_id,i.number,i.delivery_status,i.name,i.order_sn,i.order_id,i.is_arrival,i.refund_status,i.user_id,i.create_time,i.user_name,o.pay_status,o.create_time,o.order_sn,o.order_status
+		$sql = "select i.id,i.deal_id,i.duobao_id,i.duobao_item_id,i.number,i.delivery_status,i.name,i.order_sn,i.order_id,i.is_arrival,i.refund_status,i.user_id,i.create_time,i.user_name,o.pay_status,o.create_time,o.order_sn,o.order_status,o.region_info
 		    from ".DB_PREFIX."deal_order_item as i left join ".DB_PREFIX."deal_order as o on o.id = i.order_id where o.user_id = ".$id." and o.type = 3 ".$log_type_condition." ".$log_time_type_condition." order by i.create_time desc limit ".$limit;
-		
+
 		$sql_id = "select id from ".DB_PREFIX."deal_cate  c where  c.is_fictitious=1";
 		$is_fictitious_id = $GLOBALS['db']->getAll($sql_id);
 		foreach ($is_fictitious_id as $k=>$v){
 		    $is_fictitious_id[$k]=$v['id'];
 		}
 		$list = $GLOBALS['db']->getAll($sql);
-		
+
+
 		foreach($list as $k=>$v)
 		{
 		    $list[$k]['duobao_item'] = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."duobao_item where id = ".$v['duobao_item_id']);
@@ -113,9 +113,12 @@ class uc_totalbuyModule extends MainBaseModule
 		        $list[$k]['duobao_item']['is_fictitious_id'] = $list[$k]['duobao_item']['cate_id'];
 		         
 		    }
+
+		    $list[$k]['has_address'] = empty($v['region_info'])?0:1;
+
 		
 		}
-		
+
 		$page = new Page($total, $page_size); // 初始化分页对象
 		$p = $page->show();
 		
@@ -343,7 +346,79 @@ class uc_totalbuyModule extends MainBaseModule
 	    
 	    
 	    
-	} 
+	}
+
+
+	public function show_address(){
+
+        global_run();
+        init_app_page();
+        assign_uc_nav_list();
+        //避免重复提交
+        //assign_form_verify();
+
+        if( check_save_login() != LOGIN_STATUS_LOGINED )
+        {
+            app_redirect(url("index","user#login"));
+        }
+
+        $user_id = intval($GLOBALS['user_info']['id']);
+        $order_id = intval($_REQUEST['order_id']);
+
+        //输出所有配送方式
+        $consignee_list = $GLOBALS['db']->getAll("select * from ".DB_PREFIX."user_consignee where user_id = ".$user_id);
+        foreach($consignee_list as $k=>$v){
+            $consignee_info=load_auto_cache("consignee_info",array("consignee_id"=>$v['id']));
+            $consignee_list[$k]['del_url']    = url('index','uc_consignee#del',array('id'=>$v['id']));
+            $consignee_list[$k]['dfurl']      = url('index','uc_consignee#set_default',array('id'=>$v['id']));
+            $consignee_list[$k]['region_lv2'] = $consignee_info['consignee_info']['region_lv2_name'];
+            $consignee_list[$k]['region_lv3'] = $consignee_info['consignee_info']['region_lv3_name'];
+            $consignee_list[$k]['region_lv4'] = $consignee_info['consignee_info']['region_lv4_name'];
+        }
+
+        $GLOBALS['tmpl']->assign("order_id", $order_id);
+        $GLOBALS['tmpl']->assign("consignee_list", $consignee_list);
+
+        $GLOBALS['tmpl']->display("uc/uc_buy_address.html");
+    }
+
+
+    public function orderAddress(){
+
+	    $order_id = intval($_REQUEST['order_id']);
+	    $address_id = intval($_REQUEST['address_id']);
+	    if(!$order_id){
+	        ajax_return(array('status'=>0,'info'=>'订单ID缺失'));
+        }
+
+        if(!$address_id){
+	        ajax_return(array('status'=>0,'info'=>'请选择地址'));
+        }
+        $sql = 'select * from '.DB_PREFIX.'user_consignee where id='.$address_id;
+        $address = $GLOBALS['db']->getRow($sql);
+        if(empty($address)){
+            ajax_return(array('status'=>0,'info'=>'地址不存在'));
+        }
+
+        $region_conf   = load_auto_cache ( "delivery_region" );
+        $region_lv1    = intval ( $address ['region_lv1'] );
+        $region_lv2    = intval ( $address ['region_lv2'] );
+        $region_lv3    = intval ( $address ['region_lv3'] );
+        $region_lv4    = intval ( $address ['region_lv4'] );
+        $region_info   = $region_conf [$region_lv1] ['name'] . " " . $region_conf [$region_lv2] ['name'] . " " . $region_conf [$region_lv3] ['name'] . " " . $region_conf [$region_lv4] ['name'];
+
+        $data = array();
+        $data ['region_info']     = $region_info;
+        $data ['address']         = strim ( $address ['address'] );
+        $data ['mobile']          = strim ( $address ['mobile'] );
+        $data ['consignee']       = strim ( $address ['consignee'] );
+        $data ['zip']             = strim ( $address ['zip'] );
+
+        $GLOBALS['db']->autoExecute(DB_PREFIX.'deal_order',$data,'UPDATE','id='.$order_id);
+
+        ajax_return(array('status'=>1,'info'=>'更新成功'));
+
+    }
 
 }
 ?>
