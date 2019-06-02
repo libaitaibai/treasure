@@ -33,14 +33,14 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
 
 <style>
 
-    #lottery{width:950px;height:680px;margin:0px auto;border:4px solid #ba1809;}
+    #lottery{width:950px;height:640px;margin:0px auto;border:4px solid #ba1809;}
     #lottery table{width:100%;background-image:url({$TMPL}/images/truntable/img/timg3.jpg);}
-    #lottery table td{position:relative;width:190px;height:170px;text-align:center;color:#333;font-index:-999;
+    #lottery table td{position:relative;width:190px;height:160px;text-align:center;color:#333;font-index:-999;
         /*background:url("./img/back.jpg");*/
     }
     #lottery table td p{
         font-size: 20px;
-        color:rgb(255, 94, 0);
+        color: rgb(255, 164, 133);
         margin: 0px;
 
     }
@@ -101,32 +101,28 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
     <div id="lottery">
         <table border="0" cellpadding="0" cellspacing="0">
             <tr>
-                <td class="lottery-unit lottery-unit-0"><img src="{$TMPL}/images/truntable/img/1y.jpg"><p><b>10优惠券</b></p><div class="mask"></div></td>
-                <td class="lottery-unit lottery-unit-1"><img src="{$TMPL}/images/truntable/img/1y.jpg"><p><b>10优惠券</b></p><div class="mask"></div></td>
-                <td class="lottery-unit lottery-unit-2"><img src="{$TMPL}/images/truntable/img/1y.jpg"><p><b>10优惠券</b></p><div class="mask"></div></td>
-                <td class="lottery-unit lottery-unit-3"><img src="{$TMPL}/images/truntable/img/1/gift0.jpg"><div class="mask"></div></td>
-                <td class="lottery-unit lottery-unit-4"><img src="{$TMPL}/images/truntable/img/1/gift3.jpg"><div class="mask"></div></td>
+                <td class="lottery-unit lottery-unit-0">{if isset($prize[0]['showimg'])}<img src="{function name="get_spec_image" v=$prize[0]['showimg'] w=161 h=161 g=1}" width="161" height="120">{else}<img src="{$TMPL}/images/truntable/img/{$prize[0].img}">{/if}<p><b>{$prize[0].abbrename}</b></p><div class="mask"></div></td>
+                <td class="lottery-unit lottery-unit-1">{if isset($prize[1]['showimg'])}<img src="{function name="get_spec_image" v=$prize[1]['showimg'] w=161 h=161 g=1}" width="161" height="120">{else}<img src="{$TMPL}/images/truntable/img/{$prize[1].img}">{/if}<p><b>{$prize[1].abbrename}</b></p><div class="mask"></div></td>
+                <td class="lottery-unit lottery-unit-2">{if isset($prize[2]['showimg'])}<img src="{function name="get_spec_image" v=$prize[2]['showimg'] w=161 h=161 g=1}" width="161" height="120">{else}<img src="{$TMPL}/images/truntable/img/{$prize[2].img}">{/if}<p><b>{$prize[2].abbrename}</b></p><div class="mask"></div></td>
+                <td class="lottery-unit lottery-unit-3">{if isset($prize[3]['showimg'])}<img src="{function name="get_spec_image" v=$prize[3]['showimg'] w=161 h=161 g=1}" width="161" height="120">{else}<img src="{$TMPL}/images/truntable/img/{$prize[3].img}">{/if}<p><b>{$prize[3].abbrename}</b></p><div class="mask"></div></td>
+                <td class="lottery-unit lottery-unit-4">{if isset($prize[4]['showimg'])}<img src="{function name="get_spec_image" v=$prize[4]['showimg'] w=161 h=161 g=1}" width="161" height="120">{else}<img src="{$TMPL}/images/truntable/img/{$prize[4].img}">{/if}<p><b>{$prize[4].abbrename}</b></p><div class="mask"></div></td>
             </tr>
             <tr>
-                <td class="lottery-unit lottery-unit-13"><img src="{$TMPL}/images/truntable/img/4.jpg"><div class="mask"></div></td>
+                <td class="lottery-unit lottery-unit-13">{if isset($prize[13]['showimg'])}<img src="{function name="get_spec_image" v=$prize[13]['showimg'] w=161 h=161 g=1}" width="161" height="120">{else}<img src="{$TMPL}/images/truntable/img/{$prize[13].img}">{/if}<p><b>{$prize[13].abbrename}</b></p><div class="mask"></div></td>
                 <td colspan="1" rowspan="2" class="choujiang-a"><a href="#" class="choujiang-ab"></a></td>
                 <td colspan="2" rowspan="2" class="choujiang-a"><a href="#" class="choujiang-ac"></a></td>
-
-                <td class="lottery-unit lottery-unit-5"><img src="{$TMPL}/images/truntable/img/5.jpg"><div class="mask"></div></td>
-
+                <td class="lottery-unit lottery-unit-5">{if isset($prize[5]['showimg'])}<img src="{function name="get_spec_image" v=$prize[5]['showimg'] w=161 h=161 g=1}" width="161" height="120">{else}<img src="{$TMPL}/images/truntable/img/{$prize[5].img}">{/if}<p><b>{$prize[5].abbrename}</b></p><div class="mask"></div></td>
             </tr>
             <tr>
-                <td class="lottery-unit lottery-unit-12"><img src="{$TMPL}/images/truntable/img/4.jpg"><div class="mask"></div></td>
-
-                <td class="lottery-unit lottery-unit-6"><img src="{$TMPL}/images/truntable/img/5.jpg"><div class="mask"></div></td>
-
+                <td class="lottery-unit lottery-unit-12">{if isset($prize[12]['showimg'])}<img src="{function name="get_spec_image" v=$prize[12]['showimg'] w=161 h=161 g=1}" width="161" height="120">{else}<img src="{$TMPL}/images/truntable/img/{$prize[12].img}">{/if}<p><b>{$prize[12].abbrename}</b></p><div class="mask"></div></td>
+                <td class="lottery-unit lottery-unit-6">{if isset($prize[6]['showimg'])}<img src="{function name="get_spec_image" v=$prize[6]['showimg'] w=161 h=161 g=1}" width="161" height="120">{else}<img src="{$TMPL}/images/truntable/img/{$prize[6].img}">{/if}<p><b>{$prize[6].abbrename}</b></p><div class="mask"></div></td>
             </tr>
             <tr>
-                <td class="lottery-unit lottery-unit-11"><img src="{$TMPL}/images/truntable/img/6.jpg"><div class="mask"></div></td>
-                <td class="lottery-unit lottery-unit-10"><img src="{$TMPL}/images/truntable/img/7.jpg"><div class="mask"></div></td>
-                <td class="lottery-unit lottery-unit-9"><img src="{$TMPL}/images/truntable/img/8.jpg"><div class="mask"></div></td>
-                <td class="lottery-unit lottery-unit-8"><img src="{$TMPL}/images/truntable/img/1/gift1.jpg"><div class="mask"></div></td>
-                <td class="lottery-unit lottery-unit-7"><img src="{$TMPL}/images/truntable/img/1/gift2.jpg"><div class="mask"></div></td>
+                <td class="lottery-unit lottery-unit-11">{if isset($prize[11]['showimg'])}<img src="{function name="get_spec_image" v=$prize[11]['showimg'] w=161 h=161 g=1}" width="161" height="120">{else}<img src="{$TMPL}/images/truntable/img/{$prize[11].img}">{/if}<p><b>{$prize[11].abbrename}</b></p><div class="mask"></div></td>
+                <td class="lottery-unit lottery-unit-10">{if isset($prize[10]['showimg'])}<img src="{function name="get_spec_image" v=$prize[10]['showimg'] w=161 h=161 g=1}" width="161" height="120">{else}<img src="{$TMPL}/images/truntable/img/{$prize[10].img}">{/if}<p><b>{$prize[10].abbrename}</b></p><div class="mask"></div></td>
+                <td class="lottery-unit lottery-unit-9">{if isset($prize[9]['showimg'])}<img src="{function name="get_spec_image" v=$prize[9]['showimg'] w=161 h=161 g=1}" width="161" height="120">{else}<img src="{$TMPL}/images/truntable/img/{$prize[9].img}">{/if}<p><b>{$prize[9].abbrename}</b></p><div class="mask"></div></td>
+                <td class="lottery-unit lottery-unit-8">{if isset($prize[8]['showimg'])}<img src="{function name="get_spec_image" v=$prize[8]['showimg'] w=161 h=161 g=1}" width="161" height="120">{else}<img src="{$TMPL}/images/truntable/img/{$prize[8].img}">{/if}<p><b>{$prize[8].abbrename}</b></p><div class="mask"></div></td>
+                <td class="lottery-unit lottery-unit-7">{if isset($prize[7]['showimg'])}<img src="{function name="get_spec_image" v=$prize[7]['showimg'] w=161 h=161 g=1}" width="161" height="120">{else}<img src="{$TMPL}/images/truntable/img/{$prize[7].img}">{/if}<p><b>{$prize[7].abbrename}</b></p><div class="mask"></div></td>
             </tr>
         </table>
     </div>
@@ -134,7 +130,7 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
         <div class="g_3">
             <div class="g_3_tit"><span class="g_3_txt">奖励</span></div>
             <div class="g_3_cet">
-                <p style="padding:5px 0px">抽奖花费 : {$actity.expenditure}{$actity.type_source}</p>
+                <p style="padding:5px 0px">抽奖花费 : {$actity.expenditure}{$actity.type}</p>
                 <table>
                     <tr>
                         <td width="50%">奖品</td>
@@ -210,22 +206,6 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
                 this.index=index;
                 return false;
             },
-            // roll:function(){
-            //
-            //     var index = this.index;
-            //     // console.log(index);
-            //     var count = this.count;
-            //     var lottery = this.obj;
-            //     $(lottery).find(".lottery-unit-"+index).removeClass("active");
-            //     index += 1;
-            //     if (index>count-1) {
-            //         index = 0;
-            //     };
-            //     $(lottery).find(".lottery-unit-"+index).addClass("active");
-            //     this.index=index;
-            //     return false;
-            //
-            // },
             stop:function(index){
                 this.prize=index;
                 return false;
@@ -299,27 +279,27 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
             return promise;
         }
 
-
-
         function roll(){
-            lottery.times += 1;
-            lottery.rolls();//转动过程调用的是lottery的roll方法，这里是第一次调用初始化
-            // console.log(lottery.times)
             if (lottery.times > lottery.cycle+10 && lottery.prize==lottery.index) {
                 //中奖的索引
-                // console.log("aaa",lottery.prize,lottery.cycle,lottery.index,lottery.speed);
-                alert("keyo")
                 clearTimeout(lottery.timer);
                 lottery.prize=-1;
                 lottery.times=0;
                 click=false;
-                lottery.speed=40;
+                console.log(200,lottery.times,lottery.cycle,lottery.index,lottery.speed);
+                var name=$(".lottery-unit-"+{$goodluck}+"").text();
+                alert(name);
+                // location.reload();
+                save();
 
+                lottery.init();
+                return;
             }else{
                 if (lottery.times<lottery.cycle) {
                     lottery.speed -= 10;
                 }else if(lottery.times==lottery.cycle) {
-                    var index = Math.random()*(lottery.count)|0;//中奖物品通过一个随机数生成
+                    var index ={$goodluck};
+                    // var index = Math.random()*(lottery.count)|0;//中奖物品通过一个随机数生成
                     lottery.prize = index;
                 }else{
                     if (lottery.times > lottery.cycle+10 && ((lottery.prize==0 && lottery.index==7) || lottery.prize==lottery.index+1)) {
@@ -334,49 +314,102 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
                 // console.log(lottery.speed)
                 lottery.timer = setTimeout(roll,lottery.speed);//循环调用
             }
+            lottery.times += 1;
+            lottery.rolls();//转动过程调用的是lottery的roll方法，这里是第一次调用初始化
             return false;
         }
 
         var click=false;
 
+        function save (){
+            var save_url = APP_ROOT + "/index.php?ctl=turntable&act=save";
+            var prize = {$prize_json};
+            $prizeid = prize[{$goodluck}].id;
+            console.log($prizeid);
+            $.ajax({
+                url:save_url,
+                type:'POST',
+                data:{'prizeid':$prizeid},
+                success:function(arg){
+
+                }
+            })
+        }
+        function check (){
+
+        }
         window.onload=function(){
+            var actity = {$actity_json};
+            var actityid = actity.id;
+            var check_url = APP_ROOT + "/index.php?ctl=turntable&act=check";
+
             lottery.init('lottery');
             $("#lottery table td a.choujiang-ab").click(function(){
                 if (click) {//click控制一次抽奖过程中不能重复点击抽奖按钮，后面的点击不响应
                     return false;
                 }else{
-                    lottery.speed=900;
-                    roll();    //转圈过程不响应click事件，会将click置为false
-                    click=true; //一次抽奖完成后，设置click为true，可继续抽奖
-                    return false;
+                    //传送id判断是否登录等
+                    $.ajax({
+                        url:check_url,
+                        type:'GET',
+                        data:{'actityid':actityid},
+                        success:function(arg){
+                            if(arg.code==200){
+                                lottery.speed=100;
+                                roll();   //转圈过程不响应click事件，会将click置为false
+                                click=true; //一次抽奖完成后，设置click为true，可继续抽奖
+                                return false;
+                            }else if(arg.code==500){
+                                alert(arg.msg);
+                                return ;
+                            }
+                        }
+                    })
+
                 }
             });
             $("#lottery table td a.choujiang-ac").click(function(){
                 if (click) {//click控制一次抽奖过程中不能重复点击抽奖按钮，后面的点击不响应
-
                     return false;
                 }else{
                     // lottery.speed=100;
                     // roll1().then(function(){
                     //     return roll1();
                     // });
-                    roll1()
-                        .then(function(){
+                    //传送id判断是否登录等
+                    $.ajax({
+                        url:check_url,
+                        type:'GET',
+                        data:{'actityid':actityid},
+                        success:function(arg){
+                            if(arg.code==200){
+                                roll1()
+                                    .then(function(){
+                                        return roll2();
+                                    })
+                                    .then(function () {
+                                        return roll3();
+                                    })
+                                    .then(function () {
+                                        return roll4();
 
-                            return roll2();
-                        })
-                        .then(function () {
-                            return roll3();
+                                    });
+                                // roll();
+                                // roll().then(roll());    //转圈过程不响应click事件，会将click置为false
+                                click=true; //一次抽奖完成后，设置click为true，可继续抽奖
+                                // console.log("aaa");
+                                // location.reload();
+                                return false;
 
-                        })
-                        .then(function () {
-                            return roll4();
 
-                        });
-                    // roll();
-                    // roll().then(roll());    //转圈过程不响应click事件，会将click置为false
-                    click=true; //一次抽奖完成后，设置click为true，可继续抽奖
-                    return false;
+                            }else if(arg.code==500){
+                                alert(arg.msg);
+                                return ;
+                            }
+                        }
+                    })
+
+
                 }
 
             });

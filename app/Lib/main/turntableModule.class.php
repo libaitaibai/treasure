@@ -11,6 +11,7 @@ class turntableModule extends MainBaseModule
 {
     public  $type = [1=>'金币', 2=>'钻石' , 3=>'优惠券' , 4=>'实物'];
     public  $source = [1=>'money',2=>'jewel',3=>'coupons'];
+    public  $img = [1=>'jin.jpg',2=>'zhuang.jpg',3=>'youhui.jpg','6'=>'thinks.jpg'];
 
     public function index()
     {
@@ -42,19 +43,27 @@ class turntableModule extends MainBaseModule
         $physical = array_filter($physical);
         if(!empty($physical)){
             $physical=implode(',',$physical);
-            $deal = $GLOBALS['db']->getAll("select id,name from ".DB_PREFIX."deal where id in ({$physical})");
+            $deal = $GLOBALS['db']->getAll("select id,name,icon from ".DB_PREFIX."deal where id in ({$physical})");
+            $icon = array_column($deal,'icon','id');
             $deal = array_column($deal,'name','id');
         }
 
         $actity['type'] = $this->type[$actity['type']];
         $actity['expenditure'] = round($actity['expenditure']);
-        array_walk($prize,function(&$val) use ($deal){
+        $img = $this->img;
+        array_walk($prize,function(&$val) use ($deal,$img,$icon){
             $val['type_source'] = $this->type[$val['type']];
+            $val['img'] = isset($img[$val['type']])&&(!empty($val['name'])) ? $img[$val['type']] : $img[6];
+            isset($img[$val['type']])||(empty($val['name']))?'':$val['showimg'] = $icon[$val['name']];
             isset($deal[$val['name']]) ? $val['name'] = $deal[$val['name']]:'';
             $val['name'] = empty($val['name'])?'谢谢惠顾!':$val['type_source'].$val['name'];
             $val['abbrename'] = mb_substr($val['name'],0,6);
         });
 
+        //选中中奖数据
+        $goodluck = $this->price($prize);
+
+        $GLOBALS['tmpl']->assign("goodluck",$goodluck);
         $GLOBALS['tmpl']->assign("actityid",$actityid);
         $GLOBALS['tmpl']->assign("actitys",$actitys);
         $GLOBALS['tmpl']->assign("prize",$prize);
@@ -65,6 +74,27 @@ class turntableModule extends MainBaseModule
         $GLOBALS['tmpl']->assign("web_article_id",$web_article_id);
         $GLOBALS['tmpl']->assign("shptel",$shptel);
         $GLOBALS['tmpl']->display("turntable.html");
+    }
+
+    /**
+     * 轮盘赌
+     */
+    public function price ($prize)
+    {
+        $array = array_column($prize,'probability');
+
+        $total = array_sum($array);
+        $rand = rand(0,$total*100)/100;
+
+        $return = 0;
+        foreach ($array as $key => $val){
+            $rand-=$val;
+            if($rand <= 0 ){
+                $return = $key;
+                break ;
+            }
+        }
+        return $return;
     }
 
     /**
