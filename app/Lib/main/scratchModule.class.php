@@ -223,6 +223,7 @@ class scratchModule extends MainBaseModule
                     $db->query('update '.$t_scratchprize.' set last_num=last_num-1 where id='.$one['id']);
                     $db->query('insert into '.$t_statistics.'(scratch_id,prize_id,user_id,create_time) values('.$scratch_id.','.$one['id'].','.$user_id.','.time().')');
                     $this->updateMoney($user_id,$profit[$one['id']]);
+                    $this->createPaidOrder($scratch_id,$one['id'],$user_id);
                     $db->query('commit');
                     $this->showRes(200,'已中奖',array('prize'=>$one['prize']));
                 }
@@ -277,8 +278,8 @@ class scratchModule extends MainBaseModule
             $db->query('update '.$t_scratchprize.' set last_num=last_num-1 where id='.$prize_id);
             $db->query('insert into '.$t_statistics.'(scratch_id,prize_id,user_id,create_time) values('.$scratch_id.','.$prize_id.','.$user_id.','.time().')');
             $this->updateMoney($user_id,$profit[$prize_id]);
+            $this->createPaidOrder($scratch_id,$prize_id,$user_id);
             $db->query('commit');
-
             $this->showRes(200,'已中奖',array('prize'=>$prizes_tmp[$prize_id]['prize']));
 
         }catch(Exception $e){
@@ -559,6 +560,34 @@ class scratchModule extends MainBaseModule
        require_once APP_ROOT_PATH . "system/model/deal_order.php";
 
        createPaidOrder(['177'=>2],263);
+
+   }
+
+   //生成订单
+   private function createPaidOrder($scratch_id,$prize_id,$user_id){
+
+       $sql = 'select * from '.DB_PREFIX.'scratchprizelist where scratch_id='.$scratch_id.' and prize_id='.$prize_id;
+       $all = $GLOBALS['db']->getAll($sql);
+
+       $deals = array();
+       foreach($all as $v){
+           if($v['prize_type']!=1){
+               continue;
+           }
+
+           if(!isset($deals[$v['prize_deal']])){
+               $deals[$v['prize_deal']] = 1;
+           }else{
+               $deals[$v['prize_deal']]++;
+           }
+       }
+
+
+       if(!empty($deals)){
+           require_once APP_ROOT_PATH . "system/model/deal_order.php";
+           createPaidOrder($deals,$user_id);
+       }
+
 
    }
 
