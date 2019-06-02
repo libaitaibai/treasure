@@ -1,3 +1,30 @@
+<style type="text/css">
+
+	.OnlineService_Phone {
+		width: 90px;
+		height: 90px;
+		margin-bottom: 10px;
+	}
+
+	.OnlineService_Phone a {
+		display: block;
+		width: 90px;
+		height: 33px;
+		background-color: #dd344f;
+		padding-top: 57px;
+		line-height: 30px;
+		font-size: 14px;
+		text-align: center;
+		color: #fff;
+		background-image: url('{$TMPL}/images/icon_Online.png');
+		background-repeat: no-repeat;
+		background-position: center 8px;
+		cursor: pointer;
+		text-decoration: none;
+		color: #fff;
+	}
+
+</style>
 <div class="clear"></div>
 <div class="footer_box">
 <div class="footer_inner_box">
@@ -34,8 +61,10 @@
 		{function name="load_page_png" v=$foot_logo_image}
 		</a>
 	</div>
-	<div class="foot_online_time f_l">
-	{function name="app_conf" value="ONLINE_TIME"}  <br/>
+	<div class="foot_online_time f_l" style="padding:0px 0 30px 50px">
+		<div class="OnlineService_Phone"><a href="tencent://message/?Menu=yes&uin=1242599073&Site=80fans&Service=300&sigT=45a1e5847943b64c6ff3990f8a9e644d2b31356cb0b4ac6b24663a3c8dd0f8aa12a545b1714f9d45" target="_blank">在线咨询</a></div>
+
+		{function name="app_conf" value="ONLINE_TIME"}  <br/>
 	{if app_conf("SHOP_TEL") neq ''}
 				{$LANG.TEL}：{function name="app_conf" value="SHOP_TEL"}
 	{/if}

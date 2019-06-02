@@ -76,6 +76,9 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/pull_refresh/pull-refre
 			<li class="split-line split-line-top">
 				<div class="status-box flex-box split-line">
 					<p class="time flex-1 {if $item.order_status==3 || $item.order_status==2}is_delete_status{/if}">{$item.create_time}</p>
+					{if $item.has_address eq 0}
+					<p class="status txt-red add_address" data-id="{$item.order_id}">请填写地址</p>
+					{else}
 					{if $item.order_status==3}
 					<p class="status">已过期</p>
 					{elseif $item.order_status==2}
@@ -88,6 +91,7 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/pull_refresh/pull-refre
 					<p class="status txt-red">已发货</p>&nbsp<p class="status txt-red">待收货</p>
 					{elseif $item.pay_status==2&&$item.delivery_status==1&&$item.is_arrival==1}
 					<p class="status">已收货</p>
+					{/if}
 					{/if}
 				</div>
 				<div class="goods-info split-line">
@@ -157,6 +161,14 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/pull_refresh/pull-refre
 	</div>
 {/if}
 </div>
+<script type="text/javascript">
+
+	$('.add_address').bind('click',function(){
+	    var id = $(this).attr('data-id');
+	    window.location.href=APP_ROOT + "/wap/index.php?ctl=uc_totalbuy&act=show_address&order_id="+id;
+	});
+
+</script>
 
 {if $ajax_refresh==0}
 {include file="inc/footer_menu.html"}
