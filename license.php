@@ -648,10 +648,10 @@ function send_schedule_plan($type,$name,$schedule_data,$schedule_time,$dest="")
     $data['schedule_time'] =$schedule_exec_time;
     $GLOBALS['db']->autoExecute(DB_PREFIX."schedule_list",$data);
     $data['id'] =$GLOBALS['db']->insert_id();
-    if($schedule_time==0&&$data['id'])
-    {
+//    if($schedule_time==0&&$data['id'])
+//    {
         exec_schedule_plan($data);
-    }
+//    }
 }
 function exec_schedule_plan($schedule_data)
 {
