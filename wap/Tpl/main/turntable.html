@@ -214,11 +214,10 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
     var click=false;
 
     function save (){
-        var save_url = APP_ROOT + "/index.php?ctl=turntable&act=save";
+        var save_url = APP_ROOT + "/wap/index.php?ctl=turntable&act=save";
         var prize = {$list.prize_json};
-        console.log( $prizeid);
-
         $prizeid = prize[{$list.goodluck}].id;
+
         $.ajax({
             url:save_url,
             type:'POST',
@@ -368,18 +367,50 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
             return promise;
         }
 
-
-
-        function check (){
-
-        }
         window.onload=function(){
             var actity = {$list.actity_json};
             var actityid = actity.id;
-            var check_url = APP_ROOT + "/index.php?ctl=turntable&act=check";
+            var check_url = APP_ROOT + "/wap/index.php?ctl=turntable&act=check";
 
             lottery.init('lottery');
-            $("#lottery table td a.choujiang-ab").click(function(){
+            $(".choujiang-ac").bind("click",function(){
+                if (click) {//click控制一次抽奖过程中不能重复点击抽奖按钮，后面的点击不响应
+                    return false;
+                }else{
+                    //传送id判断是否登录等
+                    $.ajax({
+                        url:check_url,
+                        type:'GET',
+                        data:{'actityid':actityid},
+                        success:function(arg){
+                            if(arg.code==200){
+                                roll1(1)
+                                    .then(function(res){
+                                        console.log(res);
+                                        return roll2(2);
+                                    })
+                                    .then(function () {
+                                        return roll3(3);
+                                    })
+                                    .then(function () {
+                                        return roll4(4);
+                                    })
+                                    .then(function () {
+                                        return roll5(5);
+                                    });
+                                click=true; //一次抽奖完成后，设置click为true，可继续抽奖
+                                return false;
+
+                            }else if(arg.code==500){
+                                alert(arg.msg);
+                                return ;
+                            }
+                        }
+                    })
+                }
+
+            });
+            $(".choujiang-ab").bind("click",function(){
                 if (click) {//click控制一次抽奖过程中不能重复点击抽奖按钮，后面的点击不响应
                     return false;
                 }else{
@@ -402,69 +433,9 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
                     })
 
                 }
-            });
-            $("#lottery table td a.choujiang-ac").click(function(){
-                if (click) {//click控制一次抽奖过程中不能重复点击抽奖按钮，后面的点击不响应
-                    return false;
-                }else{
-                    // lottery.speed=100;
-                    // roll1().then(function(){
-                    //     return roll1();
-                    // });
-                    //传送id判断是否登录等
-                    $.ajax({
-                        url:check_url,
-                        type:'GET',
-                        data:{'actityid':actityid},
-                        success:function(arg){
-                            if(arg.code==200){
-                                roll1(1)
-                                    .then(function(res){
-                                        console.log(res);
-                                        return roll2(2);
-                                    })
-                                    .then(function () {
-                                        return roll3(3);
-                                    })
-                                    .then(function () {
-                                        return roll4(4);
-                                    })
-                                    .then(function () {
-                                        return roll5(5);
-                                    });
-                                // roll();
-                                // roll().then(roll());    //转圈过程不响应click事件，会将click置为false
-                                click=true; //一次抽奖完成后，设置click为true，可继续抽奖
-                                // console.log("aaa");
-                                // location.reload();
-                                return false;
-
-                            }else if(arg.code==500){
-                                alert(arg.msg);
-                                return ;
-                            }
-                        }
-                    })
-
-
-                }
 
             });
         };
-
-        (function (width) {
-            var doc = width.document,
-                element = doc.documentElement,
-                i = 640,
-                d = i / 100,
-                o = "orientationchange" in width ? "orientationchange" : "resize",
-                a = function () {
-                    var width = element.clientWidth || 320;
-                    width > 640 && (width = 640);
-                    element.style.fontSize = width / d + "px"
-                };
-            doc.addEventListener && (width.addEventListener(o, a, !1), doc.addEventListener("DOMContentLoaded", a, !1))
-        })(window);
 
     })
 </script>

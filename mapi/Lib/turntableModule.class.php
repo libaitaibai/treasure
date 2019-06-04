@@ -2,14 +2,14 @@
 class turntableApiModule extends MainBaseApiModule{
 
     public  $type = [1=>'金币', 2=>'钻石' , 3=>'优惠券' , 4=>'实物'];
-
+    public  $img = [1=>'jin.jpg',2=>'zhuang.jpg',3=>'youhui.jpg','6'=>'thinks.jpg'];
     /**
 	 * 展示所有的大转盘的活动和奖品
 	 */
     public function index(){
     	$root = array();
         $root['page_title']="大转盘";
-        $actityid = strim($GLOBALS['_GET']['actityid'])?$GLOBALS['_GET']['actityid']:1;
+        $actityid = strim($_REQUEST['actityid'])?$_REQUEST['actityid']:1;
 
         $actitys = $GLOBALS['db']->getAll("select * from ".DB_PREFIX."turntable_actity where   status = 1");
 
@@ -31,19 +31,27 @@ class turntableApiModule extends MainBaseApiModule{
         $physical = array_filter($physical);
         if(!empty($physical)){
             $physical=implode(',',$physical);
-            $deal = $GLOBALS['db']->getAll("select id,name from ".DB_PREFIX."deal where id in ({$physical})");
+            $deal = $GLOBALS['db']->getAll("select id,name,icon from ".DB_PREFIX."deal where id in ({$physical})");
+            $icon = array_column($deal,'icon','id');
             $deal = array_column($deal,'name','id');
         }
 
         $actity['type'] = $this->type[$actity['type']];
         $actity['expenditure'] = round($actity['expenditure']);
-        array_walk($prize,function(&$val) use ($deal){
+        $img = $this->img;
+        array_walk($prize,function(&$val) use ($deal,$img,$icon){
             $val['type_source'] = $this->type[$val['type']];
+            $val['img'] = isset($img[$val['type']])&&(!empty($val['name'])) ? $img[$val['type']] : $img[6];
+            isset($img[$val['type']])||(empty($val['name']))?'':$val['showimg'] = $icon[$val['name']];
             isset($deal[$val['name']]) ? $val['name'] = $deal[$val['name']]:'';
             $val['name'] = empty($val['name'])?'谢谢惠顾!':$val['type_source'].$val['name'];
             $val['abbrename'] = mb_substr($val['name'],0,6);
         });
 
+        //选中中奖数据
+        $goodluck = $this->price($prize);
+
+        $root['list']['goodluck'] = $goodluck;
         $root['list']['actityid'] = $actityid;
         $root['list']['actitys'] = $actitys;
         $root['list']['actity'] = ($actity);
@@ -56,7 +64,26 @@ class turntableApiModule extends MainBaseApiModule{
 
     }
 
+    /**
+     * 轮盘赌
+     */
+    public function price ($prize)
+    {
+        $array = array_column($prize,'probability');
 
+        $total = array_sum($array);
+        $rand = rand(0,$total*100)/100;
+
+        $return = 0;
+        foreach ($array as $key => $val){
+            $rand-=$val;
+            if($rand <= 0 ){
+                $return = $key;
+                break ;
+            }
+        }
+        return $return;
+    }
     
 	/**
 	 * 帮助文章详细页接口
