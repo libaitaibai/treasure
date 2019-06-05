@@ -39876,3 +39876,21 @@ alter table fanwe_scratchprize drop column prize_deal;
 alter table fanwe_user_log add column  `jewel` int(11) NOT NULL COMMENT '钻石';
 
 alter table fanwe_user_log add column  `current_jewel` int(11) NOT NULL default 0 COMMENT '当前钻石';
+
+---------------------分享中奖评论表--------------------------------
+CREATE TABLE `fanwe_share_comment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `share_id` int(11) NOT NULL DEFAULT '0' COMMENT '分享ID 参照share表',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户ID 评论者ID',
+  `uname` varchar(255) NOT NULL DEFAULT '' COMMENT '评论者姓名',
+  `uimg` varchar(255) NOT NULL DEFAULT '' COMMENT '评论者头像',
+  `to_uid` int(11) NOT NULL DEFAULT '0' COMMENT '被评论用户ID',
+  `to_uname` varchar(255) NOT NULL DEFAULT '' COMMENT '被评论者姓名',
+  `to_uimg` varchar(255) NOT NULL DEFAULT '' COMMENT '被回复者头像',
+  `content` text NOT NULL COMMENT '评论内容',
+  `pid` int(11) NOT NULL DEFAULT '0' COMMENT '父级ID',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '评论时间',
+  PRIMARY KEY (`id`),
+  KEY `share_Id_index` (`share_id`) USING BTREE,
+  KEY `uid_touid_index` (`uid`,`to_uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='中奖分享评论表';
