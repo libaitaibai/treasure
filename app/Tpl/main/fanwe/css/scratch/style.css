@@ -68,7 +68,7 @@ figcaption{
     margin: 0 auto;
     display: block;
 }
-.cont-span {
+/*.cont-span {
     display: block;
     width: 120px;
     height: 38px;
@@ -79,7 +79,7 @@ figcaption{
     margin-left: -60px;
     z-index: 10;
     font-size:30px;
-}
+}*/
 
 #bridgeContainer figcaption {
   margin-top: 2rem;
