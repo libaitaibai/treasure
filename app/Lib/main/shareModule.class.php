@@ -74,7 +74,10 @@ class shareModule extends MainBaseModule
         if(empty($share_info)){
             showErr("数据不存在",0,url("index"));
         }
-        
+
+        //是否存在评论
+        $comment = $GLOBALS['db']->getRow('select * from '.DB_PREFIX.'share_comment limit 1');
+
         $is_my = 0;
         if($GLOBALS['user_info']['id'] == $share_info['user_id'])
             $is_my=1;
@@ -88,9 +91,10 @@ class shareModule extends MainBaseModule
         
         $GLOBALS['tmpl']->assign("share_info",$share_info);
         $GLOBALS['tmpl']->assign("img_list",unserialize($share_info['image_list']));
-        
+        $GLOBALS['tmpl']->assign("is_user",$GLOBALS['user_info']['id']);
         $GLOBALS['tmpl']->assign("is_my",$is_my);
         $GLOBALS['tmpl']->assign("duobao_item",unserialize($share_info['cache_duobao_item_data']));
+        $GLOBALS['tmpl']->assign('has_comment',$comment?1:0);
         /* 数据 */
         $GLOBALS['tmpl']->display("share_detail.html");
     }
