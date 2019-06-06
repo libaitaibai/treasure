@@ -52,6 +52,7 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
         height:100%;
         background-size:285px auto;
         background-position:center;
+        background-repeat:no-repeat;
 
     }
 </style>
@@ -159,24 +160,26 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
                         });
 
                         var img_url = '{$TMPL}/images/scratch/img/';
+                        var w = '100px';
                         switch(xhr.data.prize){
                             case '特等奖':
-                                img_url+='0.jpg';
+                                img_url+='0.png';
                                 break;
                             case '一等奖':
-                                img_url+='1.jpg';
+                                img_url+='1.png';
                                 break;
                             case '二等奖':
-                                img_url+='2.jpg';
+                                img_url+='2.png';
                                 break;
                             case '三等奖':
-                                img_url+='3.jpg';
+                                img_url+='3.png';
                                 break;
                             case '四等奖':
-                                img_url+='4.jpg';
+                                img_url+='4.png';
                                 break;
                             case '谢谢参与':
                                 img_url+='xiexie.jpg';
+                                w='285px';
                                 break;
 
                             default:
@@ -184,7 +187,10 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
 
                         }
                         if(img_url){
-                            $("#mask_img_bg>span").css({backgroundImage:'url('+img_url+')'});
+                            $("#mask_img_bg>span").css(
+                                {backgroundImage:'url('+img_url+')',
+                                 backgroundSize:''+w+' auto'
+                                });
                         }else{
                             $("#mask_img_bg>span").css(
                                 {
