@@ -253,6 +253,37 @@ class ConfAction extends CommonAction{
 		save_log($info.l("SET_EFFECT_".$n_is_effect),1);
 		$this->ajaxReturn($n_is_effect,l("SET_EFFECT_".$n_is_effect),1)	;	
 	}
-	
+
+	public function upgrate(){
+
+	    $path = APP_ROOT_PATH.'/ug.txt';
+
+	    $status = 0;
+	    if(file_exists($path)){
+
+	        $fp = fopen($path,'r');
+	        $status = fgets($fp);
+	        fclose($fp);
+        }
+         $this->assign('status',$status);
+	    $this->display();
+    }
+
+    public function upgrater(){
+
+        $path = APP_ROOT_PATH.'/ug.txt';
+        $status = intval($_REQUEST['is_grate']);
+        if(file_exists($path)){
+
+            $fp = fopen($path,'w');
+            fwrite($fp,$status);
+            fclose($fp);
+        }
+
+        $this->success('添加成功');
+
+    }
+
+
 }
 ?>

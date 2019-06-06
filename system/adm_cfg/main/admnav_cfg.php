@@ -217,7 +217,8 @@ return array(
 			"sysconf"	=>	array(
 				"name"	=>	"系统设置", 
 				"key"	=>	"sysconf", 
-				"nodes"	=>	array( 
+				"nodes"	=>	array(
+                    array("name"=>"系统升级","module"=>"Conf","action"=>"upgrate"),
 					array("name"=>"系统配置","module"=>"Conf","action"=>"index"),
 					array("name"=>"导航菜单","module"=>"Nav","action"=>"index"),
 					array("name"=>"广告设置","module"=>"Adv","action"=>"index"),

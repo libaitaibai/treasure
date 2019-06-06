@@ -10,6 +10,18 @@
 class MainBaseModule{
 	public function __construct()
 	{
+
+        $path = APP_ROOT_PATH.'/ug.txt';
+        if(file_exists($path)){
+
+            $fp = fopen($path,'r');
+            $status = fgets($fp);
+            if($status==1){
+               header('location:/upgrate.html');
+               exit;
+            }
+            fclose($fp);
+        }
 	    //清除缓存页面调试用
         clear_cache();
 
