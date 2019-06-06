@@ -36,3 +36,246 @@
 	*display:inline
 }
 .x-sharepics .item img{width: 100%; vertical-align: bottom;}
+
+input, textarea {
+	outline: none;
+}
+textarea {
+	resize: none;
+	overflow: auto;
+}
+.box-content {
+	width:90%;
+	border: 3px solid #f0f0f0;
+	position: relative;
+}
+.box-login .box-textarea-block {
+	margin-right: 12px;
+	height: 104px;
+}
+
+.box-textarea-block {
+	margin-left: 12px;
+	margin-top: 12px;
+	margin-bottom: 12px;
+}
+.box-textarea {
+	height: 100%;
+	width: 100%;
+	display: block;
+	border: none;
+	font-size: 14px;
+	line-height: 24px;
+	color: #4b4b4b;
+}
+
+.box-info {
+	height: 34px;
+	line-height: 34px;
+	overflow: hidden;
+	padding: 14px 12px;
+	border-top: 1px solid #eee;
+}
+
+
+.box-commentBtn {
+	float: right;
+	width: 100px;
+	color: #fff;
+	background-color: #a3a3a3;
+	text-align: center;
+	font-size: 14px;
+	border-radius: 17px;
+	cursor: pointer;
+	height: 34px;
+	line-height: 34px;
+}
+
+.box-commentBtn--able {
+	background-color: #dd344f;
+}
+
+.comment-title {
+	padding-bottom: 14px;
+	border-bottom: 1px solid #f0f0f0;
+	margin-top: 48px;
+	overflow: hidden;
+}
+.comment-all {
+	font-size: 20px;
+	color: #2a2a2a;
+	float: left;
+}
+
+.comment {
+	position: relative;
+	margin-top: 32px;
+	padding: 0 0 32px 68px;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.common-avatar {
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 1;
+	width: 50px;
+	height: 50px;
+	font-size: 0;
+	border-radius: 50%;
+	background: url(//mat1.gtimg.com/v/comment/images/avatar_default.9d95c455.jpg) 0 0 no-repeat;
+	overflow: hidden;
+}
+.comment-user {
+	height: 32px;
+	line-height: 32px;
+	font-size: 12px;
+}
+.comment-username {
+	font-weight: 600;
+	color: #379be9;
+}
+.comment-time {
+	color: #999;
+	display: inline-block;
+	margin-left: 12px;
+}
+
+.comment-short .comment-content {
+	margin-top: 2px;
+}
+
+.comment-content {
+	font-size: 14px;
+	color: #4b4b4b;
+	line-height: 24px;
+	margin-top: 10px;
+	word-wrap: break-word;
+}
+
+.reply {
+	background-color: #f7f7f7;
+	padding: 8px 16px 24px;
+	margin-top: 10px;
+}
+.comment-operate {
+	margin-top: 18px;
+	font-size: 12px;
+}
+
+.comment-operate-reply {
+	background-position: 0 -46px;
+}
+.comment-operate-item {
+	float: left;
+	position: relative;
+	width: 72px;
+	padding-left: 16px;
+	height: 14px;
+	line-height: 14px;
+	background-image: url(//mat1.gtimg.com/v/comment/images/news-icon.8b6beb7f.png);
+	background-repeat: no-repeat;
+	color: #adadad;
+	cursor: pointer;
+}
+.reply-block {
+	position: relative;
+}
+.reply-content {
+	font-size: 14px;
+	color: #4b4b4b;
+	line-height: 24px;
+	margin-top: 10px;
+}
+.reply-user {
+	color: #4b4b4b;
+}
+.reply-user-nick {
+	font-weight: 600;
+}
+
+.reply-operate {
+	height: 14px;
+	line-height: 14px;
+	font-size: 12px;
+	margin-top: 6px;
+	color: #adadad;
+}
+.reply-operate span {
+	color: #adadad;
+}
+.reply-operate-item {
+	cursor: pointer;
+}
+.reply-dot {
+	display: inline-block;
+	margin: 0 2px;
+}
+.reply-allBtn {
+	font-size: 14px;
+	color: #adadad;
+	display: inline-block;
+	padding-right: 10px;
+	height: 16px;
+	line-height: 16px;
+	background: url(//mat1.gtimg.com/v/comment/images/news-icon.8b6beb7f.png) right -88px no-repeat;
+	margin-top: 14px;
+	cursor: pointer;
+}
+.comment-moreBtn {
+	cursor: pointer;
+}
+
+.comment-moreBtn, .comment-noMore {
+	display: block;
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	background-color: #f0f0f0;
+	color: #adadad;
+	font-size: 14px;
+}
+
+.reply-box {
+	border: 3px solid #f0f0f0;
+	position: relative;
+	margin-top: 8px;
+	height: 58px;
+	padding: 8px 93px 8px 16px;
+	background-color: #fff;
+}
+.reply-box-block, .reply-box-textarea {
+	width: 100%;
+	height: 100%;
+}
+.reply-box-textarea {
+	color: #4b4b4b;
+	line-height: 24px;
+	font-size: 14px;
+	border:none;
+}
+.box-textarea {
+	width: 100%;
+	height: 100%;
+}
+
+.reply-box-btn {
+	position: absolute;
+	right: -3px;
+	top: -3px;
+	z-index: 1;
+	width: 80px;
+	height: 80px;
+	background-color: #379be9;
+	font-size: 16px;
+	line-height: 80px;
+	text-align: center;
+	color: #fff;
+	cursor: pointer;
+}
+.reply-box-block, .reply-box-textarea {
+	width: 100%;
+	height: 100%;
+}

@@ -37,6 +37,8 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/share_show.js";
 		<div class="x-sharedetail">
 			<div class="x-sharetit">
 				<p class="sharetit tc">{$share_info.title}</p>
+				<input type="hidden" value="{$share_info.id}" name="share_id"/>
+				<input type="hidden" value="{$is_user}" name="is_user"/>
 				<div class="share">
 				   	<!-- JiaThis Button BEGIN -->
 						<div class="jiathis_style">
@@ -99,6 +101,237 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/share_show.js";
             		{/foreach}
             	{/if}
             </div>
+			<div class="fb_comments">
+
+				<div class="box-content box-login">
+					<div class="box-textarea-block">
+						<textarea class="box-textarea J_Textarea" id="J_Textarea" placeholder="说两句吧..."></textarea>
+					</div>
+					<div class="box-info">
+						<div class="box-operate">
+                          <div class="box-commentBtn box-commentBtn--able J_PostBtn" id="J_PostBtn">发布评论</div>
+						</div>
+					</div>
+			</div>
+			<div class="comment-short" id="J_Short">
+				<div class="comment-title">
+					<p class="comment-all">全部评论</p>
+				</div>
+				<div id="containers">
+                    {if $has_comment eq 0}
+					<div class="comment-moreBtn J_shortMore">暂无评论</div>
+					{/if}
+
+				</div>
+
+
+			</div>
+
 		</div>
 	</div>
+		<script type="text/javascript">
+
+
+
+
+
+
+            $(function(){
+
+                var url = APP_ROOT + "/index.php?ctl=comment&act=publish";//发表
+                var getList = APP_ROOT + "/index.php?ctl=comment&act=comments";//列表
+
+                //获取列表
+				function getlist(parent_id,page){
+
+				    var share_id = $('input[name="share_id"]').val();
+				    if(!share_id){
+				        return false;
+					}
+                    $.ajax({
+                        type:'get',
+                        url:getList,
+                        data:{
+                            share_id:share_id,
+							 parent_id:parent_id,
+							page:page
+                        },
+                        dataType:'json',
+                        success:function(xhr){
+
+
+                            if(parent_id){ //内评论
+                                $('.J_shortMoresB').remove();
+                                $('.J_ShortComment'+parent_id).find('.J_ReplyBlock').append(xhr.data.html);
+								var $obj = $('.J_ShortComment'+parent_id).find('.J_shortMoresB');
+                                var page =  $obj.attr('data-pageid');
+                                var pages =  $obj.attr('data-pagesid');
+
+
+							}else{ //外评论
+                                $('.J_shortMores').remove();
+                                $('#containers').append(xhr.data.html);
+                                var $obj = $('#containers').find('.J_shortMores');
+                                var page = $obj.attr('data-pageid');
+                                var pages = $obj.attr('data-pagesid');
+
+							}
+
+
+                            if(page>=pages){
+                                $obj.remove();
+                            }
+                        }
+
+                    });
+
+
+				}
+
+                //首次加载
+				getlist(0,1);
+
+
+
+                function textareak(){
+
+                    var str = '<div class="reply-box J_ReplyBox"> ' +
+                        '<div class="reply-box-block"> ' +
+                        '<textarea class="reply-box-textarea J_ReplyTextArea"></textarea> ' +
+                        '</div> ' +
+                        '<div class="reply-box-btn J_ReplyBtn" id="J_ReplyBtn">回复</div></div>';
+
+                    return str;
+
+                }
+
+                function reply(parent_id,target_id,content){
+
+                    var is_user = $('input[name="is_user"]').val();
+                    if(!is_user){
+                        alert('请先登录');
+                        return false;
+                    }
+                    var share_id = $('input[name="share_id"]').val();
+                    if(!content){
+                        alert('说两句吧');
+                        return false;
+                    }
+
+                    $.ajax({
+
+                        type:'post',
+                        url:url,
+                        data:{
+                            share_id:share_id,
+                            content:content,
+                            target_id:target_id,
+							parent_id:parent_id
+                        },
+                        dataType:'json',
+                        success:function(xhr){
+                            if(xhr.code!=200){
+                                alert(xhr.msg);
+                                return false;
+							}
+
+
+                            if(parent_id){
+                                $('.J_ReplyBox').siblings('.J_CommentOperate').find('.reply-visited').text('回复').removeClass('reply-visited');
+                                $('.J_ReplyBox').remove();
+
+                                $('.J_shortMoresBtn'+parent_id).parents('.J_ReplyBlock').empty().addClass('reply');
+							}else{
+                                $('#containers').empty();
+							}
+                            getlist(parent_id,1);
+                        }
+
+                    });
+
+
+
+                }
+
+
+
+                $('.reply-operate-item').live('click',function(){
+
+                    var target_id = $(this).attr('data-userid');
+                   // var parent_id = $(this).attr('data-pid');
+                    $('.J_ReplyBox').remove();
+                    $('.J_Reply').text('回复');
+                    if($(this).hasClass('reply-visited')){
+                        $('.J_ReplyBox').remove();
+                        $(this).removeClass('reply-visited').text('回复');
+                        $('#J_ReplyBtn').unbind();
+
+                    }else{
+                        $(this).addClass('reply-visited').text('收起');
+                        $(this).parents('.reply-block').append(textareak());
+                        $('#J_ReplyBtn').bind('click',function(){
+                            var content = $(this).parent('.J_ReplyBox').find('textarea').val();
+                            var parent_id = $(this).parents('.J_ShortComment').attr('data-pid');
+                            $(this).parents('.J_ReplyBlock').empty();
+                            reply(parent_id,target_id,content);
+
+                        });
+                    }
+
+                });
+
+                $('.comment-operate-reply').live('click',function(){
+                    var target_id = $(this).attr('data-userid');
+                    //var parent_id = $(this).attr('data-pid');
+                    $('.J_ReplyBox').remove();
+                    $('.J_Reply').text('回复');
+                    if($(this).hasClass('reply-visited')){
+                        $('.J_ReplyBox').remove();
+                        $(this).removeClass('reply-visited').text('回复');
+                        $('#J_ReplyBtn').unbind();
+
+                    }else{
+                        $(this).addClass('reply-visited').text('收起');
+                        $(this).parents('.comment-block').append(textareak());
+                        $('#J_ReplyBtn').bind('click',function(){
+                            var content = $(this).parent('.J_ReplyBox').find('textarea').val();
+                            var parent_id = $(this).parents('.J_ShortComment').attr('data-pid');
+                            $(this).parents('.comment-block').find('.J_ReplyBlock').empty().addClass('reply');
+                            reply(parent_id,target_id,content);
+
+                        });
+                    }
+
+                });
+
+
+                $('#J_PostBtn').bind('click',function(){
+
+                    var content = $('#J_Textarea').val();
+                    reply(0,0,content);
+
+
+                });
+
+                //查看更多
+                $('.J_shortMoresB').live('click',function(){
+
+                       var parent_id = $(this).parents('.J_ShortComment').attr('data-pid');
+                       var page = parseInt($(this).attr('data-pageid'),10);
+                       getlist(parent_id,page+1);
+
+				});
+
+                //查看更多评论
+                $('.J_shortMores').live('click',function(){
+
+                    var page = parseInt($(this).attr('data-pageid'),10);
+                    getlist(0,page+1);
+
+                });
+
+            });
+
+
+		</script>
 {include file="inc/footer.html"}

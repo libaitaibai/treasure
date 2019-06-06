@@ -1,0 +1,31 @@
+{foreach from=$data.rows item=row key=key}
+<div  class="J_ShortComment J_ShortComment{$row.id}" data-pid="{$row.id}">
+    <div class="comment" id="J_Comment6541850780144958973">
+        <div class="common-avatar J_User" data-userid="{$row.uid}">
+            <img src='{function name="get_user_avatar" uid=$row.uid type="small"}' width="100%" height="100%">
+        </div>
+        <div class="comment-block">
+            <p class="comment-user"><span class="comment-username J_User" data-userid="{$row.uid}"> {$row.uname} </span> <span class="comment-time">{$row.publish_time}</span> </p>
+            <div class="comment-content J_CommentContent">{$row.content}</div>
+
+            {if $row.childs}<div class="J_ReplyBlock reply">{else /}
+            <div class="J_ReplyBlock">
+            {/if}
+                    {if $row.childs}
+                {assign var=childs value=$row.childs}
+                {include file="share_comment_child.html"}
+                    {/if}
+                </div>
+            <div class="comment-operate J_CommentOperate clearfix"><span class="J_Reply comment-operate-item comment-operate-reply" data-pid="{$row.id}" data-userid="{$row.uid}" > 回复 </span> </div>
+        </div>
+    </div>
+</div>
+{/foreach}
+<div class="comment-moreBtn J_shortMore J_shortMores" data-pid="0" data-pageid="{$data.pages.page}" data-pagesid="{$data.pages.pages}">查看更多评论</div>
+
+
+
+
+
+
+

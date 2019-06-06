@@ -763,11 +763,26 @@ class ajaxModule extends MainBaseModule
 	    $result_list = $result_list['list'];
 	    if($result_list)
 	    {
+	    	 $tmp_ids = '';
+	    	 foreach($result_list as $list){
+	    	 	  $tmp_ids .= $list['id'].',';
+			 }
+            $tmp_ids = rtrim($tmp_ids,',');
+	    	$sql = 'select share_id,count(*) as num from '.DB_PREFIX.'share_comment where share_id in('.$tmp_ids.') group by share_id';
+			$tmp_res = $GLOBALS['db']->getAll($sql);
+
+			$tmps = array();
+			foreach($tmp_res as $res){
+                $tmp[$res['share_id']] = $res['num'];
+			}
+
+
 	        $result['doms'] = array();
-	        foreach($result_list as $k=>$v)
+	        foreach($result_list as $k=>&$v)
 	        {
 	            $GLOBALS['tmpl']->assign("row",$v);
 	            $result['doms'][] = $GLOBALS['tmpl']->fetch("inc/pin_box.html");
+
 	        }
 
 	        if($step==0||$step>=$step_size)
