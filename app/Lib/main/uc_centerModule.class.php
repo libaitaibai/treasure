@@ -17,7 +17,7 @@ class uc_centerModule extends MainBaseModule
 		init_app_page();
 		assign_uc_nav_list();//左侧导航菜单
 
-		
+
 		$user_info = $GLOBALS['user_info'];
 		 
 		//==业务逻辑部分==
@@ -61,7 +61,7 @@ class uc_centerModule extends MainBaseModule
 		$GLOBALS['tmpl']->assign("list",$list);
 		$GLOBALS['tmpl']->assign("history_list",$history_list);
 		$GLOBALS['tmpl']->assign("user_info",$GLOBALS['user_info']);
-		
+
 		$GLOBALS['tmpl']->display("uc/uc_center.html");
 	    
 	}
