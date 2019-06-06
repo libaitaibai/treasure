@@ -36,14 +36,33 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
 
 ?>
 {include file="inc/header.html"}
+<style type="text/css">
 
+   #mask_img_bg{
+
+       background-image:url('{$TMPL}/images/scratch/img/scratch_bg.jpg');
+       background-size:285px auto;
+       background-position:center;
+       background-repeat:no-repeat;
+   }
+
+    .cont-span{
+        display:block;
+        width:100%;
+        height:100%;
+        background-size:285px auto;
+        background-position:center;
+
+    }
+</style>
 <div class="wrap_full_w clearfix" style="margin-top:20px">
 
 <div class="htmleaf-container">
     <figure id="bridgeContainer" >
         <!--<canvas id="bridge" width="750" height="465"></canvas>-->
         <div class="redux_c" style="margin: 0 auto;background-size: cover;width: 100%;">
-            <div id="mask_img_bg"><span class="cont-span"></span></div>
+            <div id="mask_img_bg" >
+                <span class="cont-span"></span></div>
             <img id="redux" src="{$TMPL}/images/scratch/img/layer.png"/>
         </div>
     </figure>
@@ -139,7 +158,51 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
                             completeRatio: .5, //设置擦除面积比例
                         });
 
-                        $("#mask_img_bg>span").text(xhr.data.prize);
+                        var img_url = '{$TMPL}/images/scratch/img/';
+                        switch(xhr.data.prize){
+                            case '特等奖':
+                                img_url+='0.jpg';
+                                break;
+                            case '一等奖':
+                                img_url+='1.jpg';
+                                break;
+                            case '二等奖':
+                                img_url+='2.jpg';
+                                break;
+                            case '三等奖':
+                                img_url+='3.jpg';
+                                break;
+                            case '四等奖':
+                                img_url+='4.jpg';
+                                break;
+                            /*case '谢谢参与':
+                                img_url+='xiexie.jpg';
+                                break;*/
+
+                            default:
+                                img_url = '';
+
+                        }
+                        if(img_url){
+                            $("#mask_img_bg>span").css({backgroundImage:'url('+img_url+')'});
+                        }else{
+                            $("#mask_img_bg>span").css(
+                                {
+                                    display: 'block',
+                                    color:'#fff',
+                            width: '120px',
+                            height: '38px',
+                            textAlign: 'center',
+                            position: 'absolute',
+                            top: '40%',
+                            left: '50%',
+                            marginLeft: '-60px',
+                            zIndex: 10,
+                            fontSize:'30px'
+                                }
+                                ).text(xhr.data.prize);
+                        }
+
                     },'json');
 
 
