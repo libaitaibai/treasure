@@ -35,7 +35,7 @@ return array(
 				),
 			),			
 			"duobao"	=>	array(
-					"name"	=>	"夺宝活动",
+					"name"	=>	"一元抽奖",
 					"key"	=>	"duobao",
 					"nodes"	=>	array(
 							array("name"=>"夺宝计划","module"=>"Duobao","action"=>"index"),
@@ -51,29 +51,12 @@ return array(
                     array("name"=>"大转盘活动","module"=>"TurntableWin","action"=>"index"),
                 ),
             ),
-            "yuyuanchoujiang"	=>	array(
-                "name"	=>	"一元抽奖",
-                "key"	=>	"yuyuanchoujiang",
-                "nodes"	=>	array(
-                    array("name"=>"一元抽奖","module"=>"Choujiang","action"=>"index"),
-                    array("name"=>"抽奖活动","module"=>"Choujiang","action"=>"active"),
-                ),
-            ),
             "scratch"	=>	array(
                 "name"	=>	"刮刮乐",
                 "key"	=>	"scratch",
                 "nodes"	=>	array(
                     array("name"=>"刮刮乐","module"=>"Scratch","action"=>"index"),
                     array("name"=>"刮刮乐活动","module"=>"Scratch","action"=>"active"),
-                ),
-            ),
-            "choujiang"	=>	array(
-                "name"	=>	"抽奖",
-                "key"	=>	"choujiang",
-                "nodes"	=>	array(
-                    array("name"=>"一元抽奖","module"=>"Choujiang","action"=>"index"),
-                    array("name"=>"幸运大转盘","module"=>"Turntable","action"=>"index"),
-                    array("name"=>"刮刮乐","module"=>"Scratch","action"=>"index"),
                 ),
             ),
 		),
