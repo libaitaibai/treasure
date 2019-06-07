@@ -59,6 +59,15 @@ return array(
                     array("name"=>"刮刮乐活动","module"=>"Scratch","action"=>"active"),
                 ),
             ),
+            "list"	=>	array(
+                "name"	=>	"投注统计",
+                "key"	=>	"scratch",
+                "nodes"	=>	array(
+                    array("name"=>"夺宝活动","module"=>"Statistics","action"=>"duobao"),
+                    array("name"=>"刮刮乐","module"=>"Statistics","action"=>"scratch"),
+                    array("name"=>"幸运大转盘","module"=>"Statistics","action"=>"turntable"),
+                ),
+            ),
 		),
 	),
 	"order"	=>	array(
