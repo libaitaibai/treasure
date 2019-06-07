@@ -15,9 +15,11 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery-1.6.2.min.j
 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.bgiframe.js";
 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.timer.js";
 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.weebox.js";
-$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.touchwipe.js";
 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/fastclick.js";
-$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/TouchSlide.1.1.js";
+
+
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.mobile-1.2.1.min.js";
 
 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
 $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
@@ -31,13 +33,37 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
 
 ?>
 {include file="inc/header_title_home.html"}
+<style type="text/css">
 
+    #mask_img_bg{
+
+        background-image:url('{$TMPL}/images/scratch/img/scratch_bg.jpg');
+        background-size:285px auto;
+        background-position:center;
+        background-repeat:no-repeat;
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        top: 0px;
+        bottom: 0px;
+    }
+
+    .cont-span{
+        display:block;
+        width:100%;
+        height:100%;
+        background-size:285px auto;
+        background-position:center;
+        background-repeat:no-repeat;
+
+    }
+</style>
 <div class="wrap_full_w clearfix" style="margin-top:20px">
 
 <div class="htmleaf-container">
     <figure id="bridgeContainer" >
         <!--<canvas id="bridge" width="750" height="465"></canvas>-->
-        <div class="redux_c" style="margin: 0 auto;background-size: cover;width: 100%;">
+        <div class="redux_c" style="width:285px;height:145px;position:relative;z-index:20;margin: 0 auto;background-size: cover;width: 100%;">
             <div id="mask_img_bg"><span class="cont-span"></span></div>
             <img id="redux" src="{$TMPL}/images/scratch/img/layer.png"/>
         </div>
@@ -94,6 +120,8 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
 <script type="text/javascript">
 
     $(document).ready(function(){
+
+
         var num = 1;
         var get_result = APP_ROOT + "/wap/index.php?ctl=scratch&act=get_result",
             user_login = APP_ROOT + "/wap/index.php?ctl=user&act=login",
@@ -101,7 +129,7 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
         var scratch_id = $('input[name="scratch_id"]').val();
         var scratch_tip = $('input[name="scratch_tip"]').val();
 
-        $('#redux').mousedown(function(){
+        $('#redux').bind('swipe',function(){
 
             if(num==1){
                 if(!scratch_id){
@@ -135,7 +163,58 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
                             completeRatio: .5, //设置擦除面积比例
                         });
 
-                        $("#mask_img_bg>span").text(xhr.data.prize);
+
+
+                        var img_url = '{$TMPL}/images/scratch/img/';
+                        var w = '140px';
+                        switch(xhr.data.prize){
+                            case '特等奖':
+                                img_url+='0.png';
+                                break;
+                            case '一等奖':
+                                img_url+='1.png';
+                                break;
+                            case '二等奖':
+                                img_url+='2.png';
+                                break;
+                            case '三等奖':
+                                img_url+='3.png';
+                                break;
+                            case '四等奖':
+                                img_url+='4.png';
+                                break;
+                            case '谢谢参与':
+                                img_url+='xiexie.jpg';
+                                w='285px';
+                                break;
+
+                            default:
+                                img_url = '';
+
+                        }
+                        if(img_url){
+                            $("#mask_img_bg>span").css(
+                                {backgroundImage:'url('+img_url+')',
+                                    backgroundSize:''+w+' auto'
+                                });
+                        }else{
+                            $("#mask_img_bg>span").css(
+                                {
+                                    display: 'block',
+                                    color:'#fff',
+                                    width: '120px',
+                                    height: '38px',
+                                    textAlign: 'center',
+                                    position: 'absolute',
+                                    top: '40%',
+                                    left: '50%',
+                                    marginLeft: '-60px',
+                                    zIndex: 10,
+                                    fontSize:'30px'
+                                }
+                            ).text(xhr.data.prize);
+                        }
+                        //$("#mask_img_bg>span").text(xhr.data.prize);
                     },'json');
 
 
