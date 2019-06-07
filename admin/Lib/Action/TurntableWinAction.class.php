@@ -26,10 +26,36 @@ class TurntableWinAction extends CommonEnhanceAction
         if($_REQUEST['type']){
             $map['TurntableActityPrize.type'] = $_REQUEST['type'];
         }
-
+//        echo '<pre>';var_dump();exit;
         $this->_list ( $model, $map );
 
         $this->display ();
+    }
+
+    /**
+     * 添加指定用户信息
+     */
+    public function add ()
+    {
+        $this->display ();
+    }
+
+    public function addData()
+    {
+        $model = D ('TurntableWin');
+
+        $data = [
+            'actityid'=>$_REQUEST['actityid'],
+            'userid'=>$_REQUEST['userid'],
+            'prizeyid'=>$_REQUEST['prizeyid'],
+        ];
+        $id = $model->data($data)->add();
+        if ($id) {
+            $this->success('添加成功');
+        }else{
+            $this->error('添加失败');
+        }
+
     }
 }
 
