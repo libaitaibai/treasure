@@ -143,7 +143,156 @@ class IncomeBalanceAction extends CommonAction{
 		}	
 		
 	}
-	
+
+
+    public $turntable = [1=>'jinbi',2=>'zuanshi',3=>'yiuhujuan',4=>'shiwu'];
+
+	public  function dazhuanpan()
+    {
+        $_REQUEST['begin_time'] ? $map['begin_time'] = to_timespan($_REQUEST['begin_time']):'';
+        $_REQUEST['end_time'] ? $map['end_time'] = to_timespan($_REQUEST['end_time']) : '';
+
+        $page = intval($_REQUEST['p'])?intval($_REQUEST['p']):1;
+        $page_size = 50;
+        $limit = (($page - 1)*$page_size).",".($page_size);
+
+        $contend = '';$contend1='';
+        if(!empty($map)){
+            $contend = " where win.on_create >'".to_date($map['begin_time'])."' and win.on_create<'".to_date($map['end_time'])."'";
+            $contend1 = "log_time > ".$map['begin_time'].' and log_time < '.$map['end_time'] .' and  ';
+            unset($map['end_time']);unset($map['begin_time']);
+
+        }
+        //大转盘中奖信息
+        $sqlturn = "select win.`prizeyid`,win.`userid`,prize.type,prize.repertory,prize.name,user.user_name
+        from fanwe_turntable_win as win 
+        left join fanwe_turntable_actity_prize as prize on prize.id = win.prizeyid 
+        left join fanwe_user as user on user.id = win.userid ";
+        $sqlturn .=$contend;
+        $sqlturn .=" order by win.id DESC limit ".$limit;
+        $voListTurn = $GLOBALS['db']->getAll($sqlturn);
+
+        $contend1.= ' log_info like "%大转盘游戏消耗%"';
+        $UserLog = M("UserLog")->where($contend1)->order("id desc")->findAll();
+
+        $return = [];$real=[];$username = [];
+        foreach ($voListTurn as $key=>$val){
+            if($val['type'] ==4){
+                $temp = M('Deal')->field('origin_price,current_price,name')->where(['id'=>$val['name']])->find();
+                $return[$val['userid']][$val['type']] += $temp['current_price'];
+                $real[$val['userid']] .= $temp['name'].',';
+            }else{
+                $return[$val['userid']][$val['type']] += $val['name'];
+            }
+            $username[$val['userid']] = $val['user_name'];
+        }
+
+        $static = [];
+        foreach ($UserLog as $val5 ){
+            $static[$val5['log_user_id']]['money'] += $val5['money'];
+            $static[$val5['log_user_id']]['jewel'] += $val5['jewel'];
+            $static[$val5['log_user_id']]['coupons'] += $val5['coupons'];
+        }
+
+        $returnData = [];
+        foreach ($return as $key1=>$val1){
+            $returnData[$key1]['username'] = $username[$key1];
+            $returnData[$key1]['have']  = $real[$key1];
+            foreach ($this->turntable as $key2=>$val2){
+                $returnData[$key1][$val2] = isset($val1[$key2]) ? $val1[$key2]: 0;
+            }
+            //消费的数据
+            $returnData[$key1]['money'] =$static[$key1]['money'] ;
+            $returnData[$key1]['jewel'] = $static[$key1]['jewel'] ;
+            $returnData[$key1]['coupons'] = $static[$key1]['coupons'] ;
+        }
+
+        $sqlturn = "select count(*) from fanwe_turntable_win as win ";
+        $sqlturn .=$contend;
+        $count = $GLOBALS['db']->getOne($sqlturn);
+        $p = new Page ( $count, $page_size );
+        foreach ( $map as $key => $val ) {
+            if (! is_array ( $val )) {
+                $p->parameter .= "$key=" . urlencode ( $val ) . "&";
+            }
+        }
+        //分页显示
+        $page = $p->show ();
+
+        //模板赋值显示
+        $this->assign ( 'list', $returnData );
+        $this->assign ( "page", $page);
+        $this->assign ( "nowPage",$p->nowPage);
+
+
+        $this->display();
+    }
+
+	public function financial()
+    {
+        $_REQUEST['begin_time'] ? $map['begin_time'] = to_timespan($_REQUEST['begin_time']):'';
+        $_REQUEST['end_time'] ? $map['end_time'] = to_timespan($_REQUEST['end_time']) : '';
+
+        //刮刮乐中奖信息
+
+////        //大转盘中奖信息
+//        $this->dazhuanpan($map);
+////
+////
+//        echo '<pre>';var_dump($map);exit;
+
+        $map['id'] = intval($_REQUEST['id']);
+
+        $contend='';
+        if($map['id'])
+            $contend = " and t_di.id=".$map['id'];
+
+        if($map['begin_time'])
+            $contend = " and lottery_time >".$map['begin_time']." and lottery_time<".$map['end_time'];
+
+
+        $page = intval($_REQUEST['p'])?intval($_REQUEST['p']):1;
+        $page_size = 50;
+        $limit = (($page - 1)*$page_size).",".($page_size);
+        //取得满足条件的记录数
+        $count = $GLOBALS['db']->getOne("select count(*) from ".DB_PREFIX."duobao_item t_di where has_lottery = 1 ".$contend);
+// echo "select count(*) from ".DB_PREFIX."duobao_item where has_lottery = 1 ".$contend;exit;
+
+        if ($count > 0) {
+            $p = new Page ( $count, $page_size );
+            //分页查询数据
+            $robot_ids = $GLOBALS['db']->getOne("select group_concat(id) from ".DB_PREFIX."user where is_robot=1");
+
+            $sql = "select t_di.id,t_di.name,t_di.max_buy,t_d.origin_price,
+                robot_buy_count as robot_count,
+                t_di.luck_user_name as user_name,
+                t_di.lottery_time
+                from 
+                fanwe_duobao_item t_di 
+                left join fanwe_deal t_d on t_d.id=t_di.deal_id
+                where t_di.has_lottery = 1 ".$contend." order by t_di.lottery_time desc ,t_di.id desc limit ".$limit;
+
+            $voList = $GLOBALS['db']->getAll($sql);
+            //分页跳转的时候保证查询条件
+            foreach ( $map as $key => $val ) {
+                if (! is_array ( $val )) {
+                    $p->parameter .= "$key=" . urlencode ( $val ) . "&";
+                }
+            }
+            //分页显示
+//            echo '<pre>';var_dump($voList);exit;
+            $page = $p->show ();
+            //列表排序显示
+            $sortImg = $sort; //排序图标
+            $sortAlt = $sort == 'desc' ? l("ASC_SORT") : l("DESC_SORT"); //排序提示
+            $sort = $sort == 'desc' ? 1 : 0; //排序方式
+            //模板赋值显示
+            $this->assign ( 'list', $voList );
+            $this->assign ( "page", $page);
+            $this->assign ( "nowPage",$p->nowPage);
+        }
+        $this->display();
+    }
 	
 	
 }

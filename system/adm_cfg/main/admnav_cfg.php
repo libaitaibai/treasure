@@ -16,9 +16,19 @@ return array(
 				"key"	=>	"balance",
 				"nodes"	=>	array(
 						array("name"=>"报表统计","module"=>"Balance","action"=>"index"),
-				        array("name"=>"收益统计","module"=>"IncomeBalance","action"=>"index")
+				        array("name"=>"收益统计","module"=>"IncomeBalance","action"=>"index"),
+                        array("name"=>"财务统计","module"=>"IncomeBalance","action"=>"financial")
 				),
 			),
+            "balance1"	=>	array(
+                "name"	=>	"财务统计",
+                "key"	=>	"balance",
+                "nodes"	=>	array(
+                    array("name"=>"大转盘统计","module"=>"IncomeBalance","action"=>"dazhuanpan"),
+                    array("name"=>"刮刮乐统计","module"=>"IncomeBalance","action"=>"gauguale"),
+                    array("name"=>"夺宝统计","module"=>"IncomeBalance","action"=>"duobao")
+                ),
+            ),
 		),
 	),
 	"deal"	=>	array(
