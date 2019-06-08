@@ -1,0 +1,85 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<load href='__TMPL__Common/js/duobao.js' />
+<div class="main">
+    <div class="main_title">添加利率</div>
+    <div class="blank5"></div>
+    <form name="edit" action="__APP__" method="post" enctype="multipart/form-data">
+        <table class="form" cellpadding=0 cellspacing=0>
+            <tr>
+                <td colspan=2 class="topTd"></td>
+            </tr>
+
+            <tr>
+                <td class="item_title">类型:</td>
+                <td class="item_input">
+                    <select class="require" name="s_type">
+                        <option value="1" <if condition="$data.type eq 1">selected="selected"</if>>金币</option>
+                        <option value="2" <if condition="$data.type eq 2">selected="selected"</if>>钻石</option>
+                        <option value="3" <if condition="$data.type eq 3">selected="selected"</if>>优惠券</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="item_title">比例:</td>
+                <td class="item_input">
+                    <input type="text" class="textbox require" name="salary" value="{$data.salary}" />%
+
+                </td>
+            </tr>
+            <tr id="total_buy_name">
+                <td class="item_title">是否开启</td>
+                <td class="item_input">
+                    <lable>是<input type="radio" name="status" value="1" checked="checked"></lable>
+                    <lable>否<input type="radio" name="status" value="0"></lable>
+                   </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="item_title"></td>
+                <td class="item_input">
+                    <!--隐藏元素-->
+                    <input type="hidden" name="{:conf("VAR_MODULE")}" value="Invest" />
+                    <input type="hidden" name="{:conf("VAR_ACTION")}" value="salaryInsert" />
+                    <input type="hidden" name="is_effect" value="1" />
+                    <!--隐藏元素-->
+                    <input type="submit" class="button" value="添加" />
+                    <input type="reset" class="button" value="重置" />
+                    <input type="hidden" name="id" value="{$data.id}">
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2 class="bottomTd"></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+
+    $(function(){
+
+        $('select[name="s_type"]').bind('change',function(){
+
+            var type = $(this).val();
+            if(type==3){
+                $('#total_full_name').show();
+            }else{
+                $('#total_full_name').hide();
+            }
+
+
+        });
+
+
+    });
+
+
+
+
+</script>
+<include file="Public:footer" />
