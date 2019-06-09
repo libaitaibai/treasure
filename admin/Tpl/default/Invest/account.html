@@ -1,0 +1,89 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<php>
+    function get_handle($id, $duobao)
+    {
+    $str = "<a href='".u("Invest/edit",array("id"=>$id))."'>编辑</a>";
+    $str.="&nbsp;&nbsp;<a href='javascript:foreverdel(".$id.");'>".l("DEL")."</a>";
+    return $str;
+    }
+
+    function get_current_schedule($schedule, $duobao_id){
+    $str = "<a href='".u("DuobaoItem/index",array("duobao_id"=>$duobao_id))."'>".$schedule."</a>";
+    return $str;
+    }
+
+    function change_create_time($time){
+    return date('Y-m-d H:i:s',$time);
+    }
+
+    function change_type($type){
+    $type_str = '';
+    switch($type){
+    case 2:
+    $type_str = '支付宝转账';
+    break;
+    case 3:
+    $type_str = '银行转账';
+    break;
+    default:
+    break;
+
+    }
+    return $type_str;
+    }
+
+</php>
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<div class="main">
+    <div class="main_title">账号列表</div>
+    <div class="blank5"></div>
+    <form name="search" action="__APP__" method="get">
+        <div class="button_row">
+            <input type="button" class="button" value="新增" onclick="add();" />
+            <input type="button" class="button" value="删除" onclick="foreverdel();" />
+        </div>
+        <div class="blank5"></div>
+        <div class="search_row">
+
+            账号：<input type="text" class="textbox" name="name" value="{:strim($_REQUEST['name'])}" style="width:100px;" />
+            账号类型: <select  name="s_type">
+            <option value="0" >全部</option>
+            <option value="2" >支付宝</option>
+            <option value="2" >银行</option>
+        </select>
+            <input type="hidden" value="Invest" name="m" />
+            <input type="hidden" value="account" name="a" />
+
+            <input type="submit" class="button" value="{%SEARCH}" />
+        </div>
+    </form>
+    <div class="blank5"></div>
+
+    <html:list
+            id="dataTable"
+            style="dataTable"
+            name="topic"
+            checkbox="true"
+            action="true"
+            datasource="list"
+            show="id:{%ID}|50px
+	,type|change_type:充值方式
+	,account:账号
+	,account_name:真实姓名
+	,way:开户行名称
+	,create_time|change_create_time:创建时间
+	"
+            actionlist="id|get_handle=$scratch" />
+
+    <div class="blank5"></div>
+    <div class="page">{$page}</div>
+</div>
+<include file="Public:footer" />
+

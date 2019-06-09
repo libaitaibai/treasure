@@ -39894,3 +39894,46 @@ CREATE TABLE `fanwe_share_comment` (
   KEY `share_Id_index` (`share_id`) USING BTREE,
   KEY `uid_touid_index` (`uid`,`to_uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='中奖分享评论表';
+
+alter table fanwe_share add column comments int not null default 0 comment '评论数';
+
+---------------------人工充值提现详情表--------------------------------
+CREATE TABLE `fanwe_invest_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `way_id` int(11) NOT NULL DEFAULT '0',
+  `fee_account` double(20,2) NOT NULL DEFAULT '0.00' COMMENT '提现金额',
+  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `user_name` varchar(255) NOT NULL DEFAULT '' COMMENT '真实姓名',
+  `user_account` varchar(255) NOT NULL DEFAULT '' COMMENT '用户账号',
+  `account_name` varchar(255) NOT NULL DEFAULT '' COMMENT '开户行名称 只在银行转账有效',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `is_receive` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否收到 打款',
+  `is_chong` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已经充值',
+  `auditing` tinyint(4) NOT NULL DEFAULT '0' COMMENT '审核通过 1是 0 正在审核 -1不通过',
+  `remark` text NOT NULL COMMENT '通过不通过原因',
+  `up_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1可用 0不可用',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='人工充值提现详情表';
+
+---------------------充值赠送配置--------------------------------
+CREATE TABLE `fanwe_invest_salary` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '配置类型 1金币 2 钻石 3优惠券',
+  `salary` decimal(20,4) NOT NULL DEFAULT '0.0000' COMMENT '当前赠送率',
+  `is_open` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否开启',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='充值赠送配置';
+
+---------------------人工充值方式--------------------------------
+CREATE TABLE `fanwe_invest_way` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `way` varchar(255) NOT NULL DEFAULT '' COMMENT '充值方式，如农行',
+  `account` varchar(255) NOT NULL DEFAULT '' COMMENT '账号',
+  `account_name` varchar(255) NOT NULL DEFAULT '' COMMENT '账号姓名 如李某某',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '充值类型 1微信扫码 2支付宝转账 3银行转账',
+  `group_id` int(11) NOT NULL DEFAULT '0' COMMENT '分组',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否可用 0 不可用  1可用',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='人工充值方式';

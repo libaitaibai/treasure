@@ -39,6 +39,39 @@
 	<div id="deal_msg" style="display:none; color:#ccc; font-size:12px; position:absolute; right:115px; top:40px;">{%DEAL_MSG_LIST_RUNNING}</div>
 	<div id="promote_msg"  style="display:none; color:#ccc; font-size:12px; position:absolute; right:15px; top:40px;">{%PROMOTE_MSG_LIST_RUNNING}</div>
 	<div id="apns_msg"  style="display:none; color:#ccc; font-size:12px; position:absolute; right:15px; top:40px;">{%PROMOTE_MSG_LIST_RUNNING}</div>
+	<div id="playTips" data-id="0"></div>
+	<script type="text/javascript">
+
+        function anounce(txt){
+
+            txt = encodeURI(txt);
+            var str = "<audio autoplay=\"autoplay\"><source src=\"http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=5&text="+ txt +"\" type=\"audio/mpeg\"><embed height=\"0\" width=\"0\" src=\"http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=5&text="+ txt +"\"></audio>";
+
+           document.getElementById('playTips').innerHTML = str;
+
+        }
+
+        //anounce('您有新的充值订单');
+        var annouce_url = '/m.php?m=Public&a=m.php&m=Invest&a=getNewInvest';
+
+        setInterval(function(){
+
+            var id = $('#playTips').attr('data-id');
+            $.get(annouce_url,{id:id},function(xhr){
+
+                  if(xhr.code==200){
+                      $('#playTips').attr('data-id',xhr.data.id);
+                      anounce('您有新的充值订单');
+				  }
+
+            },'json');
+
+        },10000);
+
+
+
+
+	</script>
 
 </body>
 </html>

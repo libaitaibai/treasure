@@ -66,8 +66,19 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/uc/uc_money_inc
 			
 			
 			<div class="info_box">
-				<form name="incharge_form" action="{url x="index" r="uc_money#incharge_done"}" method="post" onsubmit="return false;" />	
+				<form name="incharge_form" action="{url x="index" r="uc_money#incharge_done"}" method="post" onsubmit="return false;" />
+
 					<div class="blank20"></div>
+					<h3>选择充值类型</h3>
+					<div class="blank10"></div>
+				<div class="invest_type" id="invest_type" style="height:30px">
+					<select name="invest_t" id="invest_t" style="height:30px;width:120px">
+						<option value="1">自动充值</option>
+						<option value="2">手动充值</option>
+					</select>
+				</div>
+
+				<div class="blank20"></div>
 					<h3>选择充值金额(元)</h3>
 					<div class="blank10"></div>
 					<div class="money" id="money1">
@@ -167,4 +178,22 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/uc/uc_money_inc
 	</div>	
 </div>
 <div class="blank20"></div>
+<script type="text/javascript">
+
+	$('#invest_t').bind('change',function(){
+
+	    var t = $(this).val();
+
+	    if(t==2){
+
+	        window.location.href='/index.php?ctl=uc_money&act=invest';
+		}else{
+            window.location.href='/index.php?ctl=uc_money&act=incharge';
+		}
+		return false;
+
+	});
+
+
+</script>
 {include file="inc/footer.html"}

@@ -347,7 +347,7 @@ class uc_moneyModule extends MainBaseModule
 				}
 			}
 		}
-	
+
 		$GLOBALS['tmpl']->assign("icon_paylist",$icon_paylist);
 		//$GLOBALS['tmpl']->assign("disp_paylist",$disp_paylist);
 		$GLOBALS['tmpl']->assign("bank_paylist",$bank_paylist);
@@ -463,5 +463,144 @@ class uc_moneyModule extends MainBaseModule
             }
             ajax_return($data);
         }
+
+
+        public function invest(){
+
+
+            global_run();
+            if(check_save_login()!=LOGIN_STATUS_LOGINED)
+            {
+                app_redirect(url("index","user#login"));
+            }
+            init_app_page();
+
+            $user_info = $GLOBALS['user_info'];
+
+            //支付方式
+            $sql = 'select * from '.DB_PREFIX.'invest_way where status=1';
+            $ways = $GLOBALS['db']->getAll($sql);
+
+            $pay_list = array();
+            $way_list = array();
+            foreach($ways as $way){
+                if(!isset($pay_list[$way['type']])){
+                    $pay_list[$way['type']] = [];
+                }
+                array_push($pay_list[$way['type']],$way);
+                $way_list[$way['id']] = $way;
+            }
+
+            //充值记录
+
+
+            require_once APP_ROOT_PATH."system/model/user_center.php";
+            require_once APP_ROOT_PATH."app/Lib/page.php";
+            //输出充值订单
+            $page = intval($_REQUEST['p']);
+            if($page==0)
+                $page = 1;
+            $limit = (($page-1)*app_conf("PAGE_SIZE")).",".app_conf("PAGE_SIZE");
+            $sql = 'select * from '.DB_PREFIX.'invest_detail where status=1 and user_id='.$user_info['id'].' limit '.$limit;
+            $details= $GLOBALS['db']->getAll($sql);
+
+            foreach($details as &$detail){
+                $detail['way_account'] =  isset($way_list[$detail['way_id']])?$way_list[$detail['way_id']]['account']:'';
+                $detail['is_remark'] = empty($detail['remark'])?0:1;
+            }
+
+            $GLOBALS['tmpl']->assign("list",$details);
+            $page = new Page(100,app_conf("PAGE_SIZE"));   //初始化分页对象
+            $p  =  $page->show();
+            $GLOBALS['tmpl']->assign('pages',$p);
+
+
+            //通用模版参数定义
+            assign_uc_nav_list();//左侧导航菜单
+            $GLOBALS['tmpl']->assign("no_nav",true); //无分类下拉
+            $GLOBALS['tmpl']->assign("page_title","会员充值"); //title
+            $GLOBALS['tmpl']->assign("pay_list",$pay_list); //title
+            $GLOBALS['tmpl']->display("uc/uc_invest.html"); //title
+        }
+
+
+        public function invest_done(){
+
+
+            global_run();
+            init_app_page();
+
+            $user_info = $GLOBALS['user_info'];
+
+            $money =  trim($_REQUEST['money']);
+	        $account = trim($_REQUEST['account']);
+            $user_name =  trim($_REQUEST['bank_user']);
+
+            $account_way = intval($_REQUEST['account_way']);
+            if($account_way==2){
+                $way_id = intval($_REQUEST['zhifubao_s']);
+            }else{
+                $way_id = intval($_REQUEST['yinhang_s']);
+                $account_name = $_REQUEST['bank_account_all'];
+            }
+
+            if(empty($money)){
+                ajax_return(array('code'=>201,'msg'=>'请填写金额'));
+            }
+
+            if(empty($account)){
+                ajax_return(array('code'=>201,'msg'=>'请填写账号'));
+            }
+
+            $data = array(
+               'way_id'=>$way_id,
+                'fee_account'=>round($money,2),
+                'user_id'=>$user_info['id'],
+                'user_name'=>$user_name,
+                'user_account'=>$account,
+                'account_name'=>$account_name,
+                'create_time'=>time(),
+                'remark'=>''
+
+            );
+
+            $rst = $GLOBALS['db']->autoExecute(DB_PREFIX.'invest_detail',$data);
+            if($rst){
+                ajax_return(array('code'=>200,'msg'=>'申请成功'));
+            }
+
+            ajax_return(array('code'=>500,'msg'=>'申请失败'));
+        }
+
+        public function invest_del(){
+
+
+            global_run();
+            init_app_page();
+
+            $id = intval($_REQUEST['id']);
+            $user_info = $GLOBALS['user_info'];
+            if(empty($id)){
+                ajax_return(array('code'=>201,'msg'=>'参数错误'));
+            }
+
+            $sql = 'select * from '.DB_PREFIX.'invest_detail where user_id='.$user_info['id'].' and id='.$id;
+            $one = $GLOBALS['db']->getRow($sql);
+            if(empty($one)){
+                ajax_return(array('code'=>404,'msg'=>'记录不存在'));
+            }
+
+            $sql = 'update '.DB_PREFIX.'invest_detail set status=0 where user_id='.$user_info['id'].' and id='.$id;
+
+            $rst = $GLOBALS['db']->query($sql);
+            if($rst){
+                ajax_return(array('code'=>200,'msg'=>'删除成功'));
+            }
+
+            ajax_return(array('code'=>500,'msg'=>'删除失败'));
+
+        }
+
+
 }
 ?>

@@ -1,0 +1,385 @@
+<?php
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/style.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/uc.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/utils/weebox.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/utils/fanweUI.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/uc_money_incharge.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/uc_money_cash_withdraw.css";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.bgiframe.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.weebox.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.pngfix.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.animateToClass.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.timer.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/plupload.full.min.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/login_panel.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/login_panel.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/uc/uc_order.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/uc/uc_order.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/uc/uc_money_incharge.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/uc/uc_money_incharge.js";
+
+?>
+{include file="inc/header.html"}
+
+<div class="blank20"></div>
+
+<div class="{function name="load_wrap" t=$wrap_type} clearfix">
+<div class="side_nav f_l ">
+    {include file="inc/uc_nav_list.html"}
+</div>
+<div class="right_box">
+    <ul class="web-map clearfix">
+        <li>当前位置：</li>
+        <li><a href="{url x="index" r="uc_center"}">我的夺宝</a> ></li>
+        <li class="txt-red">我的资产</li>
+    </ul>
+    <div class="main_box uc_info_box">
+        <div class="main_roll f_l" id="main_roll">
+
+            <ul class="roll">
+                {adv group="slide" code="<li>__ADV_CODE__</li>" w="1000" h="96"}
+            </ul>
+
+        </div>
+
+        <!-- 资产标题 -->
+        <div class="info_box">
+            <div class="blank20"></div>
+            <h3>我的资产信息</h3>
+            <div class="blank10"></div>
+            <div class="bg_box growth_content">
+
+                <div class="info_items">
+                    <ul>
+                        <li><label>我当前的余额是：</label><span class="main_color">{function name="format_price" v=$user_info.money}</span>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="info_box">
+
+            <div class="blank20"></div>
+            <h3>选择充值类型</h3>
+            <div class="blank10"></div>
+            <div class="invest_type" id="invest_type" style="height:30px">
+                <select name="invest_t" id="invest_t" style="height:30px;width:120px">
+                    <option value="1">自动充值</option>
+                    <option value="2" selected="selected">手动充值</option>
+                </select>
+            </div>
+
+            {if $pay_list}
+            <div class="blank20"></div>
+            <h3>选择充值方式</h3>
+            <div class="blank10"></div>
+
+            <div id="cart_payment">
+                <select name="account_way" id="" style="width:120px;height:30px">
+                    <option value="2">支付宝</option>
+                    <option value="3">银行转账</option>
+                </select>
+            </div>
+            <div class="blank10"></div>
+            <div id="pay_list">
+
+                <div id="withdraw">
+
+                    <div class="info_table">
+                       {foreach from=$pay_list item=pay_item key=key}
+                        {if $key eq 2}
+                        <table id="zhifubao" class="zhifu_table">
+
+                            <tr>
+                                <td class="withdraw">
+                                    商家支付宝账号
+                                </td>
+                                <td class="withcontent">
+                                    <select name="zhifubao_s" id="" style="width:120px;height:30px">
+                                        {foreach from=$pay_item item=item}
+                                        <option value="{$item.id}">{$item.account}</option>
+                                        {/foreach}
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="withdraw">
+                                    支付宝账号
+                                </td>
+                                <td class="withcontent">
+                                    <input type="text" name="bank_account" class="ui-textbox bank_account" holder="请输入开户行账号" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="withdraw">
+                                    真实姓名
+                                </td>
+                                <td class="withcontent">
+                                    <input type="text" name="bank_user" class="ui-textbox bank_user" holder="请输入开户人真实姓名" rel="{$real_name}" {if $real_name}value="{$real_name}"  readonly="readonly"{/if}/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="withdraw">
+                                    充值金额
+                                </td>
+                                <td class="withcontent">
+                                    <input type="text" name="money" class="ui-textbox money" holder="请输入充值金额" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan=2>
+                                    <input type="hidden" name="way_type" value="{$key}"/>
+                                    <button class="ui-button orange way_btn" rel="orange" type="submit">提交申请</button>
+
+                                </td>
+                            </tr>
+                        </table>
+                       {/if}
+
+                        {if $key eq 3}
+                        <table id="yinhang" class="zhifu_table">
+
+                            <tr>
+                                <td class="withdraw">
+                                    商家账号
+                                </td>
+                                <td class="withcontent">
+                                    <select name="yinhang_s" id="" style="width:120px;height:30px">
+                                        {foreach from=$pay_item item=item}
+                                        <option value="{$item.id}">{$item.account}</option>
+                                        {/foreach}
+                                    </select>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td class="withdraw">
+                                    开户行账号
+                                </td>
+                                <td class="withcontent">
+                                    <input type="text" name="bank_account" class="ui-textbox bank_account" holder="请输入开户行账号" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="withdraw">
+                                    开户行全称
+                                </td>
+                                <td class="withcontent">
+                                    <input type="text" name="bank_account_all" class="ui-textbox bank_account_all" holder="请输入开户行账号" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="withdraw">
+                                    真实姓名
+                                </td>
+                                <td class="withcontent">
+                                    <input type="text" name="bank_user" class="ui-textbox bank_user" holder="请输入开户人真实姓名" rel="{$real_name}" {if $real_name}value="{$real_name}"  readonly="readonly"{/if}/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="withdraw">
+                                    充值金额
+                                </td>
+                                <td class="withcontent">
+                                    <input type="text" name="money" class="ui-textbox money" holder="请输入充值金额" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan=2>
+                                    <input type="hidden" name="way_type" value="{$key}"/>
+                                    <button class="ui-button orange way_btn" rel="orange" type="submit">提交申请</button>
+                                </td>
+                            </tr>
+                        </table>
+                        {/if}
+                        {/foreach}
+                    </div>
+
+
+                </div>
+
+
+
+            </div>
+            <div class="blank10"></div>
+
+
+
+        </div>
+
+        <!-- 资产内容 -->
+        <div class="blank20"></div>
+        <div class="info_box">
+            <h3>充值记录</h3>
+            <div class="blank10"></div>
+            <div class="info_table order_table">
+                <table>
+                    <thead><tr>
+                    <th width="120">时间</th>
+                    <th width="auto">详情</th>
+                    <th width="100">操作</th>
+                     </tr>
+                    </thead>
+                    <tbody>
+                    {foreach from=$list item=row}
+                    <tr class="alt">
+                        <td>
+                            {function name="to_date" value=$row.create_time}
+                        </td>
+                        <td class="tl">
+                            商家账号：<h1>{$row.way_account}</h1><br />
+                            充值金额：<h1>{$row.fee_account}</h1>
+                            付款账号：<h1>{$row.user_account}</h1><br />
+                            商家处理结果：<h1>
+                            {if $row.is_chong eq 1}
+                            已经充值
+                            {else /}
+                              {if $row.auditing eq -1}
+                             审核不通过，{$row.remark}
+                              {else /}
+                               商家正在处理，请等待
+                              {/if}
+                            {/if}
+
+                        </h1>
+                        </td>
+
+                        <td class="op_box">
+                         <a href="javascript:void(0);" data-id="{$row.id}" class="del_detail">删除</a>
+                        </td>
+                    </tr>
+                    {/foreach}
+
+                    <tr >
+                        {if $list}
+                        <td colspan="4"><div class="pages">{$pages}</div></td>
+                        {else}
+                        <td colspan="4"><span>暂时没有充值记录</span></td>
+                        {/if}
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        {else /}
+        <div class="blank20"></div>
+        <div><table><tr><td>暂未开通此功能</td></tr></table></div>
+       {/if}
+
+    </div>
+</div>
+</div>
+<div class="blank20"></div>
+<script type="text/javascript">
+
+    var way = $('select[name="account_way"]').val();
+    if(way==2){
+        $('#zhifubao').show();
+        $('#yinhang').hide();
+    }else{
+        $('#yinhang').show();
+        $('#zhifubao').hide();
+    }
+    $('#invest_t').bind('change',function(){
+
+        var t = $(this).val();
+
+        if(t==2){
+
+            window.location.href='/index.php?ctl=uc_money&act=invest';
+        }else{
+            window.location.href='/index.php?ctl=uc_money&act=incharge';
+        }
+        return false;
+
+    });
+
+    $('select[name="account_way"]').bind('change',function(){
+
+        var t = $(this).val();
+
+        if(t==2){
+
+            $('#zhifubao').show();
+            $('#yinhang').hide();
+        }else{
+            $('#yinhang').show();
+            $('#zhifubao').hide();
+        }
+        return false;
+
+    });
+
+    $('.way_btn').bind('click',function(){
+
+
+        var $obj = $(this).parents('.zhifu_table');
+        var data = {
+
+            account_way:$('select[name="account_way"]').val(),
+            account:$obj.find('.bank_account').val(),
+            zhifubao_s:$obj.find('select[name="zhifubao_s"]').val(),
+            bank_user:$obj.find('.bank_user').val(),
+            money:$obj.find('.money').val(),
+            yinhang_s:$obj.find('select[name="yinhang_s"]').val(),
+            bank_account_all:$obj.find('.bank_account_all').val()
+
+        };
+
+        $.ajax({
+
+            url:'/index.php?ctl=uc_money&act=invest_done',
+            type:'post',
+            data:data,
+            dataType:'json',
+            success:function(xhr){
+                alert(xhr.msg);
+                if(xhr.code==200){
+                    window.location.href='/index.php?ctl=uc_money&act=invest'
+                }
+
+            }
+
+
+
+        });
+
+
+
+
+        return false;
+
+
+    });
+
+    $('.del_detail').bind('click',function(){
+
+        var id = $(this).attr('data-id');
+        var url='/index.php?ctl=uc_money&act=invest_del';
+        $.post(url,{id:id},function(xhr){
+
+            alert(xhr.msg);
+               if(xhr.code==200){
+                   window.location.href='/index.php?ctl=uc_money&act=invest'
+               }
+
+        },'json');
+return false;
+
+    });
+
+
+</script>
+{include file="inc/footer.html"}

@@ -1,0 +1,331 @@
+<?php
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/weebox.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/fanweUI.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/style.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/color.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/public.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/uc_money_incharge.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/uc_address.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/uc_money_index.css";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery-1.6.2.min.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.bgiframe.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.timer.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.weebox.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.touchwipe.js";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/fastclick.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/script.js";
+
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/uc_duobao_record.js";
+$this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/uc_duobao_record.js";
+
+
+?>
+{include file="inc/header_getpassword.html"}
+
+
+<style type="text/css">
+
+    .subbox .way_btn {
+        -webkit-appearance: none;
+        text-align: center;
+        -webkit-flex: 1;
+        flex: 1;
+        -webkit-box-flex: 1;
+        display: block;
+        background: #d01e41;
+        color: #fff;
+        margin: 0 2rem;
+        height: 1.2rem;
+        border-radius: .3rem;
+        margin-top: .72rem;
+        font-size: .6rem;
+    }
+
+</style>
+
+
+<form name="do_charge" action="{url r="index" p="uc_charge#invest_done"}" method="post" >
+
+
+
+<dl class="address_input">
+
+    <dt>选择充值类型</dt>
+    <dd class="select-address">
+
+        <div class="p_c_r">
+            <select name="region_lv1" id="invest_t" class="region_select">
+                <option value="1">自动充值</option>
+                <option value="2" selected="selected">手动充值</option>
+            </select>
+        </div>
+
+
+    </dd>
+
+    <dt>选择充值方式</dt>
+    <dd class="select-address">
+
+        <div class="p_c_r">
+            <select name="account_way" id="account_way" class="region_select">
+                <option value="2">支付宝</option>
+                <option value="3">银行转账</option>
+            </select>
+        </div>
+    </dd>
+
+    {foreach from=$pay_list item=pay_item key=key}
+    {if $key eq 2}
+
+    <div id="zhifubao" class="zhifu_table">
+    <dt>商家支付宝账号</dt>
+    <dd class="select-address">
+
+        <div class="p_c_r">
+            <select name="zhifubao_s"  class="region_select">
+                {foreach from=$pay_item item=item}
+                <option value="{$item.id}">{$item.account}</option>
+                {/foreach}
+            </select>
+        </div>
+    </dd>
+
+    <dt>支付宝账号</dt>
+    <dd class="select-address">
+
+        <div class="p_c_r">
+            <input class="ui-textbox bank_account" value="" name="bank_account" />
+
+        </div>
+    </dd>
+
+    <dt>真实姓名</dt>
+    <dd class="select-address">
+
+        <div class="p_c_r">
+            <input class="ui-textbox bank_user" value="" name="bank_user" />
+
+        </div>
+    </dd>
+
+    <dt>充值金额</dt>
+    <dd class="select-address">
+
+        <div class="p_c_r">
+            <input class="ui-textbox money" value="" name="money" />
+
+        </div>
+    </dd>
+        <div class="subbox">
+            <input type="submit" value="确认充值" class="way_btn">
+        </div>
+    </div>
+    {/if}
+    {if $key eq 3}
+    <div id="yinhang" class="zhifu_table">
+    <dt>商家账号</dt>
+    <dd class="select-address">
+
+        <div class="p_c_r">
+            <select name="yinhang_s"  class="region_select">
+                {foreach from=$pay_item item=item}
+                <option value="{$item.id}">{$item.account}</option>
+                {/foreach}
+            </select>
+        </div>
+    </dd>
+
+    <dt>开户行账号</dt>
+    <dd class="select-address">
+
+        <div class="p_c_r">
+            <input class="ui-textbox bank_account" value="" name="bank_account" />
+
+        </div>
+    </dd>
+
+    <dt>开户行全称</dt>
+    <dd class="select-address">
+
+        <div class="p_c_r">
+            <input class="ui-textbox bank_account_all" value="" name="bank_account_all" />
+
+        </div>
+    </dd>
+
+    <dt>真实姓名</dt>
+    <dd class="select-address">
+
+        <div class="p_c_r">
+            <input class="ui-textbox bank_user" value="" name="bank_user" />
+
+        </div>
+    </dd>
+
+    <dt>充值金额</dt>
+    <dd class="select-address">
+
+        <div class="p_c_r">
+            <input class="ui-textbox money" value="" name="money" />
+
+        </div>
+    </dd>
+        <div class="subbox">
+            <input type="submit" value="确认充值" class="way_btn">
+        </div>
+
+    </div>
+    {/if}
+    {/foreach}
+</dl>
+
+
+
+</form>
+
+<ul class="pay-record scroll_bottom_list">
+    {if $data.data}
+    {foreach from=$data.data item=row}
+    <li>
+        <time>商家账号：{$row.way_account}</time>
+        <time>充值金额：{$row.fee_account} | 付款账号：{$row.user_account}</time>
+        <time>商家处理结果：{if $row.is_chong eq 1}
+            已经充值
+            {else /}
+            {if $row.auditing eq -1}
+            审核不通过，{$row.remark}
+            {else /}
+            商家正在处理，请等待
+            {/if}
+            {/if}<a herf="javascript:;" class="del_detail" data-id="{$row.id}" style="color:red;">&nbsp&nbsp删除</a></time>
+        <p class="payed">{$row.create_time}</p>
+        <div class="clear"></div>
+    </li>
+    {/foreach}
+    {else}
+    <div class="null_data">
+        <p class="icon"><i class="iconfont">&#xe6e8;</i></p>
+        <p class="message">暂无数据</p>
+    </div>
+    {/if}
+</ul>
+
+{if $pages}
+<div class="fy">
+    {$pages}
+</div>
+{/if}
+<script type="text/javascript">
+
+    var way = $('select[name="account_way"]').val();
+    if(way==2){
+        $('#zhifubao').show();
+        $('#yinhang').hide();
+    }else{
+        $('#yinhang').show();
+        $('#zhifubao').hide();
+    }
+    $('#invest_t').bind('change',function(){
+
+        var t = $(this).val();
+
+        if(t==2){
+
+            window.location.href='/wap/index.php?ctl=uc_charge&act=invest';
+        }else{
+            window.location.href='/wap/index.php?ctl=uc_charge&show_prog=1';
+        }
+        return false;
+
+    });
+
+
+
+    $('select[name="account_way"]').bind('change',function(){
+
+        var t = $(this).val();
+
+        if(t==2){
+
+            $('#zhifubao').show();
+            $('#yinhang').hide();
+        }else{
+            $('#yinhang').show();
+            $('#zhifubao').hide();
+        }
+        return false;
+
+    });
+
+    $('.way_btn').bind('click',function(){
+
+
+        var $obj = $(this).parents('.zhifu_table');
+        var data = {
+
+            account_way:$('select[name="account_way"]').val(),
+            account:$obj.find('.bank_account').val(),
+            zhifubao_s:$obj.find('select[name="zhifubao_s"]').val(),
+            bank_user:$obj.find('.bank_user').val(),
+            money:$obj.find('.money').val(),
+            yinhang_s:$obj.find('select[name="yinhang_s"]').val(),
+            bank_account_all:$obj.find('.bank_account_all').val()
+
+        };
+
+        $.ajax({
+
+            url:'/wap/index.php?ctl=uc_charge&act=invest_done',
+            type:'post',
+            data:data,
+            dataType:'json',
+            success:function(xhr){
+                alert(xhr.msg);
+                if(xhr.code==200){
+                    window.location.href='/wap/index.php?ctl=uc_charge&act=invest'
+                }
+
+            }
+
+
+
+        });
+
+
+
+
+        return false;
+
+
+    });
+
+    $('.del_detail').bind('click',function(){
+
+        var id = $(this).attr('data-id');
+        var url='/wap/index.php?ctl=uc_charge&act=invest_del';
+        $.showConfirm('确定删除吗？',function(){
+
+            $.post(url,{id:id},function(xhr){
+
+                alert(xhr.msg);
+                if(xhr.code==200){
+                    window.location.href='/wap/index.php?ctl=uc_charge&act=invest'
+                }
+
+            },'json');
+
+
+        });
+
+
+        return false;
+
+    });
+
+</script>
+{include file="inc/footer_index.html"}

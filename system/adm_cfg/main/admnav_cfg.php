@@ -111,6 +111,17 @@ return array(
 							        array("name"=>"拆分红包设置","module"=>"RedSet","action"=>"index"),
 							),
 					),
+                "orderinvest"	=>	array(
+                    "name"	=>	"人工充值",
+                    "key"	=>	"orderinvest",
+                    "nodes"	=>	array(
+                        array("name"=>"充值赠送设置","module"=>"Invest","action"=>"salary"),
+                        array("name"=>"支付账户设置","module"=>"Invest","action"=>"account"),
+                        array("name"=>"人工充值详情","module"=>"Invest","action"=>"detail")
+
+                    ),
+                ),
+
 // 					"delivery"	=>	array(
 // 							"name"	=>	"配送方式",
 // 							"key"	=>	"delivery",
