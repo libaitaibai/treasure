@@ -263,5 +263,25 @@ class InvestAction extends  CommonEnhanceAction{
     }
 
 
+    public function getNewInvest(){
+
+        $id = intval($_REQUEST['id']);
+        if(!$id){
+            $one = M('invest_detail')->where(array('status'=>1))->find();
+            $v = empty($one)?false:true;
+        }else{
+            $one = M('invest_detail')->where(array('status'=>1))->order('id desc')->find();
+            $v = (empty($one) || $one['id']==$id)?false:true;
+        }
+
+        if($v){
+            ajax_return(array('code'=>200,'msg'=>'','data'=>array('id'=>$one['id'])));
+        }
+
+        ajax_return(array('code'=>500,'msg'=>'没有新订单','data'=>array()));
+
+    }
+
+
 
 }

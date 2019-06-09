@@ -147,7 +147,7 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/uc/uc_money_inc
                        {/if}
 
                         {if $key eq 3}
-                        <table id="yinhang" class="zhifu_table" style="display:none">
+                        <table id="yinhang" class="zhifu_table">
 
                             <tr>
                                 <td class="withdraw">
@@ -284,6 +284,14 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/page_js/uc/uc_money_inc
 <div class="blank20"></div>
 <script type="text/javascript">
 
+    var way = $('select[name="account_way"]').val();
+    if(way==2){
+        $('#zhifubao').show();
+        $('#yinhang').hide();
+    }else{
+        $('#yinhang').show();
+        $('#zhifubao').hide();
+    }
     $('#invest_t').bind('change',function(){
 
         var t = $(this).val();

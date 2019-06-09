@@ -5,6 +5,7 @@ $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/style.css";
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/color.css";
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/public.css";
 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/uc_money_incharge.css";
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/uc_address.css";
 
 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery-1.6.2.min.js";
 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/utils/jquery.bgiframe.js";
@@ -26,6 +27,28 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/uc_charge.js";
 
 ?>
 {include file="inc/header_getpassword.html"}
+<h1>选择充值金额(元)</h1>
+
+
+<dl class="address_input">
+
+	<dt>选择充值类型</dt>
+	<dd class="select-address">
+
+		<div class="p_c_r">
+			<select name="region_lv1" id="invest_t" class="region_select">
+				<option value="1">自动充值</option>
+				<option value="2">手动充值</option>
+			</select>
+		</div>
+
+
+	</dd>
+
+
+</dl>
+
+
 <form name="do_charge" action="{url r="index" p="uc_charge#done"}" method="post" >
 <h1>选择充值金额(元)</h1>
 <div class="money" id="money1">
@@ -52,4 +75,21 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/uc_charge.js";
 <input type="submit" value="确认充值" class="sub">
 </div>
 </form>
+<script type="text/javascript">
+
+    $('#invest_t').bind('change',function(){
+
+        var t = $(this).val();
+
+        if(t==2){
+
+            window.location.href='/wap/index.php?ctl=uc_charge&act=invest';
+        }else{
+            window.location.href='/wap/index.php?ctl=uc_charge&show_prog=1';
+        }
+        return false;
+
+    });
+
+</script>
 {include file="inc/footer_index.html"}
