@@ -161,7 +161,6 @@ class IncomeBalanceAction extends CommonAction{
             $contend = " where win.on_create >'".to_date($map['begin_time'])."' and win.on_create<'".to_date($map['end_time'])."'";
             $contend1 = "log_time > ".$map['begin_time'].' and log_time < '.$map['end_time'] .' and  ';
             unset($map['end_time']);unset($map['begin_time']);
-
         }
         //大转盘中奖信息
         $sqlturn = "select win.`prizeyid`,win.`userid`,prize.type,prize.repertory,prize.name,user.user_name
@@ -206,6 +205,10 @@ class IncomeBalanceAction extends CommonAction{
             $returnData[$key1]['jewel'] = $static[$key1]['jewel'] ;
             $returnData[$key1]['coupons'] = $static[$key1]['coupons'] ;
         }
+        foreach ($returnData as $key9 => $val9){
+            $returnData[$key9]['fenxiao'] = $val9['jinbi'] * 0.17;
+        }
+
 
         $sqlturn = "select count(*) from fanwe_turntable_win as win ";
         $sqlturn .=$contend;
@@ -224,25 +227,106 @@ class IncomeBalanceAction extends CommonAction{
         $this->assign ( "page", $page);
         $this->assign ( "nowPage",$p->nowPage);
 
-
         $this->display();
     }
 
-	public function financial()
+    public function gauguale()
     {
         $_REQUEST['begin_time'] ? $map['begin_time'] = to_timespan($_REQUEST['begin_time']):'';
         $_REQUEST['end_time'] ? $map['end_time'] = to_timespan($_REQUEST['end_time']) : '';
 
-        //刮刮乐中奖信息
+        $page = intval($_REQUEST['p'])?intval($_REQUEST['p']):1;
+        $page_size = 50;
+        $limit = (($page - 1)*$page_size).",".($page_size);
 
-////        //大转盘中奖信息
-//        $this->dazhuanpan($map);
-////
-////
-//        echo '<pre>';var_dump($map);exit;
+        $contend = '';$contend1='';
+        if(!empty($map)){
+            $contend = " where statics.create_time >'".($map['begin_time'])."' and statics.create_time<'".($map['end_time'])."'";
+            $contend1 = "log_time > ".$map['begin_time'].' and log_time < '.$map['end_time'] .' and  ';
+            unset($map['end_time']);unset($map['begin_time']);
+        }
+
+        //消费信息
+        $contend1.= ' log_info like "%刮刮乐消费%"';
+        $UserLog = M("UserLog")->where($contend1)->order("id desc")->findAll();
+
+        $static = [];
+        foreach ($UserLog as $val5 ){
+            $static[$val5['log_user_id']]['money'] += $val5['money'];
+            $static[$val5['log_user_id']]['jewel'] += $val5['jewel'];
+            $static[$val5['log_user_id']]['coupons'] += $val5['coupons'];
+        }
+
+        //中奖信息
+        $sqlturn = "select statics.scratch_id,statics.prize_id,statics.user_id,user.user_name
+        from fanwe_scratchstatics as statics 
+        left join fanwe_scratchprize as prize on prize.id = statics.prize_id 
+        left join fanwe_user as user on user.id = statics.user_id ";
+        $sqlturn .=$contend;
+        $sqlturn .=" order by statics.id DESC limit ".$limit;
+        $voListTurn = $GLOBALS['db']->getAll($sqlturn);
+
+        //具体奖项信息         1商品 2金币 3钻石
+        $prize_ids = array_map(function($val){return $val['prize_id'];},$voListTurn);
+        $prize_ids = array_unique($prize_ids);
+        $details = M('scratchprizelist')->where(array ('prize_id' => array ('in', implode ( ',', $prize_ids ) ) ))->select();
+
+        $price = [];
+        foreach ($details as $key => $val){
+            $price[$val['prize_id']][$val['prize_type']] = $val['prize_deal'];
+        }
+
+        $array = [1=>'shangpin', 2=>'jinbi', 3=>'zuanshi'];
+        $reurn = [];
+        foreach ($voListTurn as $key1 => $val){
+            $reurn[$val['user_id']]['username'] = $val['user_name'];
+            foreach ($price[$val['prize_id']] as $key2 => $val2){
+                if($key2 == 1){
+                    $temp = M('Deal')->field('origin_price,current_price,name')->where(['id'=>$val2])->find();
+                    $reurn[$val['user_id']][$array[$key2]] += $temp['current_price'];
+                    $reurn[$val['user_id']]['have'] .= $temp['name'].',';
+                }else{
+                    $reurn[$val['user_id']][$array[$key2]] += $val2;
+                }
+            }
+        }
+
+        array_walk($reurn, function(&$val,$key) use ($static){
+            $val +=  $static[$key];
+            $val['fenxiao'] = $val['jinbi']  * 0.17;
+        });
+
+
+        $sqlturn = "select count(*) from fanwe_scratchstatics as statics ";
+        $sqlturn .=$contend;
+        $count = $GLOBALS['db']->getOne($sqlturn);
+        $p = new Page ( $count, $page_size );
+        foreach ( $map as $key => $val ) {
+            if (! is_array ( $val )) {
+                $p->parameter .= "$key=" . urlencode ( $val ) . "&";
+            }
+        }
+        //分页显示
+        $page = $p->show ();
+
+        //模板赋值显示
+        $this->assign ( 'list', $reurn );
+        $this->assign ( "page", $page);
+        $this->assign ( "nowPage",$p->nowPage);
+
+
+        $this->display();
+
+
+    }
+
+	public function duobao()
+    {
+        $map['begin_time'] = to_timespan($_REQUEST['begin_time']);
+        $map['end_time'] = $_REQUEST['end_time']?$_REQUEST['end_time']:NOW_TIME;
+        $map['end_time'] = to_timespan($map['end_time']);
 
         $map['id'] = intval($_REQUEST['id']);
-
         $contend='';
         if($map['id'])
             $contend = " and t_di.id=".$map['id'];
@@ -280,7 +364,7 @@ class IncomeBalanceAction extends CommonAction{
                 }
             }
             //分页显示
-//            echo '<pre>';var_dump($voList);exit;
+
             $page = $p->show ();
             //列表排序显示
             $sortImg = $sort; //排序图标

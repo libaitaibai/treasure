@@ -17,7 +17,6 @@ return array(
 				"nodes"	=>	array(
 						array("name"=>"报表统计","module"=>"Balance","action"=>"index"),
 				        array("name"=>"收益统计","module"=>"IncomeBalance","action"=>"index"),
-                        array("name"=>"财务统计","module"=>"IncomeBalance","action"=>"financial")
 				),
 			),
             "balance1"	=>	array(
