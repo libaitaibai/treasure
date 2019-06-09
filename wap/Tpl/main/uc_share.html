@@ -92,15 +92,20 @@ $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/pull_refresh/pull-refre
 						<p class="share-txt">{$ome.content}</p>
 						{if $ome.image_list}
 						<ul class="share-pic clearfix">
-							{foreach from=$ome.image_list item=ome}
+							{foreach from=$ome.image_list item=om}
 							<li>
-								<img src="{$ome.path}">
+								<img src="{$om.path}">
 							</li>
 							{/foreach}
 						</ul>
 						{/if}
 					</div>
+				<div class="clear"></div>
 				</a>
+				<div class="comment" style="position:absolute;right:50px;bottom:10px">
+                    <a class="cmt" target="_blank" href='{url r="index" r="uc_share#detail" p="id=$ome.share_id"}" class="share-info"'>{$ome.comments}</a>
+                </div>
+
 			</li>
 			{/foreach}
 		</ul>

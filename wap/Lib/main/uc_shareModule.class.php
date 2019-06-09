@@ -23,6 +23,7 @@ class uc_shareModule extends MainBaseModule
 		$GLOBALS['tmpl']->assign("share_list", $data['share_list']);
 		$GLOBALS['tmpl']->assign("data_id", $param['data_id']);
 		$GLOBALS['tmpl']->assign("data", $data);
+		$GLOBALS['tmpl']->assign('comments',1);
 		$GLOBALS['tmpl']->display("uc_share.html");
 	}
 	
@@ -176,7 +177,7 @@ class uc_shareModule extends MainBaseModule
 	    $param = array();
 	    $param['id'] = intval($_REQUEST['id']);
 	    $data = call_api_core("uc_share","detail",$param);
-	    	
+
 	    if($data['user_login_status']!=LOGIN_STATUS_LOGINED){
 	        app_redirect(wap_url("index","user#login"));
 	    }
@@ -184,8 +185,13 @@ class uc_shareModule extends MainBaseModule
 	    if ($data['status']==0){
 	        app_redirect(wap_url("index","uc_share#index"));
 	    }
-	
+
+        //是否存在评论
+        $comment = $GLOBALS['db']->getRow('select * from '.DB_PREFIX.'share_comment limit 1');
+        $GLOBALS['tmpl']->assign("is_user",$GLOBALS['user_info']['id']);
 	    $GLOBALS['tmpl']->assign("data",$data);
+        $GLOBALS['tmpl']->assign('has_comment',$comment?1:0);
+        $GLOBALS['tmpl']->assign('share_id',$param['id'] );
 	    $GLOBALS['tmpl']->display("share_detail.html");
 	}
 	

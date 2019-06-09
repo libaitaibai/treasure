@@ -1,0 +1,14 @@
+
+{foreach from=$childs.rows item=row}
+<div class="reply-block">
+    <div class="reply-content">
+                        <span class="reply-user"> <b class="reply-user-nick J_User" data-userid="{$row.uid}">{$row.uname}</b>
+                            {if $row.to_uid gt 0}
+                            <i class="reply-reply">回复</i> <b class="reply-user-nick J_User" data-userid="{$row.to_uid}">{$row.to_uname}</b>
+                            {/if}
+                            : </span> {$row.content} </div>
+    <div class="reply-operate reply-operate--hot">  <span>{$row.publish_time}</span> <i class="reply-dot">·</i> <span class="J_Reply reply-operate-item"  data-pid="{$row.id}" data-userid="{$row.uid}">回复</span> </div>
+</div>
+{/foreach}
+<span class="reply-allBtn J_ReplyMoreBtn J_shortMoresB" data-pageid="{$childs.pages.page}" data-pagesid="{$childs.pages.pages}"> 查看更多 </span>
+
