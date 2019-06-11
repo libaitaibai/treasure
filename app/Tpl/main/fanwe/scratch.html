@@ -89,8 +89,18 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
     }
 </style>
 <div class="wrap_full_w clearfix" style="margin-top:20px">
+    {if $rows}
+    <div style="width:1040px;height:30px;margin:0 auto">
 
+        <select name="scratch_list" id="" style="width:120px;height:30px">
+            {foreach from=$rows item=row}
+            <option value="{$row.id}" {if $row.id eq $scratch_id}selected="selected"{/if}>{$row.name}</option>
+            {/foreach}
+        </select>
+    </div>
+    {/if}
 <div class="htmleaf-container">
+
     <figure id="bridgeContainer" >
         <!--<canvas id="bridge" width="750" height="465"></canvas>-->
         <div class="redux_c" style="margin: 0 auto;background-size: cover;width: 100%;">
@@ -102,7 +112,7 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
 
 
 </div>
-<div class="text1" style="height:66px">呱呱中大奖</div>
+<div class="text1" style="height:66px">刮刮中大奖</div>
 
 <div class="col-md-4">
 
@@ -154,7 +164,8 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
         var num = 1;
         var get_result = APP_ROOT + "/index.php?ctl=scratch&act=get_result",
             user_login = APP_ROOT + "/index.php?ctl=user&act=login",
-            user_center = APP_ROOT + "/index.php?ctl=uc_center";
+            user_center = APP_ROOT + "/index.php?ctl=uc_center",
+            get_index = APP_ROOT + "/index.php?ctl=scratch&act=index&scratch_id=";
         var scratch_id = $('input[name="scratch_id"]').val();
         var scratch_tip = $('input[name="scratch_tip"]').val();
 
@@ -251,6 +262,13 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
         });
 
 
+
+        $('select[name="scratch_list"]').bind('change',function(){
+
+            var id = $(this).val();
+            window.location.href=get_index+id;
+
+        });
 
     });
 

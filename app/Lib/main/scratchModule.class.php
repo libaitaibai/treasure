@@ -16,21 +16,24 @@ class scratchModule extends MainBaseModule
         global_run();
         init_app_page();
         $scratch_id = intval($_REQUEST['scratch_id']);
-        if(empty($scratch_id)){
-            $one = $GLOBALS['db']->getRow('select * from '.DB_PREFIX.'scratch where status=1 order by id desc limit 1');
-            !empty($one) && $scratch_id = $one['id'];
-        }else{
-            $one = $GLOBALS['db']->getRow('select * from '.DB_PREFIX.'scratch where status=1 and id='.$scratch_id);
+
+        $rows = $GLOBALS['db']->getAll('select id,name from '.DB_PREFIX.'scratch where is_effect=1 and status=1 order by id desc');
+        if(empty($scratch_id)) {
+           $scratch_id = $rows[0]['id'];
         }
 
-        if(!empty($one)){
-            $one['tip'] = $one['money'].$this->tips[$one['type']];
-            $scratch = $one;
-        }else{
+        if(!$scratch_id){
             $scratch = array();
+        }else {
+            $one = $GLOBALS['db']->getRow('select * from ' . DB_PREFIX . 'scratch where id=' . $scratch_id);
+            if($one){
+                $one['tip'] = $one['money'].$this->tips[$one['type']];
+                $scratch = $one;
+            }else{
+                $scratch = array();
+            }
         }
 
-        $scratch = !empty($one)?$one:array();
         $prizes = array();
         $prizes_tmp = array();
         if(!empty($scratch_id)){
@@ -69,6 +72,7 @@ class scratchModule extends MainBaseModule
         $GLOBALS['tmpl']->assign("scratch_id",$scratch_id);
         $GLOBALS['tmpl']->assign("scratch_tip",isset($scratch['tip'])?$scratch['tip']:'');
         $GLOBALS['tmpl']->assign("prizes",$prizes);
+        $GLOBALS['tmpl']->assign("rows",$rows);
         $GLOBALS['tmpl']->display("scratch.html");
     }
 
@@ -175,8 +179,7 @@ class scratchModule extends MainBaseModule
             //扣除参与活动费用
             $this->updateUserM($user_id,$activity);
 
-            //统计代理提成
-            $levels = array();
+            //记录代理提成
             if($activity['type']==1){
                 $levels = $this->calculateAgent($user_id,$activity['money']);
                 if(!empty($levels)){
@@ -186,17 +189,38 @@ class scratchModule extends MainBaseModule
 
             }
 
-            //统计成本 商品成本加代理提成
-            $profit = $this->calculateProfit($scratch_id,$levels);
+            //统计代理提成
+            $tmp = $GLOBALS['db']->getRow('select initial_stock,parti_score,reward from '.DB_PREFIX.'scratch where id='.$scratch_id);
+            $reward = $tmp?$tmp['reward']:0;
+            $parti_score = $tmp?$tmp['parti_score']:0;
+            $initial_stock = $tmp?$tmp['initial_stock']:0;
+
+            //统计商品成本
+            $profit = $this->calculateProfit($scratch_id,array());
+
+            //计算库存
+            $sum = 0;
+            foreach($profit as $p){
+                $sum+=$p['sum'];
+            }
+
+            $now_stock = $parti_score-$sum-$reward;
+            $now_stock<0 && $now_stock=0;
+
+            //更新当前库存
+            $GLOBALS['db']->query('update '.DB_PREFIX.'scratch set stock='.$now_stock.' where id='.$scratch_id);
+
+            $stock = $initial_stock+$now_stock;
 
             //指定玩家中奖 中奖之后相同奖项不能再中
             $sql1 = 'select * from '.$t_scratchprize.' where scratch_id='.$scratch_id.
                 ' and last_num>0 and find_in_set('.$user_id.',book_ids) for update';
-            $sql2 = 'select * from '.$t_scratch.' where id = '.$scratch_id.' for update';
-            $two = $db->getRow($sql2);
+
+            //$sql2 = 'select * from '.$t_scratch.' where id = '.$scratch_id.' for update';
+            //$two = $db->getRow($sql2);
 
             //统计参与人数 参与金额
-            $db->query('update '.$t_scratch.' set parti_num=parti_num+1,parti_score=parti_score+'.$two['money'].' where id='.$scratch_id);
+            //$db->query('update '.$t_scratch.' set parti_num=parti_num+1,parti_score=parti_score+'.$two['money'].' where id='.$scratch_id);
 
             $ones = $db->getAll($sql1);
             $zhiding = array();
@@ -220,9 +244,9 @@ class scratchModule extends MainBaseModule
                 $one = $ones_tmp[$diff[array_rand($diff)]];
 
                 if(!empty($one)){
-                    $db->query('update '.$t_scratchprize.' set last_num=last_num-1 where id='.$one['id']);
+                    $db->query('update '.$t_scratchprize.' set last_num=last_num-1,nodraw_num=nodraw_num-1 where id='.$one['id']);
                     $db->query('insert into '.$t_statistics.'(scratch_id,prize_id,user_id,create_time) values('.$scratch_id.','.$one['id'].','.$user_id.','.time().')');
-                    $this->updateMoney($user_id,$profit[$one['id']]);
+                    $this->updateMoney($user_id,$profit[$one['id']],$scratch_id);
                     $this->createPaidOrder($scratch_id,$one['id'],$user_id);
                     $db->query('commit');
                     $this->showRes(200,'已中奖',array('prize'=>$one['prize']));
@@ -245,12 +269,25 @@ class scratchModule extends MainBaseModule
             $prizes_tmp = array();
             foreach($prize as $k=>$v){
                 $prizes_tmp[$v['id']] = $v;
-                if(!isset($profit[$v['id']]) ||
+                /*if(!isset($profit[$v['id']]) ||
                     (isset($profit[$v['id']]) && $v['aim_profit']<$profit[$v['id']['sum']])){
                     continue;
+                }*/
+                if(!isset($profit[$v['id']])){
+                    continue;
                 }
+
+                if($v['aim_profit']>$stock){ //库存小于预设库存不让中奖
+                    continue;
+                }
+                //指定中奖人中奖后不能再中该奖
                 if(isset($zhiding[$v['id']])){
                     continue;
+                }
+
+                //指定中奖人保留中奖项
+                if($v['last_num']<=$v['nodraw_num']){
+                     continue;
                 }
                 $probability[$v['id']] = round($v['rate'],2);
 
@@ -277,7 +314,7 @@ class scratchModule extends MainBaseModule
 
             $db->query('update '.$t_scratchprize.' set last_num=last_num-1 where id='.$prize_id);
             $db->query('insert into '.$t_statistics.'(scratch_id,prize_id,user_id,create_time) values('.$scratch_id.','.$prize_id.','.$user_id.','.time().')');
-            $this->updateMoney($user_id,$profit[$prize_id]);
+            $this->updateMoney($user_id,$profit[$prize_id],$scratch_id);
             $this->createPaidOrder($scratch_id,$prize_id,$user_id);
             $db->query('commit');
             $this->showRes(200,'已中奖',array('prize'=>$prizes_tmp[$prize_id]['prize']));
@@ -292,7 +329,7 @@ class scratchModule extends MainBaseModule
 
 
     //中奖获得金币钻石增加到用户表
-    private function updateMoney($user_id,$get_prize=array()){
+    private function updateMoney($user_id,$get_prize,$scratch_id=0){
 
            if(empty($get_prize) || !$user_id){
                return false;
@@ -309,6 +346,10 @@ class scratchModule extends MainBaseModule
                $str .= 'jewel=jewel+'.$get_prize['coin'].',';
            }
 
+        if($scratch_id){
+            //记录扣除奖项后的库存
+            $GLOBALS['db']->query('update '.DB_PREFIX.'scratch set stock=stock-'.$get_prize['sum'].' where id='.$scratch_id);
+        }
 
         //增加资金流水
         $this->moneyLog($user_id,$moneys,$log_msg);
@@ -338,7 +379,7 @@ class scratchModule extends MainBaseModule
         $GLOBALS['db']->query('update '.DB_PREFIX.'user set '.$tmp_str.' where id='.$user_id);
 
         //记录活动收益
-        $GLOBALS['db']->query('update '.DB_PREFIX.'scratch set parti_num=parti_num+1,parti_score=parti_score+'+$money.' where id='.$activity['scratch_id']);
+        $GLOBALS['db']->query('update '.DB_PREFIX.'scratch set parti_num=parti_num+1,parti_score=parti_score+'.$money.' where id='.$activity['id']);
 
     }
 
