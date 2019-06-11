@@ -15,8 +15,8 @@
                 <td class="item_title">类型:</td>
                 <td class="item_input">
                     <select class="require" name="s_type">
-                        <option value="1" <if condition="$data.type eq 1">selected="selected"</if>>金币</option>
-                        <option value="2" <if condition="$data.type eq 2">selected="selected"</if>>钻石</option>
+                        <!--<option value="1" <if condition="$data.type eq 1">selected="selected"</if>>金币</option>
+                        <option value="2" <if condition="$data.type eq 2">selected="selected"</if>>钻石</option>-->
                         <option value="3" <if condition="$data.type eq 3">selected="selected"</if>>优惠券</option>
                     </select>
                 </td>
@@ -32,8 +32,8 @@
             <tr id="total_buy_name">
                 <td class="item_title">是否开启</td>
                 <td class="item_input">
-                    <lable>是<input type="radio" name="status" value="1" checked="checked"></lable>
-                    <lable>否<input type="radio" name="status" value="0"></lable>
+                    <lable>是<input type="radio" name="status" value="1" <if condition="$data.is_open eq 1">checked="checked"</if>></lable>
+                    <lable>否<input type="radio" name="status" value="0"<if condition="$data.is_open eq 0">checked="checked"</if>></lable>
                    </td>
             </tr>
 

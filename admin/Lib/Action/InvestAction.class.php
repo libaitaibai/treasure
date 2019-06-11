@@ -248,13 +248,14 @@ class InvestAction extends  CommonEnhanceAction{
       $status = intval($_REQUEST['status']);
       $type = intval($_REQUEST['s_type']);
 
-        $data = array('salary'=>round($salary/100,2),'status'=>$status,'type'=>$type);
-      if(empty($id)){
+        $data = array('salary'=>round($salary/100,2),'is_open'=>$status,'type'=>$type);
+
+        if(empty($id)){
          $s= M('invest_salary')->data($data)->add();
       }else{
          $s =  M('invest_salary')->where(array('id'=>$id))->save($data);
       }
-       if($s){
+       if($s!==false){
            $this->assign('jumpUrl',U('Invest/salary'));
            $this->success('更新成功');
        }
@@ -267,10 +268,10 @@ class InvestAction extends  CommonEnhanceAction{
 
         $id = intval($_REQUEST['id']);
         if(!$id){
-            $one = M('invest_detail')->where(array('status'=>1))->find();
+            $one = M('invest_detail')->where(array('status'=>1,'is_chong'=>0))->find();
             $v = empty($one)?false:true;
         }else{
-            $one = M('invest_detail')->where(array('status'=>1))->order('id desc')->find();
+            $one = M('invest_detail')->where(array('status'=>1,'is_chong'=>0))->order('id desc')->find();
             $v = (empty($one) || $one['id']==$id)?false:true;
         }
 
