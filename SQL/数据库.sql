@@ -39938,20 +39938,5 @@ CREATE TABLE `fanwe_invest_way` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='人工充值方式';
 
-
-alter table fanwe_scratch add column `initial_stock` double(20,4) NOT NULL DEFAULT '0.0000' COMMENT '初始库存';
-
-alter table fanwe_scratch add column `stock` double(20,4) NOT NULL DEFAULT '0.0000' COMMENT '当前库存 ';
-
-alter table fanwe_scratchprize add column  `nodraw_num` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '指定中奖人未领取数';
-
-CREATE TABLE `fanwe_stock_record` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '操作者ID',
-  `scratch_id` int(11) NOT NULL DEFAULT '0' COMMENT '活动ID',
-  `before_stock` double(20,4) NOT NULL DEFAULT '0.0000' COMMENT '更改前库存',
-  `after_stock` double(20,4) NOT NULL DEFAULT '0.0000' COMMENT '更改后库存',
-  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 comment '库存操作表';
-
+alter table fanwe_turntable_actity add column repertory int not null default 0 comment '库存';
+alter table fanwe_turntable_actity add column person_repertory int not null default 0 comment '人工干预库存';

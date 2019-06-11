@@ -54,10 +54,11 @@ class TurntableAction extends CommonAction
         $model = D ('TurntableActity');
 
         $data = [
+            'person_repertory'=>$_REQUEST['person_repertory'],
             'name'=>$_REQUEST['name'],
             'expenditure'=>(int)($_REQUEST['expenditure']),
             'type'=>$_REQUEST['type'],
-            'status'=>$_REQUEST['status']
+            'status'=>$_REQUEST['status'],
         ];
         $model->where(['id'=> $id])->data($data)->save();
 
