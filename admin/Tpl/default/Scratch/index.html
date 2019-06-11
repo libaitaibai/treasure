@@ -21,6 +21,13 @@
     function change_create_time($time){
         return date('Y-m-d H:i:s',$time);
     }
+    function calculate_stock($s,$param){
+       $initial_stock = isset($param['initial_stock'])?$param['initial_stock']:0;
+       $stock = isset($param['stock'])?$param['stock']:0;
+
+       return ($initial_stock+$stock);
+
+    }
 
     function change_type($type){
         $type_str = '金币';
@@ -37,6 +44,8 @@
         }
         return $type_str;
     }
+
+
 
 </php>
 <load href='__TMPL__Common/js/jquery.bgiframe.js' />
@@ -82,6 +91,7 @@
 			,type|change_type:消费类型
 			,parti_num:参与人数
 			,parti_score:参与金额
+			,stock|calculate_stock=$scratch:库存
 			,create_time|change_create_time:创建时间
 		 	,is_effect|get_toogle_status=$scratch['id']#is_effect:有效"
             actionlist="id|get_handle=$scratch" />

@@ -68,6 +68,7 @@ class ScratchAction extends  CommonEnhanceAction{
         $name = isset($_REQUEST['total_buy_name'])?$_REQUEST['total_buy_name']:'';
         $total_buy_price = isset($_REQUEST['total_need_price'])?$_REQUEST['total_need_price']:0;
         $s_type = isset($_REQUEST['s_type'])?intval($_REQUEST['s_type']):1;
+        $stock = isset($_REQUEST['stock'])?$_REQUEST['stock']:0;
 
         if(empty($name)){
             $this->error('请填写活动名称');
@@ -80,22 +81,53 @@ class ScratchAction extends  CommonEnhanceAction{
             $this->error('消费金额不正确');
         }
 
+        $one = array();
+        if(!empty($id)){
+            $one = M('scratch')->where(array('id'=>$id))->find();
+            if(!$one){
+                $this->error('该条记录不存在');
+            }
+        }
+
         $is_effect = intval($_REQUEST['is_scratch_effect']);
         $data = array();
         $data['name'] = $name;
         $data['money'] = $total_buy_price;
-        empty($id) && $data['create_time'] = time();
         $data['is_effect'] = $is_effect;
         $data['type'] = $s_type;
+        $data['initial_stock'] = $stock;
+        empty($id) && $data['create_time'] = time();
 
         $model = D($this->getActionName());
+        $user_account = es_session::get(md5(conf("AUTH_KEY")));
 
+        $record = array();
+        $record['create_time'] = time();
+        $record['user_id'] = $user_account['adm_id'];
         if(empty($id)){ //添加
             $id = $model->data($data)->add();
+            //记录库存
+            if($id && $stock){
+                $record['scratch_id'] = $id;
+                $record['before_stock'] = 0;
+                $record['after_stock'] = $stock;
+            }
+            M('stock_record')->add($record);
+
         }else{
 
+            $scratch_id = $id;
             $id = $model->where(array('id'=>$id))->save($data);
             $id!==false && $id=1;
+
+            //记录库存
+            if($stock!=$one['initial_stock']){
+                $record['scratch_id'] = $scratch_id;
+                $record['before_stock'] = $one['initial_stock'];
+                $record['after_stock'] = $stock;
+                M('stock_record')->add($record);
+            }
+
         }
 
         if($id){
@@ -116,7 +148,7 @@ class ScratchAction extends  CommonEnhanceAction{
             $this->error('参数错误');
         }
 
-        $data = M('scratch')->field('id,name,money,type,is_effect')->where(array('id'=>$id))->find();
+        $data = M('scratch')->where(array('id'=>$id))->find();
         if(empty($data)){
             $this->error('记录不存在');
         }
