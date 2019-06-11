@@ -39938,5 +39938,5 @@ CREATE TABLE `fanwe_invest_way` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='人工充值方式';
 
-alter table fanwe_turntable_actity add column repertory int not null default 0 comment '库存';
-alter table fanwe_turntable_actity add column person_repertory int not null default 0 comment '人工干预库存';
+alter table fanwe_turntable_actity  modify  column repertory double(20,4) not null default 0 comment '库存';
+alter table fanwe_turntable_actity  modify  column person_repertory double(20,4) not null default 0 comment '人工干预库存';

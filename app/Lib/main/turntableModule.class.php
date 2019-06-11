@@ -127,9 +127,29 @@ class turntableModule extends MainBaseModule
             //减去消费的
             require_once APP_ROOT_PATH."system/model/user.php";
             modify_account([$this->source[$actity['type']]=>'-'.$actity['expenditure']],$user_info['id'],'大转盘游戏消耗');
+            $this->rewirte($actityid);
 //            $GLOBALS['db']->getRow("update ".DB_PREFIX."user set `{$type}` = `{$type}`-{$actity['expenditure']} WHERE `id` = {$user_info['id']}");
             $this->Json([],200,'成功!');
         }
+    }
+
+    /**
+     * 重新修改库存信息
+     */
+    public function rewirte($actityid)
+    {
+        $actity = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."turntable_actity where id = '".$actityid."' and status = 1");
+        $repertory = $actity['repertory'];
+
+        if(empty((int)$repertory)){
+            $actity1 = $GLOBALS['db']->getRow("select SUM(predict_repertory) as total from ".DB_PREFIX."turntable_actity_prize where actityid = '".$actityid."' and status = 1");
+            $GLOBALS['db']->getRow("update ".DB_PREFIX."turntable_actity set `repertory` = -{$actity['total']} WHERE `id` = {$actityid}");
+            $repertory = -$actity1['total'];
+        }
+
+        $save = $actity['expenditure'];
+        $final  = $repertory+$save*(1-0.17);
+        $GLOBALS['db']->getRow("update ".DB_PREFIX."turntable_actity set `repertory` = {$final} WHERE `id` = {$actityid}");
     }
 
     /**
