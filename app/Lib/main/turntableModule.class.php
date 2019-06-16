@@ -61,7 +61,7 @@ class turntableModule extends MainBaseModule
         });
 
         //选中中奖数据
-        $goodluck = $this->price($prize);
+        $goodluck = $this->price($prize,$actity);
 
         $GLOBALS['tmpl']->assign("goodluck",$goodluck);
         $GLOBALS['tmpl']->assign("actityid",$actityid);
@@ -79,21 +79,46 @@ class turntableModule extends MainBaseModule
     /**
      * 轮盘赌
      */
-    public function price ($prize)
+    public function price ($prize,$actity)
     {
+        //判断库存信息  库存加上人工干预数据
+        $repertory =  $actity['repertory'] + $actity['person_repertory'];
+        $user_info = $GLOBALS['user_info'];
+
         $array = array_column($prize,'probability');
 
         $total = array_sum($array);
         $rand = rand(0,$total*100)/100;
 
-        $return = 0;
-        foreach ($array as $key => $val){
-            $rand-=$val;
-            if($rand <= 0 ){
+        $return = -1;
+        foreach ($prize as $key => $val){
+            //指定中奖人
+            if($val['lucky_person'] == $user_info['id']){
                 $return = $key;
                 break ;
             }
+            //轮盘转
+            $rand-=$val['probability'];
+            if($rand <= 0 ){
+                if( ($repertory > $val['predict_repertory'])){
+                    $return = $key;
+                    break ;
+                }else{
+                    continue;
+                }
+            }
         }
+
+        //预库存没有达到库存的值得时候设置为不中奖
+        if($return == -1){
+            foreach ($prize as $key => $val) {
+                if($val['name'] == '谢谢惠顾!'){
+                    $return = $key;
+                    break ;
+                }
+            }
+        }
+
         return $return;
     }
 

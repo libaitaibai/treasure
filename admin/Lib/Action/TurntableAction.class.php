@@ -184,6 +184,7 @@ class TurntableAction extends CommonAction
             'probability'=>$_REQUEST['probability'],
             'predict_repertory'=>$_REQUEST['counpredict_repertoryt'],
             'repertory'=>$_REQUEST['repertory'],
+            'lucky_person'=>$_REQUEST['lucky'],
             'status'=>$_REQUEST['status'],
         ];
         $id = $model->data($data)->add();
@@ -240,6 +241,7 @@ class TurntableAction extends CommonAction
             'predict_repertory'=>$_REQUEST['counpredict_repertoryt'],
             'repertory'=>$_REQUEST['repertory'],
             'status'=>$_REQUEST['status'],
+            'lucky_person'=>$_REQUEST['lucky'],
         ];
         $model->where(['id'=> $id])->data($data)->save();
 

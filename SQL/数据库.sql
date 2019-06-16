@@ -39940,3 +39940,5 @@ CREATE TABLE `fanwe_invest_way` (
 
 alter table fanwe_turntable_actity  modify  column repertory double(20,4) not null default 0 comment '库存';
 alter table fanwe_turntable_actity  modify  column person_repertory double(20,4) not null default 0 comment '人工干预库存';
+
+alter table fanwe_turntable_actity_prize  add  column lucky_person varchar(64) not null default 0 comment '指定中奖人员信息';
