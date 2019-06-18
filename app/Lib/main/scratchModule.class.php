@@ -205,7 +205,7 @@ class scratchModule extends MainBaseModule
             }
 
             $now_stock = $parti_score-$sum-$reward;
-            $now_stock<0 && $now_stock=0;
+            //$now_stock<0 && $now_stock=0;
 
             //更新当前库存
             $GLOBALS['db']->query('update '.DB_PREFIX.'scratch set stock='.$now_stock.' where id='.$scratch_id);
@@ -450,7 +450,7 @@ class scratchModule extends MainBaseModule
         $prizes = $GLOBALS['db']->getAll($sql);
 
         if(empty($prizes)){
-            return -1;
+            return array();
         }
 
 /*        $deal_ids = '';
