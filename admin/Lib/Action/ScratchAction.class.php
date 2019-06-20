@@ -197,7 +197,7 @@ class ScratchAction extends  CommonEnhanceAction{
         $model = D ('Scratchprize');
         $map = $this->_search ($model);
 
-
+        $map['scratch_id'] = $scratch_id;
         if(!empty($_REQUEST['id'])){
             $map['id'] = intval($_REQUEST['id']);
         }
@@ -280,7 +280,7 @@ class ScratchAction extends  CommonEnhanceAction{
         }
 
 
-        $cond = array('prize'=>$prize);
+        $cond = array('prize'=>$prize,'scratch_id'=>$scratch_id);
         !empty($id) && $cond['id'] = array('NEQ',$id);
         $one = M('scratchprize')->where($cond)->find();
 

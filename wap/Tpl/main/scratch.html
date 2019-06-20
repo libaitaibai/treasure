@@ -60,6 +60,17 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
 </style>
 <div class="wrap_full_w clearfix" style="margin-top:20px">
 
+    {if $rows}
+    <div style="width:1040px;height:30px;margin:0 auto">
+
+        <select name="scratch_list" id="" style="width:120px;height:30px">
+            {foreach from=$rows item=row}
+            <option value="{$row.id}" {if $row.id eq $scratch_id}selected="selected"{/if}>{$row.name}</option>
+            {/foreach}
+        </select>
+    </div>
+    {/if}
+
 <div class="htmleaf-container">
     <figure id="bridgeContainer" >
         <!--<canvas id="bridge" width="750" height="465"></canvas>-->
@@ -67,6 +78,8 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
             <div id="mask_img_bg"><span class="cont-span"></span></div>
             <img id="redux" src="{$TMPL}/images/scratch/img/layer.png"/>
         </div>
+        <div style="display:none;height:30px;line-height:30px;cursor:pointer;color:#fff;font-weight:bold" id="gua_again">再刮一次</div>
+
     </figure>
 
 
@@ -129,98 +142,128 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
         var scratch_id = $('input[name="scratch_id"]').val();
         var scratch_tip = $('input[name="scratch_tip"]').val();
 
-        $('#redux').bind('swipe',function(){
+        function ss() {
+            $('#redux').unbind().bind('swipe', function () {
 
-            if(num==1){
-                if(!scratch_id){
-                    $.showErr('参数错误');
-                    return false;
-                }
-                $.showConfirm('消耗'+scratch_tip+'，是否继续？',function(){
+                if (num == 1) {
+                    if (!scratch_id) {
+                        $.showErr('参数错误');
+                        return false;
+                    }
+                    $.showConfirm('消耗' + scratch_tip + '，是否继续？', function () {
 
-                    num++;
-                    $.get(get_result,{scratch_id:scratch_id},function(xhr){
+                        num++;
+                        $.get(get_result, {scratch_id: scratch_id}, function (xhr) {
 
-                        if(xhr.code!=200){
-                            num=1;
-                            if(xhr.code==401){
-                                $.showErr(xhr.msg);
-                                window.location.href=user_login;
-                            }else if(xhr.code==402){
-                                /*$.showErr(xhr.msg,function(){
+                            if (xhr.code != 200) {
+                                num = 1;
+                                if (xhr.code == 401) {
+                                    $.showErr(xhr.msg);
+                                    window.location.href = user_login;
+                                } else if (xhr.code == 402) {
+                                    /*$.showErr(xhr.msg,function(){
                                     window.location.href= user_center;
                                 });*/
-                                $.showErr(xhr.msg);
-                            }else{
-                                $.showErr(xhr.msg);
-                            }
-                            return false;
-                        }
-
-
-                        $('#redux').eraser({
-                            size: 50,   //设置橡皮擦大小
-                            completeRatio: .5, //设置擦除面积比例
-                        });
-
-
-
-                        var img_url = '{$TMPL}/images/scratch/img/';
-                        var w = '140px';
-                        switch(xhr.data.prize){
-                            case '特等奖':
-                                img_url+='0.png';
-                                break;
-                            case '一等奖':
-                                img_url+='1.png';
-                                break;
-                            case '二等奖':
-                                img_url+='2.png';
-                                break;
-                            case '三等奖':
-                                img_url+='3.png';
-                                break;
-                            case '四等奖':
-                                img_url+='4.png';
-                                break;
-                            case '谢谢参与':
-                                img_url+='xiexie.jpg';
-                                w='285px';
-                                break;
-
-                            default:
-                                img_url = '';
-
-                        }
-                        if(img_url){
-                            $("#mask_img_bg>span").css(
-                                {backgroundImage:'url('+img_url+')',
-                                    backgroundSize:''+w+' auto'
-                                });
-                        }else{
-                            $("#mask_img_bg>span").css(
-                                {
-                                    display: 'block',
-                                    color:'#fff',
-                                    width: '120px',
-                                    height: '38px',
-                                    textAlign: 'center',
-                                    position: 'absolute',
-                                    top: '40%',
-                                    left: '50%',
-                                    marginLeft: '-60px',
-                                    zIndex: 10,
-                                    fontSize:'30px'
+                                    $.showErr(xhr.msg);
+                                } else {
+                                    $.showErr(xhr.msg);
                                 }
-                            ).text(xhr.data.prize);
-                        }
-                        //$("#mask_img_bg>span").text(xhr.data.prize);
-                    },'json');
+                                return false;
+                            }
 
 
-                });
+                            $('#redux').eraser({
+                                size: 50,   //设置橡皮擦大小
+                                completeRatio: .5, //设置擦除面积比例
+                            });
 
-            }
+
+                            var img_url = '{$TMPL}/images/scratch/img/';
+                            var w = '140px';
+                            switch (xhr.data.prize) {
+                                case '特等奖':
+                                    img_url += '0.png';
+                                    break;
+                                case '一等奖':
+                                    img_url += '1.png';
+                                    break;
+                                case '二等奖':
+                                    img_url += '2.png';
+                                    break;
+                                case '三等奖':
+                                    img_url += '3.png';
+                                    break;
+                                case '四等奖':
+                                    img_url += '4.png';
+                                    break;
+                                case '谢谢参与':
+                                    img_url += 'xiexie.jpg';
+                                    w = '285px';
+                                    break;
+
+                                default:
+                                    img_url = '';
+
+                            }
+                            if (img_url) {
+                                $("#mask_img_bg>span").css(
+                                    {
+                                        backgroundImage: 'url(' + img_url + ')',
+                                        backgroundSize: '' + w + ' auto'
+                                    });
+                            } else {
+                                $("#mask_img_bg>span").css(
+                                    {
+                                        display: 'block',
+                                        color: '#fff',
+                                        width: '120px',
+                                        height: '38px',
+                                        textAlign: 'center',
+                                        position: 'absolute',
+                                        top: '40%',
+                                        left: '50%',
+                                        marginLeft: '-60px',
+                                        zIndex: 10,
+                                        fontSize: '30px'
+                                    }
+                                ).text(xhr.data.prize);
+                            }
+                            //$("#mask_img_bg>span").text(xhr.data.prize);
+                            //显示再刮一次
+                            $('#gua_again').show();
+                        }, 'json');
+
+
+                    });
+
+                }
+
+            });
+
+        }
+
+        ss();
+
+
+        $('#gua_again').bind('click',function(){
+
+            var img_url = "{$TMPL}/images/scratch/img/layer.png";
+            var str = '<div id="mask_img_bg">\n' +
+                '                <span class="cont-span"></span></div>\n' +
+                '            <img id="redux" src="'+img_url+'">';
+
+            $('.redux_c').html(str);
+            num = 1;
+           ss();
+
+        });
+
+
+        $('select[name="scratch_list"]').siblings('span').remove();
+        $('select[name="scratch_list"]').bind('change',function(){
+
+            var id = $(this).val();
+            window.location.href=get_index+id;
 
         });
 
