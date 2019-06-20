@@ -206,7 +206,7 @@ class IncomeBalanceAction extends CommonAction{
             $returnData[$key1]['coupons'] = $static[$key1]['coupons'] ;
         }
         foreach ($returnData as $key9 => $val9){
-            $returnData[$key9]['fenxiao'] = $val9['jinbi'] * 0.17;
+            $returnData[$key9]['fenxiao'] = $val9['money'] * 0.17;
         }
 
 
