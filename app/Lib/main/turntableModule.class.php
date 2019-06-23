@@ -132,7 +132,7 @@ class turntableModule extends MainBaseModule
         global_run();
         $actityid = strim($_REQUEST['actityid']);
         $user_info = $GLOBALS['user_info'];
-
+        $num = $_REQUEST['num']?$_REQUEST['num']:1;
         if(empty($user_info)){
             $this->Json([],500,'请先登录!');
         }
@@ -144,15 +144,17 @@ class turntableModule extends MainBaseModule
         $type = $this->source[$actity['type']];
         $field = 'id,user_name,'.$type;
         $use =  $GLOBALS['db']->getRow("select {$field} from ".DB_PREFIX."user where id = '".$user_info['id']."'");
+        //消耗的
+        $expenditure =$actity['expenditure']*$num;
 
-        if($use[$type]<$actity['expenditure']){
+        if($use[$type]<$expenditure){
             $this->Json([],500,"没有足够的{$this->type[$actity['type']]}");
         }else{
             //减去消费的钻石
             //减去消费的
             require_once APP_ROOT_PATH."system/model/user.php";
-            modify_account([$this->source[$actity['type']]=>'-'.$actity['expenditure']],$user_info['id'],'大转盘游戏消耗');
-            $this->rewirte($actityid);
+            modify_account([$this->source[$actity['type']]=>'-'.$expenditure],$user_info['id'],'大转盘游戏消耗');
+            $this->rewirte($actityid,$expenditure);
 //            $GLOBALS['db']->getRow("update ".DB_PREFIX."user set `{$type}` = `{$type}`-{$actity['expenditure']} WHERE `id` = {$user_info['id']}");
             $this->Json([],200,'成功!');
         }
@@ -161,7 +163,7 @@ class turntableModule extends MainBaseModule
     /**
      * 重新修改库存信息
      */
-    public function rewirte($actityid)
+    public function rewirte($actityid,$expenditure)
     {
         $actity = $GLOBALS['db']->getRow("select * from ".DB_PREFIX."turntable_actity where id = '".$actityid."' and status = 1");
         $repertory = $actity['repertory'];
@@ -172,8 +174,7 @@ class turntableModule extends MainBaseModule
             $repertory = -$actity1['total'];
         }
 
-        $save = $actity['expenditure'];
-        $final  = $repertory+$save*(1-0.17);
+        $final  = $repertory+$expenditure*(1-0.17);
         $GLOBALS['db']->getRow("update ".DB_PREFIX."turntable_actity set `repertory` = {$final} WHERE `id` = {$actityid}");
     }
 

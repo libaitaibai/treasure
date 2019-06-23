@@ -381,7 +381,7 @@ $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.eraser.js";
                     $.ajax({
                         url:check_url,
                         type:'GET',
-                        data:{'actityid':actityid},
+                        data:{'actityid':actityid,'num':5},
                         success:function(arg){
                             if(arg.code==200){
                                 roll1(1)
