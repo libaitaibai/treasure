@@ -206,7 +206,7 @@ class IncomeBalanceAction extends CommonAction{
             $returnData[$key1]['coupons'] = $static[$key1]['coupons'] ;
         }
         foreach ($returnData as $key9 => $val9){
-            $returnData[$key9]['fenxiao'] = $val9['money'] * 0.17;
+            $returnData[$key9]['fenxiao'] = ($val9['money'] * 0.17)+($val9['jewel'] * 0.17)+($val9['coupons'] * 0.17);
         }
 
 
@@ -305,7 +305,7 @@ class IncomeBalanceAction extends CommonAction{
 
         array_walk($reurn, function(&$val,$key) use ($static){
             $val +=  $static[$key];
-            $val['fenxiao'] = $val['jinbi']  * 0.17;
+            $val['fenxiao'] = ($val['money']  * 0.17) +($val['jewel']  * 0.17) +($val['coupons']  * 0.17);
         });
 
 
@@ -399,8 +399,9 @@ class IncomeBalanceAction extends CommonAction{
             $sort = $sort == 'desc' ? 1 : 0; //排序方式
             //模板赋值显示
             $total['origin_price'] = array_sum(array_column($voList,'origin_price'));
+            $total['max_buy'] = array_sum(array_column($voList,'max_buy'));
             $total1[]=$total;
-//            echo '<pre>';var_dump($total1);exit;
+
             $this->assign ( 'total', $total1 );
             $this->assign ( 'list', $voList );
             $this->assign ( "page", $page);
