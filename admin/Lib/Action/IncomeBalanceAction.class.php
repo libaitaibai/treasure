@@ -219,11 +219,23 @@ class IncomeBalanceAction extends CommonAction{
                 $p->parameter .= "$key=" . urlencode ( $val ) . "&";
             }
         }
+
+        //显示总的信息
+        $total['jinbi'] = array_sum(array_column($returnData,'jinbi'));
+        $total['zuanshi'] = array_sum(array_column($returnData,'zuanshi'));
+        $total['yiuhujuan'] = array_sum(array_column($returnData,'yiuhujuan'));
+        $total['shiwu'] = array_sum(array_column($returnData,'shiwu'));
+        $total['money'] = array_sum(array_column($returnData,'money'));
+        $total['jewel'] = array_sum(array_column($returnData,'jewel'));
+        $total['coupons'] = array_sum(array_column($returnData,'coupons'));
+        $total['fenxiao'] = array_sum(array_column($returnData,'fenxiao'));
+        $total1[]=$total;
+
         //分页显示
         $page = $p->show ();
-
         //模板赋值显示
         $this->assign ( 'list', $returnData );
+        $this->assign ( 'total', $total1 );
         $this->assign ( "page", $page);
         $this->assign ( "nowPage",$p->nowPage);
 
@@ -306,10 +318,25 @@ class IncomeBalanceAction extends CommonAction{
                 $p->parameter .= "$key=" . urlencode ( $val ) . "&";
             }
         }
+
+
+
+        //显示总的信息
+        $total['jinbi'] = array_sum(array_column($reurn,'jinbi'));
+        $total['zuanshi'] = array_sum(array_column($reurn,'zuanshi'));
+        $total['yiuhujuan'] = array_sum(array_column($reurn,'yiuhujuan'));
+        $total['shangpin'] = array_sum(array_column($reurn,'shangpin'));
+        $total['money'] = array_sum(array_column($reurn,'money'));
+        $total['jewel'] = array_sum(array_column($reurn,'jewel'));
+        $total['coupons'] = array_sum(array_column($reurn,'coupons'));
+        $total['fenxiao'] = array_sum(array_column($reurn,'fenxiao'));
+        $total1[]=$total;
+
         //分页显示
         $page = $p->show ();
 
         //模板赋值显示
+        $this->assign ( 'total', $total1 );
         $this->assign ( 'list', $reurn );
         $this->assign ( "page", $page);
         $this->assign ( "nowPage",$p->nowPage);
@@ -371,6 +398,10 @@ class IncomeBalanceAction extends CommonAction{
             $sortAlt = $sort == 'desc' ? l("ASC_SORT") : l("DESC_SORT"); //排序提示
             $sort = $sort == 'desc' ? 1 : 0; //排序方式
             //模板赋值显示
+            $total['origin_price'] = array_sum(array_column($voList,'origin_price'));
+            $total1[]=$total;
+//            echo '<pre>';var_dump($total1);exit;
+            $this->assign ( 'total', $total1 );
             $this->assign ( 'list', $voList );
             $this->assign ( "page", $page);
             $this->assign ( "nowPage",$p->nowPage);

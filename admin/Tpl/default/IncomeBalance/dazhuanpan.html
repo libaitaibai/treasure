@@ -33,8 +33,24 @@
 	id="dataTable" 
 	style="dataTable" 
 	name="duobao_item" 
-	datasource="list" 
+	datasource="total"
 	show="id:期号|50px
+			,jinbi:总中奖金币
+			,zuanshi:总中奖钻石
+			,yiuhujuan:总中奖优惠券
+			,shiwu:总中奖实物价值
+			,money:总消费金币
+			,jewel:总消费钻石
+			,coupons:总消费优惠券
+			,fenxiao:总分销金额
+		 	"
+ />
+	<html:list
+			id="dataTable"
+			style="dataTable"
+			name="duobao_item"
+			datasource="list"
+			show="id:期号|50px
 			,username:用户名
 			,jinbi:中奖金币
 			,zuanshi:中奖钻石
@@ -46,8 +62,7 @@
 			,coupons:消费优惠券
 			,fenxiao:分销金额
 		 	"
- />
-
+	/>
 <div class="blank5"></div>
 <div class="page">{$page}</div>
 </div>
